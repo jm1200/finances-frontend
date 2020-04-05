@@ -26,23 +26,23 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { TextField } from "@material-ui/core";
 import { Transaction } from "../types";
 
-interface Data {
-  calories: number;
-  carbs: number;
-  fat: number;
-  name: string;
-  protein: number;
-}
+// interface Data {
+//   calories: number;
+//   carbs: number;
+//   fat: number;
+//   name: string;
+//   protein: number;
+// }
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number
-): Data {
-  return { name, calories, fat, carbs, protein };
-}
+// function createData(
+//   name: string,
+//   calories: number,
+//   fat: number,
+//   carbs: number,
+//   protein: number
+// ): Data {
+//   return { name, calories, fat, carbs, protein };
+// }
 
 // const rows = [
 //   createData("Cupcake", 305, 3.7, 67, 4.3),

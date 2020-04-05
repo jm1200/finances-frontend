@@ -6,5 +6,5 @@ export interface Transaction {
   transId: string;
   name: string;
   memo: string;
-  amount: string;
+  amount: number;
 }

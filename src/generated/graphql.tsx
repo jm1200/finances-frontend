@@ -88,7 +88,7 @@ export type Transaction = {
   datePosted: Scalars['String'];
   name: Scalars['String'];
   memo: Scalars['String'];
-  amount: Scalars['String'];
+  amount: Scalars['Float'];
 };
 
 

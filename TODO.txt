@@ -3,4 +3,8 @@
 - clean up nav
 - redis user?
 
+Material table
+- make amounts display dollars
+- make dates date objects in server??
+
 
