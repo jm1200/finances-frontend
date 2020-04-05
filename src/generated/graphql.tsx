@@ -86,7 +86,7 @@ export type Transaction = {
   account: Scalars['String'];
   type: Scalars['String'];
   datePosted: Scalars['String'];
-  name?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
   memo: Scalars['String'];
   amount: Scalars['String'];
 };
@@ -95,6 +95,7 @@ export type Transaction = {
 export type UploadResponse = {
    __typename?: 'UploadResponse';
   uploaded: Scalars['Boolean'];
+  name: Scalars['String'];
   account: Scalars['String'];
   rangeStart: Scalars['String'];
   rangeEnd: Scalars['String'];
