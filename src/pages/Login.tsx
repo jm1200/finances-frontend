@@ -62,6 +62,7 @@ const Login: React.FC<IRegisterProps & RouteComponentProps> = ({ history }) => {
             history.push("/home");
           } catch (err) {
             //invalid login
+
             if (err.graphQLErrors) {
               setLoginError(err.graphQLErrors[0].message);
             } else {
