@@ -16,6 +16,7 @@
     "formik": "^2.1.4",
     "graphql": "^14.6.0",
     "jwt-decode": "^2.2.0",
+    "notistack": "^0.9.9",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-dropzone": "^10.2.1",

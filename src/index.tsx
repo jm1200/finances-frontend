@@ -27,23 +27,23 @@ const cache = new InMemoryCache({});
 //#############################################################################
 const uploadLink = createUploadLink({
   uri: "http://localhost:4000/graphql",
-  credentials: "include"
+  credentials: "include",
 });
 
 //#############################################################################
 const requestLink = new ApolloLink(
   (operation, forward) =>
-    new Observable(observer => {
+    new Observable((observer) => {
       let handle: any;
       Promise.resolve(operation)
-        .then(operation => {
+        .then((operation) => {
           const accessToken = getAccessToken();
           // console.log("index 41: request link operation", operation);
           if (accessToken) {
             operation.setContext({
               headers: {
-                authorization: `bearer ${accessToken}`
-              }
+                authorization: `bearer ${accessToken}`,
+              },
             });
           }
         })
@@ -51,7 +51,7 @@ const requestLink = new ApolloLink(
           handle = forward(operation).subscribe({
             next: observer.next.bind(observer),
             error: observer.error.bind(observer),
-            complete: observer.complete.bind(observer)
+            complete: observer.complete.bind(observer),
           });
         })
         .catch(observer.error.bind(observer));
@@ -87,16 +87,16 @@ const tokenRefreshLink = new TokenRefreshLink({
   fetchAccessToken: () => {
     return fetch("http://localhost:4000/refresh_token", {
       method: "POST",
-      credentials: "include"
+      credentials: "include",
     });
   },
-  handleFetch: accessToken => {
+  handleFetch: (accessToken) => {
     setAccessToken(accessToken);
   },
-  handleError: err => {
+  handleError: (err) => {
     console.warn("Your refresh token is invalid. Try to relogin");
     console.error(err);
-  }
+  },
 });
 
 //#############################################################################
@@ -133,9 +133,9 @@ const client = new ApolloClient({
     //   uri: "http://localhost:4000/graphql",
     //   credentials: "include"
     // }),
-    uploadLink
+    uploadLink,
   ]),
-  cache
+  cache,
 });
 
 ReactDOM.render(

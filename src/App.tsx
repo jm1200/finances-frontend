@@ -5,17 +5,18 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 import Nav from "./Components/Nav";
 import { BrowserRouter } from "react-router-dom";
 import { useMeLazyQuery, MeQuery } from "./generated/graphql";
+import { SnackbarProvider } from "notistack";
 
 const darkTheme = createMuiTheme({
   palette: {
-    type: "dark"
-  }
+    type: "dark",
+  },
 });
 
 const lightTheme = createMuiTheme({
   palette: {
-    type: "light"
-  }
+    type: "light",
+  },
 });
 
 export const UserContext = React.createContext<MeQuery | undefined>(undefined);
@@ -36,8 +37,8 @@ const App: React.FC = () => {
   useEffect(() => {
     fetch("http://localhost:4000/refresh_token", {
       method: "POST",
-      credentials: "include"
-    }).then(async x => {
+      credentials: "include",
+    }).then(async (x) => {
       const data = await x.json();
       setAccessToken(data.accessToken);
       setLoading(false);
@@ -54,9 +55,11 @@ const App: React.FC = () => {
       <BrowserRouter>
         <UserContext.Provider value={meData}>
           <ThemeProvider theme={theme}>
-            <CssBaseline />
+            <SnackbarProvider>
+              <CssBaseline />
 
-            <Nav />
+              <Nav />
+            </SnackbarProvider>
           </ThemeProvider>
         </UserContext.Provider>
       </BrowserRouter>

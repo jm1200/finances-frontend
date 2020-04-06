@@ -6,6 +6,7 @@ import MaterialUITable from "../Components/MaterialUITable";
 import moment from "moment";
 import { Box, Button } from "@material-ui/core";
 import { TransactionInput, Transaction } from "../generated/graphql";
+import { useSnackbar } from "notistack";
 
 const uploadFileMutation = gql`
   mutation UploadFile($file: Upload!) {
@@ -30,7 +31,10 @@ const uploadFileMutation = gql`
 
 const submitTransactionsMutation = gql`
   mutation SubmitTransactions($transactions: [TransactionInput!]!) {
-    submitTransactions(transactions: $transactions)
+    submitTransactions(transactions: $transactions) {
+      inserted
+      message
+    }
   }
 `;
 
@@ -45,6 +49,7 @@ const centralDivStyle: CSSProperties = {
 };
 
 const ImportFile: React.FC = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const [uploadFile, { data, error, loading }] = useMutation(
     uploadFileMutation
   );
@@ -78,8 +83,18 @@ const ImportFile: React.FC = () => {
     submitTransactions({ variables: { transactions: transNoTypename } }).then(
       ({ data, errors }) => {
         console.log("submit trans data: ", data);
-        if (errors) {
-          console.log("error", errors);
+        if (
+          data &&
+          data.submitTransactions &&
+          data.submitTransactions.inserted
+        ) {
+          enqueueSnackbar(data.submitTransactions.message, {
+            variant: "success",
+          });
+        } else {
+          enqueueSnackbar(data.submitTransactions.message, {
+            variant: "error",
+          });
         }
       }
     );
@@ -114,7 +129,7 @@ const ImportFile: React.FC = () => {
                 )}`}
               </p>
             </Box>
-            <Box marginRight="3" flexGrow="1" ml={30} p={1}>
+            <Box marginRight="3" ml={30} p={1}>
               <p>Submit this file?</p>
               <Button
                 variant="outlined"
