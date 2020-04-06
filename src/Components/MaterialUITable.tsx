@@ -25,6 +25,7 @@ import Switch from "@material-ui/core/Switch";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { TextField } from "@material-ui/core";
 import { Transaction } from "../types";
+import moment from "moment";
 
 // interface Data {
 //   calories: number;
@@ -96,7 +97,10 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
 
 function filterRows(array: Transaction[], filterString: string) {
   return array.filter((row) => {
-    return row!.name!.toLowerCase().includes(filterString);
+    const bool =
+      row!.name!.toLowerCase().includes(filterString) ||
+      row!.memo!.toLowerCase().includes(filterString);
+    return bool;
   });
 }
 
@@ -313,12 +317,12 @@ export default function EnhancedTable(props: IEnhancedTableProps) {
   const [orderBy, setOrderBy] = React.useState<keyof Transaction>("datePosted");
   const [selected, setSelected] = React.useState<string[]>([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [dense, setDense] = React.useState(true);
+  const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [filter, setFilter] = React.useState("");
 
   const { transactions }: { transactions: Transaction[] } = props;
-  //console.log("Transactions: ", transactions);
+  console.log("Transactions: ", transactions);
 
   let filteredTransactions = transactions;
   if (filter) {
@@ -438,7 +442,11 @@ export default function EnhancedTable(props: IEnhancedTableProps) {
                         </TableCell>
                         <TableCell align="right">{row.account}</TableCell>
                         <TableCell align="right">{row.type}</TableCell>
-                        <TableCell align="right">{row.datePosted}</TableCell>
+                        <TableCell align="right">
+                          {moment(row.datePosted, "YYYYMMDD").format(
+                            "MMM Do YYYY"
+                          )}
+                        </TableCell>
                         <TableCell align="right">
                           {row.name ? row.name : null}
                         </TableCell>
