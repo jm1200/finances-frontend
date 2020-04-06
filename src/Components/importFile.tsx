@@ -3,6 +3,7 @@ import { useDropzone } from "react-dropzone";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import MaterialUITable from "./MaterialUITable";
+import moment from "moment";
 
 const uploadFileMutation = gql`
   mutation UploadFile($file: Upload!) {
@@ -70,7 +71,11 @@ const ImportFile: React.FC = () => {
           <p>File Name: {data.uploadFile.name}</p>
           <p>
             Date Range:{" "}
-            {`${data.uploadFile.rangeStart} - ${data.uploadFile.rangeEnd}`}
+            {`${moment(data.uploadFile.rangeStart, "YYYYMMDD").format(
+              "MMM Do YYYY"
+            )} - ${moment(data.uploadFile.rangeEnd, "YYYYMMDD").format(
+              "MMM Do YYYY"
+            )}`}
           </p>
           <hr />
           <MaterialUITable transactions={data.uploadFile.transactions} />

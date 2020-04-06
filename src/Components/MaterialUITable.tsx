@@ -205,7 +205,7 @@ export default function EnhancedTable(props: IEnhancedTableProps) {
   const [filter, setFilter] = React.useState("");
 
   const { transactions }: { transactions: Transaction[] } = props;
-  console.log("Transactions: ", transactions);
+  //console.log("Transactions: ", transactions);
 
   let filteredTransactions = transactions;
   if (filter) {
@@ -267,7 +267,7 @@ export default function EnhancedTable(props: IEnhancedTableProps) {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     return (
-                      <TableRow hover>
+                      <TableRow hover key={index}>
                         <TableCell align="left">{row.account}</TableCell>
                         <TableCell align="left">{row.type}</TableCell>
                         <TableCell align="right">
