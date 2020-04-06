@@ -2,7 +2,7 @@ import Login from "../pages/Login";
 import Logout from "../pages/Logout";
 import Register from "../pages/Register";
 import Home from "../pages/Home";
-import ImportFile from "../Components/ImportFile";
+import ImportFile from "../pages/ImportFile";
 import Settings from "../pages/Settings";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import { Settings as SettingsIcon } from "@material-ui/icons";
@@ -29,8 +29,8 @@ export const routes: IRoutes = {
       name: "Home",
       path: "/home",
       component: Home,
-      icon: InboxIcon
-    }
+      icon: InboxIcon,
+    },
   ],
 
   //Routes only visible when logged in
@@ -39,20 +39,20 @@ export const routes: IRoutes = {
       name: "Logout",
       path: "/logout",
       component: Logout,
-      icon: InboxIcon
+      icon: InboxIcon,
     },
     {
       name: "ImportFile",
       path: "/importFile",
       component: ImportFile,
-      icon: InboxIcon
+      icon: InboxIcon,
     },
     {
       name: "Settings",
       path: "/settings",
       component: Settings,
-      icon: SettingsIcon
-    }
+      icon: SettingsIcon,
+    },
   ],
 
   //Routes only visible when not logged in
@@ -61,13 +61,13 @@ export const routes: IRoutes = {
       name: "Login",
       path: "/login",
       component: Login,
-      icon: InboxIcon
+      icon: InboxIcon,
     },
     {
       name: "Register",
       path: "/register",
       component: Register,
-      icon: InboxIcon
-    }
-  ]
+      icon: InboxIcon,
+    },
+  ],
 };

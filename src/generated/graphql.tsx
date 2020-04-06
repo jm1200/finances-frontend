@@ -32,6 +32,7 @@ export type Mutation = {
   login: LoginResponse;
   register: LoginResponse;
   uploadFile: UploadResponse;
+  submitTransactions: Scalars['Boolean'];
   updateTheme?: Maybe<UserSettings>;
 };
 
@@ -53,6 +54,11 @@ export type MutationRegisterArgs = {
 
 export type MutationUploadFileArgs = {
   file: Scalars['Upload'];
+};
+
+
+export type MutationSubmitTransactionsArgs = {
+  transactions: Array<TransactionInput>;
 };
 
 
@@ -82,6 +88,16 @@ export type RegisterInput = {
 
 export type Transaction = {
    __typename?: 'Transaction';
+  transId: Scalars['String'];
+  account: Scalars['String'];
+  type: Scalars['String'];
+  datePosted: Scalars['String'];
+  name: Scalars['String'];
+  memo: Scalars['String'];
+  amount: Scalars['Float'];
+};
+
+export type TransactionInput = {
   transId: Scalars['String'];
   account: Scalars['String'];
   type: Scalars['String'];
