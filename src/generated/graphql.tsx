@@ -15,40 +15,25 @@ export type Scalars = {
 export type LoginResponse = {
    __typename?: 'LoginResponse';
   accessToken: Scalars['String'];
-  user: User;
-  userSettings: UserSettings;
+  user: UserEntity;
+  userSettings: UserSettingsEntity;
 };
 
 export type MeResponse = {
    __typename?: 'MeResponse';
-  user?: Maybe<User>;
-  userSettings?: Maybe<UserSettings>;
+  user?: Maybe<UserEntity>;
+  userSettings?: Maybe<UserSettingsEntity>;
 };
 
 export type Mutation = {
    __typename?: 'Mutation';
+  uploadFile: UploadResponse;
+  submitTransactions: SubmitTransactionsResponse;
+  updateTheme?: Maybe<UserSettingsEntity>;
   logout: Scalars['Boolean'];
   revokeRefreshTokensForUser: Scalars['Boolean'];
   login: LoginResponse;
   register: LoginResponse;
-  uploadFile: UploadResponse;
-  submitTransactions: Scalars['Boolean'];
-  updateTheme?: Maybe<UserSettings>;
-};
-
-
-export type MutationRevokeRefreshTokensForUserArgs = {
-  userId: Scalars['Int'];
-};
-
-
-export type MutationLoginArgs = {
-  data: RegisterInput;
-};
-
-
-export type MutationRegisterArgs = {
-  data: RegisterInput;
 };
 
 
@@ -67,13 +52,28 @@ export type MutationUpdateThemeArgs = {
   theme: Scalars['String'];
 };
 
+
+export type MutationRevokeRefreshTokensForUserArgs = {
+  userId: Scalars['Int'];
+};
+
+
+export type MutationLoginArgs = {
+  data: RegisterInput;
+};
+
+
+export type MutationRegisterArgs = {
+  data: RegisterInput;
+};
+
 export type Query = {
    __typename?: 'Query';
+  getUserSettings: UserSettingsEntity;
   hello: Scalars['String'];
   bye: Scalars['String'];
-  users: Array<User>;
+  users: Array<UserEntity>;
   me?: Maybe<MeResponse>;
-  getUserSettings: UserSettings;
 };
 
 
@@ -86,9 +86,18 @@ export type RegisterInput = {
   password: Scalars['String'];
 };
 
-export type Transaction = {
-   __typename?: 'Transaction';
+export type SubmitTransactionsResponse = {
+   __typename?: 'SubmitTransactionsResponse';
+  inserted: Scalars['Boolean'];
+  message: Scalars['String'];
+};
+
+export type TransactionEntity = {
+   __typename?: 'TransactionEntity';
+  id: Scalars['Int'];
   transId: Scalars['String'];
+  userId: Scalars['Int'];
+  user: UserEntity;
   account: Scalars['String'];
   type: Scalars['String'];
   datePosted: Scalars['String'];
@@ -115,17 +124,20 @@ export type UploadResponse = {
   account: Scalars['String'];
   rangeStart: Scalars['String'];
   rangeEnd: Scalars['String'];
-  transactions: Array<Transaction>;
+  transactions: Array<TransactionEntity>;
 };
 
-export type User = {
-   __typename?: 'User';
+export type UserEntity = {
+   __typename?: 'UserEntity';
   id: Scalars['Int'];
   email: Scalars['String'];
+  userSettings: UserSettingsEntity;
+  transactions: Array<TransactionEntity>;
 };
 
-export type UserSettings = {
-   __typename?: 'UserSettings';
+export type UserSettingsEntity = {
+   __typename?: 'UserSettingsEntity';
+  id: Scalars['Float'];
   userId: Scalars['Int'];
   theme: Scalars['String'];
 };
@@ -158,11 +170,11 @@ export type LoginMutation = (
     { __typename?: 'LoginResponse' }
     & Pick<LoginResponse, 'accessToken'>
     & { user: (
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'email'>
+      { __typename?: 'UserEntity' }
+      & Pick<UserEntity, 'id' | 'email'>
     ), userSettings: (
-      { __typename?: 'UserSettings' }
-      & Pick<UserSettings, 'theme'>
+      { __typename?: 'UserSettingsEntity' }
+      & Pick<UserSettingsEntity, 'theme'>
     ) }
   ) }
 );
@@ -183,11 +195,11 @@ export type MeQuery = (
   & { me?: Maybe<(
     { __typename?: 'MeResponse' }
     & { user?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, 'email' | 'id'>
+      { __typename?: 'UserEntity' }
+      & Pick<UserEntity, 'email' | 'id'>
     )>, userSettings?: Maybe<(
-      { __typename?: 'UserSettings' }
-      & Pick<UserSettings, 'theme'>
+      { __typename?: 'UserSettingsEntity' }
+      & Pick<UserSettingsEntity, 'theme'>
     )> }
   )> }
 );
@@ -204,11 +216,11 @@ export type RegisterMutation = (
     { __typename?: 'LoginResponse' }
     & Pick<LoginResponse, 'accessToken'>
     & { user: (
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'email'>
+      { __typename?: 'UserEntity' }
+      & Pick<UserEntity, 'id' | 'email'>
     ), userSettings: (
-      { __typename?: 'UserSettings' }
-      & Pick<UserSettings, 'theme'>
+      { __typename?: 'UserSettingsEntity' }
+      & Pick<UserSettingsEntity, 'theme'>
     ) }
   ) }
 );
@@ -222,8 +234,8 @@ export type UpdateThemeMutationVariables = {
 export type UpdateThemeMutation = (
   { __typename?: 'Mutation' }
   & { updateTheme?: Maybe<(
-    { __typename?: 'UserSettings' }
-    & Pick<UserSettings, 'theme'>
+    { __typename?: 'UserSettingsEntity' }
+    & Pick<UserSettingsEntity, 'theme'>
   )> }
 );
 
@@ -233,8 +245,8 @@ export type UsersQueryVariables = {};
 export type UsersQuery = (
   { __typename?: 'Query' }
   & { users: Array<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'email'>
+    { __typename?: 'UserEntity' }
+    & Pick<UserEntity, 'id' | 'email'>
   )> }
 );
 

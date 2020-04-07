@@ -5,7 +5,7 @@ import { useMutation } from "@apollo/react-hooks";
 import MaterialUITable from "../Components/MaterialUITable";
 import moment from "moment";
 import { Box, Button } from "@material-ui/core";
-import { TransactionInput, Transaction } from "../generated/graphql";
+import { TransactionInput, TransactionEntity } from "../generated/graphql";
 import { useSnackbar } from "notistack";
 
 const uploadFileMutation = gql`
@@ -69,16 +69,18 @@ const ImportFile: React.FC = () => {
 
   const handleSubmitTransactions = () => {
     console.log(data.uploadFile.transactions);
-    const trans: Transaction[] = data.uploadFile.transactions;
-    let transNoTypename: TransactionInput[] = trans.map((obj: Transaction) => ({
-      transId: obj.transId,
-      account: obj.account,
-      type: obj.type,
-      datePosted: obj.datePosted,
-      name: obj.name,
-      memo: obj.memo,
-      amount: obj.amount,
-    }));
+    const trans: TransactionEntity[] = data.uploadFile.transactions;
+    let transNoTypename: TransactionInput[] = trans.map(
+      (obj: TransactionEntity) => ({
+        transId: obj.transId,
+        account: obj.account,
+        type: obj.type,
+        datePosted: obj.datePosted,
+        name: obj.name,
+        memo: obj.memo,
+        amount: obj.amount,
+      })
+    );
 
     submitTransactions({ variables: { transactions: transNoTypename } }).then(
       ({ data, errors }) => {

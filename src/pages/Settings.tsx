@@ -4,12 +4,12 @@ import { UserContext } from "../App";
 import {
   useUpdateThemeMutation,
   MeQuery,
-  MeDocument
+  MeDocument,
 } from "../generated/graphql";
 
 interface ISettingsProps {}
 
-const Settings: React.FC<ISettingsProps> = props => {
+const Settings: React.FC<ISettingsProps> = (props) => {
   let [updateTheme] = useUpdateThemeMutation();
   let user: any;
   let userSettings: any;
@@ -32,7 +32,7 @@ const Settings: React.FC<ISettingsProps> = props => {
         await updateTheme({
           variables: {
             userId: user.id,
-            theme: checked ? "light" : "dark"
+            theme: checked ? "light" : "dark",
           },
           update: (store, { data }) => {
             if (!data) {
@@ -45,13 +45,13 @@ const Settings: React.FC<ISettingsProps> = props => {
                   __typename: "MeResponse",
                   user: user,
                   userSettings: {
-                    __typename: "UserSettings",
-                    theme: data.updateTheme!.theme
-                  }
-                }
-              }
+                    __typename: "UserSettingsEntity",
+                    theme: data.updateTheme!.theme,
+                  },
+                },
+              },
             });
-          }
+          },
         });
       } catch (err) {
         console.log("errors: ", err);
