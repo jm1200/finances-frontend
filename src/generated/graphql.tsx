@@ -26,7 +26,7 @@ export type MeResponse = {
 export type Mutation = {
    __typename?: 'Mutation';
   uploadFile: UploadResponse;
-  submitTransactions: SubmitTransactionsResponse;
+  submitTransactions: Scalars['Boolean'];
   updateTheme?: Maybe<UserSettingsEntity>;
   logout: Scalars['Boolean'];
   revokeRefreshTokensForUser: Scalars['Boolean'];
@@ -96,9 +96,22 @@ export type SubmitTransactionsResponse = {
   message: Scalars['String'];
 };
 
+export type TransactionClass = {
+   __typename?: 'TransactionClass';
+  id: Scalars['String'];
+  transId: Scalars['String'];
+  userId: Scalars['Float'];
+  account: Scalars['String'];
+  type: Scalars['String'];
+  datePosted: Scalars['String'];
+  name: Scalars['String'];
+  memo: Scalars['String'];
+  amount: Scalars['Float'];
+};
+
 export type TransactionEntity = {
    __typename?: 'TransactionEntity';
-  id: Scalars['Int'];
+  id: Scalars['String'];
   transId: Scalars['String'];
   userId: Scalars['Int'];
   user: UserEntity;
@@ -128,7 +141,7 @@ export type UploadResponse = {
   account: Scalars['String'];
   rangeStart: Scalars['String'];
   rangeEnd: Scalars['String'];
-  transactions: Array<TransactionEntity>;
+  transactions: Array<TransactionClass>;
 };
 
 export type UserEntity = {

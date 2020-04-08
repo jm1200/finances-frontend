@@ -1,11 +1,12 @@
-import React, { useCallback, CSSProperties } from "react";
+import React, { useCallback, CSSProperties, useContext } from "react";
 import { useDropzone } from "react-dropzone";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import MaterialUITable from "../Components/MaterialUITable";
 import moment from "moment";
 import { Box, Button } from "@material-ui/core";
-import { TransactionInput, TransactionEntity } from "../generated/graphql";
+import { TransactionEntity } from "../generated/graphql";
+import { Transaction } from "../types";
 import { useSnackbar } from "notistack";
 
 const uploadFileMutation = gql`
@@ -17,6 +18,7 @@ const uploadFileMutation = gql`
       rangeEnd
       account
       transactions {
+        id
         account
         type
         datePosted
@@ -24,6 +26,7 @@ const uploadFileMutation = gql`
         name
         memo
         amount
+        userId
       }
     }
   }
@@ -50,13 +53,17 @@ const centralDivStyle: CSSProperties = {
 
 const ImportFile: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar();
+
   const [uploadFile, { data, error, loading }] = useMutation(
     uploadFileMutation
   );
+  if (data) {
+    console.log("Transaction data", data);
+  }
   const [submitTransactions] = useMutation(submitTransactionsMutation);
 
   const onDrop = useCallback(
-    async ([file]) => {
+    async ([file], userId) => {
       try {
         await uploadFile({ variables: { file } });
       } catch (err) {
@@ -70,8 +77,10 @@ const ImportFile: React.FC = () => {
   const handleSubmitTransactions = () => {
     console.log(data.uploadFile.transactions);
     const trans: TransactionEntity[] = data.uploadFile.transactions;
-    let transNoTypename: TransactionInput[] = trans.map(
+    let transNoTypename: Transaction[] = trans.map(
       (obj: TransactionEntity) => ({
+        id: obj.id,
+        userId: obj.userId,
         transId: obj.transId,
         account: obj.account,
         type: obj.type,

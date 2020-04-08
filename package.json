@@ -23,6 +23,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "typescript": "3.8.3",
+    "uuid": "^7.0.3",
     "yup": "^0.28.3"
   },
   "scripts": {
@@ -57,6 +58,8 @@
     "@types/graphql": "^14.5.0",
     "@types/jwt-decode": "^2.2.1",
     "@types/react-router-dom": "^4.3.5",
+    "@types/uuid": "^7.0.2",
+    "@types/uuidv4": "^5.0.0",
     "@types/yup": "^0.26.33"
   }
 }
