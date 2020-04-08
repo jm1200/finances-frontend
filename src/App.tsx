@@ -26,8 +26,8 @@ const App: React.FC = () => {
   const [meQuery, { data: meData }] = useMeLazyQuery();
 
   let theme = lightTheme;
-  if (meData && meData.me && meData.me.userSettings) {
-    if (meData.me.userSettings.theme === "dark") {
+  if (meData && meData.me && meData.me.user) {
+    if (meData.me.user.userSettings.theme === "dark") {
       theme = darkTheme;
     } else {
       theme = lightTheme;

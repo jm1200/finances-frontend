@@ -4,9 +4,10 @@ mutation Login($email: String!, $password: String!) {
     user {
       id
       email
-    }
-    userSettings {
-      theme
+      userSettingsId
+      userSettings {
+        theme
+      }
     }
   }
 }

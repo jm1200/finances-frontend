@@ -16,9 +16,9 @@ const Settings: React.FC<ISettingsProps> = (props) => {
 
   const userContext = useContext(UserContext);
 
-  if (userContext) {
+  if (userContext && userContext.me) {
     user = userContext.me?.user;
-    userSettings = userContext.me?.userSettings;
+    userSettings = userContext.me.user?.userSettings;
   }
 
   let checked = true;
@@ -31,7 +31,7 @@ const Settings: React.FC<ISettingsProps> = (props) => {
       try {
         await updateTheme({
           variables: {
-            userId: user.id,
+            id: user.id,
             theme: checked ? "light" : "dark",
           },
           update: (store, { data }) => {
@@ -43,10 +43,12 @@ const Settings: React.FC<ISettingsProps> = (props) => {
               data: {
                 me: {
                   __typename: "MeResponse",
-                  user: user,
-                  userSettings: {
-                    __typename: "UserSettingsEntity",
-                    theme: data.updateTheme!.theme,
+                  user: {
+                    ...user,
+                    userSettings: {
+                      __typename: "UserSettingsEntity",
+                      theme: data.updateTheme!.theme,
+                    },
                   },
                 },
               },

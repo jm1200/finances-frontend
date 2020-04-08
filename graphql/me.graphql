@@ -3,9 +3,10 @@ query Me {
     user {
       email
       id
-    }
-    userSettings {
-      theme
+      userSettingsId
+      userSettings {
+        theme
+      }
     }
   }
 }

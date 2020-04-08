@@ -47,7 +47,6 @@ const Login: React.FC<IRegisterProps & RouteComponentProps> = ({ history }) => {
                     me: {
                       __typename: "MeResponse",
                       user: data.login.user,
-                      userSettings: data.login.userSettings,
                     },
                   },
                 });

@@ -1,0 +1,8 @@
+{
+  "label": "Watch TS Errors",
+  "type": "shell",
+  "command": "tsc",
+  "args": ["-w", "-p", ".", "--noEmit"],
+  "isBackground": true,
+  "problemMatcher": "$tsc-watch"
+}

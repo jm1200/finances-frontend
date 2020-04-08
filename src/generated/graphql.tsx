@@ -16,13 +16,11 @@ export type LoginResponse = {
    __typename?: 'LoginResponse';
   accessToken: Scalars['String'];
   user: UserEntity;
-  userSettings: UserSettingsEntity;
 };
 
 export type MeResponse = {
    __typename?: 'MeResponse';
   user?: Maybe<UserEntity>;
-  userSettings?: Maybe<UserSettingsEntity>;
 };
 
 export type Mutation = {
@@ -48,7 +46,7 @@ export type MutationSubmitTransactionsArgs = {
 
 
 export type MutationUpdateThemeArgs = {
-  userId: Scalars['Float'];
+  id: Scalars['Int'];
   theme: Scalars['String'];
 };
 
@@ -72,6 +70,7 @@ export type Query = {
   getUserSettings: UserSettingsEntity;
   hello: Scalars['String'];
   bye: Scalars['String'];
+  user: UserEntity;
   users: Array<UserEntity>;
   me?: Maybe<MeResponse>;
 };
@@ -79,6 +78,11 @@ export type Query = {
 
 export type QueryGetUserSettingsArgs = {
   userId: Scalars['Int'];
+};
+
+
+export type QueryUserArgs = {
+  userId: Scalars['Float'];
 };
 
 export type RegisterInput = {
@@ -131,14 +135,13 @@ export type UserEntity = {
    __typename?: 'UserEntity';
   id: Scalars['Int'];
   email: Scalars['String'];
+  userSettingsId: Scalars['Int'];
   userSettings: UserSettingsEntity;
-  transactions: Array<TransactionEntity>;
 };
 
 export type UserSettingsEntity = {
    __typename?: 'UserSettingsEntity';
-  id: Scalars['Float'];
-  userId: Scalars['Int'];
+  id: Scalars['Int'];
   theme: Scalars['String'];
 };
 
@@ -171,10 +174,11 @@ export type LoginMutation = (
     & Pick<LoginResponse, 'accessToken'>
     & { user: (
       { __typename?: 'UserEntity' }
-      & Pick<UserEntity, 'id' | 'email'>
-    ), userSettings: (
-      { __typename?: 'UserSettingsEntity' }
-      & Pick<UserSettingsEntity, 'theme'>
+      & Pick<UserEntity, 'id' | 'email' | 'userSettingsId'>
+      & { userSettings: (
+        { __typename?: 'UserSettingsEntity' }
+        & Pick<UserSettingsEntity, 'theme'>
+      ) }
     ) }
   ) }
 );
@@ -196,10 +200,11 @@ export type MeQuery = (
     { __typename?: 'MeResponse' }
     & { user?: Maybe<(
       { __typename?: 'UserEntity' }
-      & Pick<UserEntity, 'email' | 'id'>
-    )>, userSettings?: Maybe<(
-      { __typename?: 'UserSettingsEntity' }
-      & Pick<UserSettingsEntity, 'theme'>
+      & Pick<UserEntity, 'email' | 'id' | 'userSettingsId'>
+      & { userSettings: (
+        { __typename?: 'UserSettingsEntity' }
+        & Pick<UserSettingsEntity, 'theme'>
+      ) }
     )> }
   )> }
 );
@@ -217,16 +222,17 @@ export type RegisterMutation = (
     & Pick<LoginResponse, 'accessToken'>
     & { user: (
       { __typename?: 'UserEntity' }
-      & Pick<UserEntity, 'id' | 'email'>
-    ), userSettings: (
-      { __typename?: 'UserSettingsEntity' }
-      & Pick<UserSettingsEntity, 'theme'>
+      & Pick<UserEntity, 'id' | 'email' | 'userSettingsId'>
+      & { userSettings: (
+        { __typename?: 'UserSettingsEntity' }
+        & Pick<UserSettingsEntity, 'theme'>
+      ) }
     ) }
   ) }
 );
 
 export type UpdateThemeMutationVariables = {
-  userId: Scalars['Float'];
+  id: Scalars['Int'];
   theme: Scalars['String'];
 };
 
@@ -318,9 +324,10 @@ export const LoginDocument = gql`
     user {
       id
       email
-    }
-    userSettings {
-      theme
+      userSettingsId
+      userSettings {
+        theme
+      }
     }
   }
 }
@@ -386,9 +393,10 @@ export const MeDocument = gql`
     user {
       email
       id
-    }
-    userSettings {
-      theme
+      userSettingsId
+      userSettings {
+        theme
+      }
     }
   }
 }
@@ -425,9 +433,10 @@ export const RegisterDocument = gql`
     user {
       id
       email
-    }
-    userSettings {
-      theme
+      userSettingsId
+      userSettings {
+        theme
+      }
     }
   }
 }
@@ -459,8 +468,8 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = ApolloReactCommon.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const UpdateThemeDocument = gql`
-    mutation UpdateTheme($userId: Float!, $theme: String!) {
-  updateTheme(userId: $userId, theme: $theme) {
+    mutation UpdateTheme($id: Int!, $theme: String!) {
+  updateTheme(id: $id, theme: $theme) {
     theme
   }
 }
@@ -480,7 +489,7 @@ export type UpdateThemeMutationFn = ApolloReactCommon.MutationFunction<UpdateThe
  * @example
  * const [updateThemeMutation, { data, loading, error }] = useUpdateThemeMutation({
  *   variables: {
- *      userId: // value for 'userId'
+ *      id: // value for 'id'
  *      theme: // value for 'theme'
  *   },
  * });

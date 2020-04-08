@@ -1,5 +1,5 @@
-mutation UpdateTheme($userId: Float!, $theme: String!) {
-  updateTheme(userId: $userId, theme: $theme) {
+mutation UpdateTheme($id: Int!, $theme: String!) {
+  updateTheme(id: $id, theme: $theme) {
     theme
   }
 }
