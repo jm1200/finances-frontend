@@ -58,9 +58,8 @@ const Register: React.FC<IRegisterProps & RouteComponentProps> = ({
             if (response && response.data) {
               setAccessToken(response.data.register.accessToken);
             }
-            await client?.resetStore();
-
             history.push("/home");
+            await client!.resetStore();
           } catch (err) {
             //invalid login
             if (err.graphQLErrors) {

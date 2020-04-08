@@ -41,6 +41,7 @@ const Login: React.FC<IRegisterProps & RouteComponentProps> = ({ history }) => {
                 if (!data) {
                   return null;
                 }
+
                 store.writeQuery<MeQuery>({
                   query: MeDocument,
                   data: {
@@ -52,13 +53,11 @@ const Login: React.FC<IRegisterProps & RouteComponentProps> = ({ history }) => {
                 });
               },
             });
-
             if (response && response.data) {
               setAccessToken(response.data.login.accessToken);
             }
-
-            await client?.resetStore();
             history.push("/home");
+            await client!.resetStore();
           } catch (err) {
             //invalid login
 
