@@ -1,0 +1,8 @@
+query GetAllUserTransactions {
+  getAllUserTransactions {
+    transactions {
+      name
+      id
+    }
+  }
+}

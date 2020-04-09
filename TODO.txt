@@ -5,6 +5,7 @@
 
 Material table
 - make amounts display dollars
-- make dates date objects in server??
+
+get userid function working for resolvers.
 
 

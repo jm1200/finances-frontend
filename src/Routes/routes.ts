@@ -4,6 +4,7 @@ import Register from "../pages/Register";
 import Home from "../pages/Home";
 import ImportFile from "../pages/ImportFile";
 import Settings from "../pages/Settings";
+import Transactions from "../pages/Transactions";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import { Settings as SettingsIcon } from "@material-ui/icons";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
@@ -45,6 +46,12 @@ export const routes: IRoutes = {
       name: "ImportFile",
       path: "/importFile",
       component: ImportFile,
+      icon: InboxIcon,
+    },
+    {
+      name: "Transactions",
+      path: "/transactions",
+      component: Transactions,
       icon: InboxIcon,
     },
     {

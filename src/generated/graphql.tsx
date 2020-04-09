@@ -26,7 +26,7 @@ export type MeResponse = {
 export type Mutation = {
    __typename?: 'Mutation';
   uploadFile: UploadResponse;
-  submitTransactions: Scalars['Boolean'];
+  submitTransactions: SubmitTransactionsResponse;
   updateTheme?: Maybe<UserSettingsEntity>;
   logout: Scalars['Boolean'];
   revokeRefreshTokensForUser: Scalars['Boolean'];
@@ -70,19 +70,14 @@ export type Query = {
   getUserSettings: UserSettingsEntity;
   hello: Scalars['String'];
   bye: Scalars['String'];
-  user: UserEntity;
   users: Array<UserEntity>;
   me?: Maybe<MeResponse>;
+  getAllUserTransactions: UserEntity;
 };
 
 
 export type QueryGetUserSettingsArgs = {
   userId: Scalars['Int'];
-};
-
-
-export type QueryUserArgs = {
-  userId: Scalars['Float'];
 };
 
 export type RegisterInput = {
@@ -124,6 +119,8 @@ export type TransactionEntity = {
 };
 
 export type TransactionInput = {
+  id: Scalars['String'];
+  userId: Scalars['Int'];
   transId: Scalars['String'];
   account: Scalars['String'];
   type: Scalars['String'];
@@ -150,6 +147,7 @@ export type UserEntity = {
   email: Scalars['String'];
   userSettingsId: Scalars['Int'];
   userSettings: UserSettingsEntity;
+  transactions: Array<TransactionEntity>;
 };
 
 export type UserSettingsEntity = {
@@ -256,6 +254,20 @@ export type UpdateThemeMutation = (
     { __typename?: 'UserSettingsEntity' }
     & Pick<UserSettingsEntity, 'theme'>
   )> }
+);
+
+export type GetAllUserTransactionsQueryVariables = {};
+
+
+export type GetAllUserTransactionsQuery = (
+  { __typename?: 'Query' }
+  & { getAllUserTransactions: (
+    { __typename?: 'UserEntity' }
+    & { transactions: Array<(
+      { __typename?: 'TransactionEntity' }
+      & Pick<TransactionEntity, 'name' | 'id'>
+    )> }
+  ) }
 );
 
 export type UsersQueryVariables = {};
@@ -513,6 +525,41 @@ export function useUpdateThemeMutation(baseOptions?: ApolloReactHooks.MutationHo
 export type UpdateThemeMutationHookResult = ReturnType<typeof useUpdateThemeMutation>;
 export type UpdateThemeMutationResult = ApolloReactCommon.MutationResult<UpdateThemeMutation>;
 export type UpdateThemeMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateThemeMutation, UpdateThemeMutationVariables>;
+export const GetAllUserTransactionsDocument = gql`
+    query GetAllUserTransactions {
+  getAllUserTransactions {
+    transactions {
+      name
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllUserTransactionsQuery__
+ *
+ * To run a query within a React component, call `useGetAllUserTransactionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllUserTransactionsQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllUserTransactionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllUserTransactionsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAllUserTransactionsQuery, GetAllUserTransactionsQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetAllUserTransactionsQuery, GetAllUserTransactionsQueryVariables>(GetAllUserTransactionsDocument, baseOptions);
+      }
+export function useGetAllUserTransactionsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAllUserTransactionsQuery, GetAllUserTransactionsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetAllUserTransactionsQuery, GetAllUserTransactionsQueryVariables>(GetAllUserTransactionsDocument, baseOptions);
+        }
+export type GetAllUserTransactionsQueryHookResult = ReturnType<typeof useGetAllUserTransactionsQuery>;
+export type GetAllUserTransactionsLazyQueryHookResult = ReturnType<typeof useGetAllUserTransactionsLazyQuery>;
+export type GetAllUserTransactionsQueryResult = ApolloReactCommon.QueryResult<GetAllUserTransactionsQuery, GetAllUserTransactionsQueryVariables>;
 export const UsersDocument = gql`
     query Users {
   users {
