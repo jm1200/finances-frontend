@@ -265,7 +265,7 @@ export type GetAllUserTransactionsQuery = (
     { __typename?: 'UserEntity' }
     & { transactions: Array<(
       { __typename?: 'TransactionEntity' }
-      & Pick<TransactionEntity, 'name' | 'id'>
+      & Pick<TransactionEntity, 'name' | 'datePosted' | 'amount' | 'memo' | 'type' | 'account'>
     )> }
   ) }
 );
@@ -530,7 +530,11 @@ export const GetAllUserTransactionsDocument = gql`
   getAllUserTransactions {
     transactions {
       name
-      id
+      datePosted
+      amount
+      memo
+      type
+      account
     }
   }
 }

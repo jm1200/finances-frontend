@@ -2,7 +2,11 @@ query GetAllUserTransactions {
   getAllUserTransactions {
     transactions {
       name
-      id
+      datePosted
+      amount
+      memo
+      type
+      account
     }
   }
 }
