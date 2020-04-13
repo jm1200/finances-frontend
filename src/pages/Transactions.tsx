@@ -4,21 +4,18 @@ import {
   TransactionEntity,
 } from "../generated/graphql";
 import MaterialUITable from "../Components/MaterialUITable";
-import { UserEntity } from "../generated/graphql";
+import { UserEntity, useUserQuery } from "../generated/graphql";
 import { Transaction } from "../types";
 
 interface ITransactionsProps {}
 
 const Transactions: React.FC<ITransactionsProps> = (props) => {
-  const { data } = useGetAllUserTransactionsQuery();
+  const { data } = useUserQuery();
 
   let transNoTypename: any;
-  if (
-    data &&
-    data?.getAllUserTransactions &&
-    data.getAllUserTransactions.transactions
-  ) {
-    const trans: any = data.getAllUserTransactions.transactions;
+  if (data && data?.user && data!.user!.transactions) {
+    const trans: any = data.user.transactions;
+    console.log(trans);
     transNoTypename = trans.map((obj: TransactionEntity) => ({
       id: obj.id,
       userId: obj.userId,
@@ -35,7 +32,7 @@ const Transactions: React.FC<ITransactionsProps> = (props) => {
   return (
     <div>
       <h1>Transactions Component</h1>
-      {data && data.getAllUserTransactions && transNoTypename ? (
+      {data && data.user && transNoTypename ? (
         <MaterialUITable transactions={transNoTypename} />
       ) : null}
     </div>

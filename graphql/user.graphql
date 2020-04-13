@@ -4,3 +4,23 @@ query Users {
     email
   }
 }
+
+query User {
+  user {
+    id
+    transactions {
+      id
+      transId
+      name
+      datePosted
+      amount
+      memo
+      type
+      account
+    }
+    categories {
+      name
+      subCategories
+    }
+  }
+}

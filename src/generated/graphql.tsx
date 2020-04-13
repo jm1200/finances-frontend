@@ -12,6 +12,15 @@ export type Scalars = {
   Upload: any;
 };
 
+export type CategoryEntity = {
+   __typename?: 'CategoryEntity';
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  userId: Scalars['Int'];
+  subCategories?: Maybe<Array<Scalars['String']>>;
+  user: UserEntity;
+};
+
 export type LoginResponse = {
    __typename?: 'LoginResponse';
   accessToken: Scalars['String'];
@@ -32,6 +41,11 @@ export type Mutation = {
   revokeRefreshTokensForUser: Scalars['Boolean'];
   login: LoginResponse;
   register: LoginResponse;
+  addCategory: Scalars['Boolean'];
+  updateCategory: Scalars['Boolean'];
+  deleteCategory: Scalars['Boolean'];
+  addSubCategory: Scalars['Boolean'];
+  deleteSubCategory: Scalars['Boolean'];
 };
 
 
@@ -65,14 +79,44 @@ export type MutationRegisterArgs = {
   data: RegisterInput;
 };
 
+
+export type MutationAddCategoryArgs = {
+  name: Scalars['String'];
+};
+
+
+export type MutationUpdateCategoryArgs = {
+  categoryId: Scalars['Int'];
+  name: Scalars['String'];
+};
+
+
+export type MutationDeleteCategoryArgs = {
+  categoryId: Scalars['Int'];
+};
+
+
+export type MutationAddSubCategoryArgs = {
+  categoryId: Scalars['Int'];
+  name: Scalars['String'];
+};
+
+
+export type MutationDeleteSubCategoryArgs = {
+  categoryId: Scalars['Int'];
+  name: Scalars['String'];
+};
+
 export type Query = {
    __typename?: 'Query';
   getUserSettings: UserSettingsEntity;
   hello: Scalars['String'];
   bye: Scalars['String'];
+  user: UserEntity;
   users: Array<UserEntity>;
   me?: Maybe<MeResponse>;
   getAllUserTransactions: UserEntity;
+  getUserCategories: UserEntity;
 };
 
 
@@ -116,6 +160,7 @@ export type TransactionEntity = {
   name: Scalars['String'];
   memo: Scalars['String'];
   amount: Scalars['Float'];
+  category?: Maybe<CategoryEntity>;
 };
 
 export type TransactionInput = {
@@ -148,6 +193,7 @@ export type UserEntity = {
   userSettingsId: Scalars['Int'];
   userSettings: UserSettingsEntity;
   transactions: Array<TransactionEntity>;
+  categories: Array<CategoryEntity>;
 };
 
 export type UserSettingsEntity = {
@@ -279,6 +325,24 @@ export type UsersQuery = (
     { __typename?: 'UserEntity' }
     & Pick<UserEntity, 'id' | 'email'>
   )> }
+);
+
+export type UserQueryVariables = {};
+
+
+export type UserQuery = (
+  { __typename?: 'Query' }
+  & { user: (
+    { __typename?: 'UserEntity' }
+    & Pick<UserEntity, 'id'>
+    & { transactions: Array<(
+      { __typename?: 'TransactionEntity' }
+      & Pick<TransactionEntity, 'id' | 'transId' | 'name' | 'datePosted' | 'amount' | 'memo' | 'type' | 'account'>
+    )>, categories: Array<(
+      { __typename?: 'CategoryEntity' }
+      & Pick<CategoryEntity, 'name' | 'subCategories'>
+    )> }
+  ) }
 );
 
 
@@ -597,3 +661,49 @@ export function useUsersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOp
 export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
 export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
 export type UsersQueryResult = ApolloReactCommon.QueryResult<UsersQuery, UsersQueryVariables>;
+export const UserDocument = gql`
+    query User {
+  user {
+    id
+    transactions {
+      id
+      transId
+      name
+      datePosted
+      amount
+      memo
+      type
+      account
+    }
+    categories {
+      name
+      subCategories
+    }
+  }
+}
+    `;
+
+/**
+ * __useUserQuery__
+ *
+ * To run a query within a React component, call `useUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUserQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<UserQuery, UserQueryVariables>) {
+        return ApolloReactHooks.useQuery<UserQuery, UserQueryVariables>(UserDocument, baseOptions);
+      }
+export function useUserLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UserQuery, UserQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<UserQuery, UserQueryVariables>(UserDocument, baseOptions);
+        }
+export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
+export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
+export type UserQueryResult = ApolloReactCommon.QueryResult<UserQuery, UserQueryVariables>;
