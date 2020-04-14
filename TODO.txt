@@ -8,4 +8,6 @@ Material table
 
 get userid function working for resolvers.
 
+check all useAuth middlewares in server resolvers.
+
 
