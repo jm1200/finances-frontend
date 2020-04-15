@@ -1,11 +1,12 @@
 import React from "react";
-import { useUserQuery } from "../generated/graphql";
+import { useUserQuery, CategoryEntity, UserQuery } from "../generated/graphql";
+import CategoryList from "../Components/categoryListComonents/CategoryList";
 
 interface ICategoriesProps {}
 
 const Categories: React.FC<ICategoriesProps> = (props) => {
   const { data, loading } = useUserQuery();
-  let categories;
+  let categories: UserQuery["user"]["categories"] = [];
 
   if (data && data.user) {
     categories = data.user.categories;
@@ -14,14 +15,14 @@ const Categories: React.FC<ICategoriesProps> = (props) => {
 
   return (
     <div>
-      <h1>Categories Component</h1>
       {loading ? <div>Loading..</div> : null}
       {categories && !loading ? (
-        <ul>
-          {categories.map((category) => (
-            <li key={category.name}>{category.name}</li>
-          ))}
-        </ul>
+        // <ul>
+        //   {categories.map((category) => (
+        //     <li key={category.name}>{category.name}</li>
+        //   ))}
+        // </ul>
+        <CategoryList categories={categories} />
       ) : (
         <div>No categories</div>
       )}

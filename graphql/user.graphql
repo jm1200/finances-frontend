@@ -19,6 +19,7 @@ query User {
       account
     }
     categories {
+      id
       name
       subCategories
     }

@@ -1,8 +1,5 @@
 import React from "react";
-import {
-  useGetAllUserTransactionsQuery,
-  TransactionEntity,
-} from "../generated/graphql";
+import { TransactionEntity } from "../generated/graphql";
 import MaterialUITable from "../Components/MaterialUITable";
 import { UserEntity, useUserQuery } from "../generated/graphql";
 import { Transaction } from "../types";
