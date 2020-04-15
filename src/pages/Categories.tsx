@@ -1,5 +1,5 @@
 import React from "react";
-import { useUserQuery, CategoryEntity, UserQuery } from "../generated/graphql";
+import { useUserQuery, UserQuery } from "../generated/graphql";
 import CategoryList from "../Components/categoryListComonents/CategoryList";
 
 interface ICategoriesProps {}

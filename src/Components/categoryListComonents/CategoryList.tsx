@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import List from "@material-ui/core/List";
@@ -7,14 +7,16 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Collapse from "@material-ui/core/Collapse";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
-import DraftsIcon from "@material-ui/icons/Drafts";
-import SendIcon from "@material-ui/icons/Send";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import StarBorder from "@material-ui/icons/StarBorder";
 import AddCircle from "@material-ui/icons/AddCircle";
-import { CategoryEntity, UserQuery } from "../../generated/graphql";
+import Delete from "@material-ui/icons/Delete";
+import Edit from "@material-ui/icons/Edit";
+import { UserQuery } from "../../generated/graphql";
 import AddCategoryForm from "./AddCategoryForm";
+import EditCategoryForm from "./EditCategoryForm";
+import { ListItemSecondaryAction, IconButton } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,6 +49,7 @@ export default function CategoryList({ categories }: ICategoryListProps) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(0);
   const [addCategoryMode, setAddCategoryMode] = React.useState(false);
+  const [editCategoryMode, setEditCategoryMode] = React.useState(0);
 
   const handleCategoryClick = (
     e: React.MouseEvent<HTMLDivElement>,
@@ -62,13 +65,38 @@ export default function CategoryList({ categories }: ICategoryListProps) {
     console.log(subCategoryName);
   };
 
-  const handleAddCategory = () => {
+  const handleAddCategoryMode = () => {
     setAddCategoryMode(true);
-    console.log("clicked");
+  };
+  const handleEditCategoryMode = (
+    e: React.MouseEvent<SVGSVGElement, MouseEvent>,
+    categoryId: number
+  ) => {
+    e.stopPropagation();
+    setEditCategoryMode(categoryId);
   };
 
-  const addCategory = (newCategory: string) => {
+  const _addCategory = (newCategory: string) => {
     console.log("Category to add: ", newCategory);
+  };
+  const _editCategory = (
+    e:
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+      | React.MouseEvent<SVGSVGElement, MouseEvent>
+      | React.FormEvent<HTMLFormElement>,
+    editCategory: string
+  ) => {
+    console.log("Category to edit: ", editCategory);
+    e.stopPropagation();
+    setEditCategoryMode(0);
+  };
+  const _deleteCategory = (
+    e: React.MouseEvent<SVGSVGElement, MouseEvent>,
+    categoryId: number
+  ) => {
+    console.log("Category to delete: ", categoryId);
+    e.stopPropagation();
+    setEditCategoryMode(0);
   };
 
   return (
@@ -84,11 +112,14 @@ export default function CategoryList({ categories }: ICategoryListProps) {
           <h4>Categories</h4>
           {addCategoryMode ? (
             <AddCategoryForm
-              addCategory={addCategory}
+              addCategory={_addCategory}
               setAddCategoryMode={setAddCategoryMode}
             />
           ) : (
-            <AddCircle className={classes.icon} onClick={handleAddCategory} />
+            <AddCircle
+              className={classes.icon}
+              onClick={handleAddCategoryMode}
+            />
           )}
         </ListSubheader>
       }
@@ -106,6 +137,21 @@ export default function CategoryList({ categories }: ICategoryListProps) {
                   <InboxIcon />
                 </ListItemIcon>
                 <ListItemText primary={category.name} />
+
+                {editCategoryMode === category.id ? (
+                  <EditCategoryForm
+                    categoryId={category.id}
+                    currentValue={category.name}
+                    deleteCategory={_deleteCategory}
+                    editCategory={_editCategory}
+                    setEditCategoryMode={setEditCategoryMode}
+                  />
+                ) : (
+                  <Edit
+                    onClick={(e) => handleEditCategoryMode(e, category.id)}
+                  />
+                )}
+
                 {category.id === open ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
               <Collapse in={category.id === open} timeout="auto" unmountOnExit>

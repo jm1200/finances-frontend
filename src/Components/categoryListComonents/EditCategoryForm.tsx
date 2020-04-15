@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Cancel from "@material-ui/icons/Cancel";
+import Delete from "@material-ui/icons/Delete";
 import CheckCircle from "@material-ui/icons/CheckCircle";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -22,30 +23,48 @@ const useStyles = makeStyles((theme: Theme) =>
     cancel: {
       color: theme.palette.error.light,
     },
+    delete: {
+      color: theme.palette.error.dark,
+    },
   })
 );
 
-interface IAddCategoryFormProps {
-  setAddCategoryMode: Dispatch<SetStateAction<boolean>>;
-  addCategory: (newCategory: string) => void;
+interface IEditCategoryFormProps {
+  setEditCategoryMode: Dispatch<SetStateAction<number>>;
+  editCategory: (
+    e:
+      | React.MouseEvent<SVGSVGElement, MouseEvent>
+      | React.FormEvent<HTMLFormElement>,
+    editCategory: string
+  ) => void;
+  deleteCategory: (
+    e: React.MouseEvent<SVGSVGElement, MouseEvent>,
+    categoryId: number
+  ) => void;
+  currentValue: string;
+  categoryId: number;
 }
 
-export default function AddCategoryForm(props: IAddCategoryFormProps) {
+export default function EditCategoryForm(props: IEditCategoryFormProps) {
   const classes = useStyles();
-  const [newCategory, setNewCategory] = React.useState("");
+  const [editCategory, setEditCategory] = React.useState(props.currentValue);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewCategory(e.target.value);
+    setEditCategory(e.target.value);
+  };
+
+  const handleCancel = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    e.stopPropagation();
+    props.setEditCategoryMode(0);
   };
 
   const handleSubmit = (
     e:
-      | React.FormEvent<HTMLFormElement>
       | React.MouseEvent<SVGSVGElement, MouseEvent>
+      | React.FormEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
-    props.addCategory(newCategory);
-    props.setAddCategoryMode(false);
+    props.editCategory(e, editCategory);
   };
 
   return (
@@ -58,18 +77,18 @@ export default function AddCategoryForm(props: IAddCategoryFormProps) {
       <div className={classes.form}>
         <TextField
           autoFocus
-          label="Add Category"
+          label="Edit Category"
           id="outlined-size-small"
-          placeholder="Category Name:"
           variant="outlined"
           size="small"
-          value={newCategory}
+          value={editCategory}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
         />
         <CheckCircle className={classes.ok} onClick={(e) => handleSubmit(e)} />
-        <Cancel
-          className={classes.cancel}
-          onClick={() => props.setAddCategoryMode(false)}
+        <Cancel className={classes.cancel} onClick={(e) => handleCancel(e)} />
+        <Delete
+          className={classes.delete}
+          onClick={(e) => props.deleteCategory(e, props.categoryId)}
         />
       </div>
     </form>

@@ -1,4 +1,4 @@
-import React, { useCallback, CSSProperties, useContext } from "react";
+import React, { useCallback, CSSProperties } from "react";
 import { useDropzone } from "react-dropzone";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
