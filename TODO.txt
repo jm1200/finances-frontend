@@ -11,3 +11,20 @@ get userid function working for resolvers.
 check all useAuth middlewares in server resolvers.
 
 
+categories tests:
+1. add button opens form
+2. cancel button closes form
+3. check button adds category and closes form
+4. list item component expands list and shrinks
+5. arrow button expands lists and shrinks
+6. add subcat button appears on expands
+7. edit button disappears when add subcat pressed
+8. sub cat cancels closes form
+9. sub cat check adds subcat
+10. add button disappears when edit button pressed
+11. delete deletes category
+12. cancel closes form
+13. check edits category name
+
+
+

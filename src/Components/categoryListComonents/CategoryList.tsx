@@ -15,6 +15,7 @@ import Delete from "@material-ui/icons/Delete";
 import Edit from "@material-ui/icons/Edit";
 import { UserQuery } from "../../generated/graphql";
 import AddCategoryForm from "./AddCategoryForm";
+import AddSubCategoryForm from "./AddSubCategoryForm";
 import EditCategoryForm from "./EditCategoryForm";
 import { ListItemSecondaryAction, IconButton } from "@material-ui/core";
 
@@ -38,6 +39,11 @@ const useStyles = makeStyles((theme: Theme) =>
         color: theme.palette.primary.main,
       },
     },
+    delete: {
+      "&:hover": {
+        color: theme.palette.error.main,
+      },
+    },
   })
 );
 
@@ -50,23 +56,28 @@ export default function CategoryList({ categories }: ICategoryListProps) {
   const [open, setOpen] = React.useState(0);
   const [addCategoryMode, setAddCategoryMode] = React.useState(false);
   const [editCategoryMode, setEditCategoryMode] = React.useState(0);
+  const [addSubCategoryMode, setAddSubCategoryMode] = React.useState(0);
 
   const handleCategoryClick = (
     e: React.MouseEvent<HTMLDivElement>,
     categoryId: number
   ) => {
-    console.log(categoryId);
     categoryId === open ? setOpen(0) : setOpen(categoryId);
   };
   const handleSubCategoryClick = (
     e: React.MouseEvent<HTMLDivElement>,
     subCategoryName: string
-  ) => {
-    console.log(subCategoryName);
-  };
+  ) => {};
 
   const handleAddCategoryMode = () => {
     setAddCategoryMode(true);
+  };
+  const handleAddSubCategoryMode = (
+    e: React.MouseEvent<SVGSVGElement, MouseEvent>,
+    categoryId: number
+  ) => {
+    e.stopPropagation();
+    setAddSubCategoryMode(categoryId);
   };
   const handleEditCategoryMode = (
     e: React.MouseEvent<SVGSVGElement, MouseEvent>,
@@ -75,21 +86,33 @@ export default function CategoryList({ categories }: ICategoryListProps) {
     e.stopPropagation();
     setEditCategoryMode(categoryId);
   };
+  const handleDeleteSubCategory = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    categoryName: string
+  ) => {
+    e.stopPropagation();
+    _deleteSubCategory(categoryName);
+  };
 
   const _addCategory = (newCategory: string) => {
     console.log("Category to add: ", newCategory);
+  };
+  const _addSubCategory = (newSubCategory: string, categoryId: number) => {
+    console.log("Sub Category to add: ", newSubCategory, categoryId);
   };
   const _editCategory = (
     e:
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
       | React.MouseEvent<SVGSVGElement, MouseEvent>
       | React.FormEvent<HTMLFormElement>,
-    editCategory: string
+    editCategory: string,
+    categoryId: number
   ) => {
-    console.log("Category to edit: ", editCategory);
+    console.log("Category to edit: ", editCategory, categoryId);
     e.stopPropagation();
     setEditCategoryMode(0);
   };
+
   const _deleteCategory = (
     e: React.MouseEvent<SVGSVGElement, MouseEvent>,
     categoryId: number
@@ -97,6 +120,10 @@ export default function CategoryList({ categories }: ICategoryListProps) {
     console.log("Category to delete: ", categoryId);
     e.stopPropagation();
     setEditCategoryMode(0);
+  };
+
+  const _deleteSubCategory = (categoryName: string) => {
+    console.log("delete subCategory: ", categoryName);
   };
 
   return (
@@ -137,7 +164,28 @@ export default function CategoryList({ categories }: ICategoryListProps) {
                   <InboxIcon />
                 </ListItemIcon>
                 <ListItemText primary={category.name} />
+                {/* Default */}
 
+                {category.id === open ? (
+                  category.id === addSubCategoryMode ? (
+                    <AddSubCategoryForm
+                      categoryId={category.id}
+                      setAddSubCategoryMode={setAddSubCategoryMode}
+                      addSubCategory={_addSubCategory}
+                    />
+                  ) : (
+                    !editCategoryMode && (
+                      <AddCircle
+                        className={classes.icon}
+                        onClick={(e) =>
+                          handleAddSubCategoryMode(e, category.id)
+                        }
+                      />
+                    )
+                  )
+                ) : null}
+
+                {/* Edit Category Mode */}
                 {editCategoryMode === category.id ? (
                   <EditCategoryForm
                     categoryId={category.id}
@@ -147,10 +195,16 @@ export default function CategoryList({ categories }: ICategoryListProps) {
                     setEditCategoryMode={setEditCategoryMode}
                   />
                 ) : (
-                  <Edit
-                    onClick={(e) => handleEditCategoryMode(e, category.id)}
-                  />
+                  !addSubCategoryMode && (
+                    <Edit
+                      className={classes.icon}
+                      onClick={(e) => handleEditCategoryMode(e, category.id)}
+                    />
+                  )
                 )}
+                {/* Add SubCategory Mode */}
+
+                {/* Expansion arrows */}
 
                 {category.id === open ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
@@ -170,6 +224,17 @@ export default function CategoryList({ categories }: ICategoryListProps) {
                             <StarBorder />
                           </ListItemIcon>
                           <ListItemText primary={subCategory} />
+                          <ListItemSecondaryAction>
+                            <IconButton
+                              onClick={(e) =>
+                                handleDeleteSubCategory(e, subCategory)
+                              }
+                              edge="end"
+                              aria-label="delete"
+                            >
+                              <Delete className={classes.delete} />
+                            </IconButton>
+                          </ListItemSecondaryAction>
                         </ListItem>
                       </List>
                     );

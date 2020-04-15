@@ -11,8 +11,6 @@ const Categories: React.FC<ICategoriesProps> = (props) => {
   if (data && data.user) {
     categories = data.user.categories;
   }
-  console.log(categories);
-
   return (
     <div>
       {loading ? <div>Loading..</div> : null}
