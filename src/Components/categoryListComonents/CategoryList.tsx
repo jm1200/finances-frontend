@@ -13,7 +13,14 @@ import StarBorder from "@material-ui/icons/StarBorder";
 import AddCircle from "@material-ui/icons/AddCircle";
 import Delete from "@material-ui/icons/Delete";
 import Edit from "@material-ui/icons/Edit";
-import { UserQuery } from "../../generated/graphql";
+import {
+  UserQuery,
+  useAddCategoryMutation,
+  useDeleteCategoryMutation,
+  useUpdateCategoryMutation,
+  useAddSubCategoryMutation,
+  useDeleteSubCategoryMutation,
+} from "../../generated/graphql";
 import AddCategoryForm from "./AddCategoryForm";
 import AddSubCategoryForm from "./AddSubCategoryForm";
 import EditCategoryForm from "./EditCategoryForm";
@@ -49,9 +56,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface ICategoryListProps {
   categories: UserQuery["user"]["categories"];
+  refetchUserQuery: any;
 }
 
-export default function CategoryList({ categories }: ICategoryListProps) {
+export default function CategoryList({
+  categories,
+  refetchUserQuery,
+}: ICategoryListProps) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(0);
   const [addCategoryMode, setAddCategoryMode] = React.useState(false);
@@ -88,19 +99,31 @@ export default function CategoryList({ categories }: ICategoryListProps) {
   };
   const handleDeleteSubCategory = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    categoryName: string
+    subCategoryName: string,
+    categoryId: number
   ) => {
     e.stopPropagation();
-    _deleteSubCategory(categoryName);
+    _deleteSubCategory(subCategoryName, categoryId);
   };
 
-  const _addCategory = (newCategory: string) => {
+  //API calls
+  const [addCategory] = useAddCategoryMutation();
+  const [deleteCategory] = useDeleteCategoryMutation();
+  const [updateCategory] = useUpdateCategoryMutation();
+  const [addSubCategory] = useAddSubCategoryMutation();
+  const [deleteSubCategory] = useDeleteSubCategoryMutation();
+
+  const _addCategory = async (newCategory: string) => {
     console.log("Category to add: ", newCategory);
+    await addCategory({
+      variables: {
+        name: newCategory,
+      },
+    });
+    refetchUserQuery();
   };
-  const _addSubCategory = (newSubCategory: string, categoryId: number) => {
-    console.log("Sub Category to add: ", newSubCategory, categoryId);
-  };
-  const _editCategory = (
+
+  const _editCategory = async (
     e:
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
       | React.MouseEvent<SVGSVGElement, MouseEvent>
@@ -111,19 +134,34 @@ export default function CategoryList({ categories }: ICategoryListProps) {
     console.log("Category to edit: ", editCategory, categoryId);
     e.stopPropagation();
     setEditCategoryMode(0);
+    await updateCategory({ variables: { categoryId, name: editCategory } });
+    refetchUserQuery();
   };
 
-  const _deleteCategory = (
+  const _deleteCategory = async (
     e: React.MouseEvent<SVGSVGElement, MouseEvent>,
     categoryId: number
   ) => {
     console.log("Category to delete: ", categoryId);
     e.stopPropagation();
+    await deleteCategory({ variables: { categoryId } });
+    refetchUserQuery();
     setEditCategoryMode(0);
   };
 
-  const _deleteSubCategory = (categoryName: string) => {
-    console.log("delete subCategory: ", categoryName);
+  const _addSubCategory = async (
+    newSubCategory: string,
+    categoryId: number
+  ) => {
+    console.log("Sub Category to add: ", newSubCategory, categoryId);
+    await addSubCategory({ variables: { categoryId, name: newSubCategory } });
+    refetchUserQuery();
+  };
+
+  const _deleteSubCategory = async (name: string, categoryId: number) => {
+    console.log("delete subCategory: ", name);
+    await deleteSubCategory({ variables: { categoryId, name } });
+    refetchUserQuery();
   };
 
   return (
@@ -202,7 +240,6 @@ export default function CategoryList({ categories }: ICategoryListProps) {
                     />
                   )
                 )}
-                {/* Add SubCategory Mode */}
 
                 {/* Expansion arrows */}
 
@@ -210,35 +247,45 @@ export default function CategoryList({ categories }: ICategoryListProps) {
               </ListItem>
               <Collapse in={category.id === open} timeout="auto" unmountOnExit>
                 {category.subCategories &&
-                  category.subCategories.map((subCategory, index) => {
-                    return (
-                      <List key={index} component="div" disablePadding>
-                        <ListItem
-                          button
-                          onClick={(e) =>
-                            handleSubCategoryClick(e, subCategory)
-                          }
-                          className={classes.nested}
-                        >
-                          <ListItemIcon>
-                            <StarBorder />
-                          </ListItemIcon>
-                          <ListItemText primary={subCategory} />
-                          <ListItemSecondaryAction>
-                            <IconButton
-                              onClick={(e) =>
-                                handleDeleteSubCategory(e, subCategory)
-                              }
-                              edge="end"
-                              aria-label="delete"
-                            >
-                              <Delete className={classes.delete} />
-                            </IconButton>
-                          </ListItemSecondaryAction>
-                        </ListItem>
-                      </List>
-                    );
-                  })}
+                  category.subCategories
+                    .sort((a, b) => {
+                      if (b > a) return -1;
+                      if (a < b) return 1;
+                      return 0;
+                    })
+                    .map((subCategory, index) => {
+                      return (
+                        <List key={index} component="div" disablePadding>
+                          <ListItem
+                            button
+                            onClick={(e) =>
+                              handleSubCategoryClick(e, subCategory)
+                            }
+                            className={classes.nested}
+                          >
+                            <ListItemIcon>
+                              <StarBorder />
+                            </ListItemIcon>
+                            <ListItemText primary={subCategory} />
+                            <ListItemSecondaryAction>
+                              <IconButton
+                                onClick={(e) =>
+                                  handleDeleteSubCategory(
+                                    e,
+                                    subCategory,
+                                    category.id
+                                  )
+                                }
+                                edge="end"
+                                aria-label="delete"
+                              >
+                                <Delete className={classes.delete} />
+                              </IconButton>
+                            </ListItemSecondaryAction>
+                          </ListItem>
+                        </List>
+                      );
+                    })}
               </Collapse>
             </div>
           );

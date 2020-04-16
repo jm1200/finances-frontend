@@ -1,0 +1,18 @@
+mutation AddCategory($name: String!) {
+  addCategory(name: $name)
+}
+
+mutation UpdateCategory($categoryId: Int!, $name: String!) {
+  updateCategory(categoryId: $categoryId, name: $name)
+}
+
+mutation AddSubCategory($name: String!, $categoryId: Int!) {
+  addSubCategory(name: $name, categoryId: $categoryId)
+}
+
+mutation DeleteSubCategory($name: String!, $categoryId: Int!) {
+  deleteSubCategory(name: $name, categoryId: $categoryId)
+}
+mutation DeleteCategory($categoryId: Int!) {
+  deleteCategory(categoryId: $categoryId)
+}
