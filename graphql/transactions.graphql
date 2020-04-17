@@ -1,0 +1,24 @@
+query GetAllTransactions {
+  getAllTransactions {
+    id
+    name
+    categoryId
+    categoryName
+    subCategoryName
+  }
+}
+mutation UpdateCategoriesInTransaction(
+  $id: String!
+  $categoryId: Int!
+  $categoryName: String
+  $subCategoryName: String
+) {
+  updateCategoriesInTransaction(
+    data: {
+      id: $id
+      categoryId: $categoryId
+      categoryName: $categoryName
+      subCategoryName: $subCategoryName
+    }
+  )
+}

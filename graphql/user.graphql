@@ -17,6 +17,9 @@ query User {
       memo
       type
       account
+      categoryId
+      categoryName
+      subCategoryName
     }
     categories {
       id

@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: "100%",
-      maxWidth: 500,
+      maxWidth: 400,
       backgroundColor: theme.palette.background.paper,
     },
     nested: {
@@ -201,7 +201,10 @@ export default function CategoryList({
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
-                <ListItemText primary={category.name} />
+                {editCategoryMode === category.id ? null : (
+                  <ListItemText primary={category.name} />
+                )}
+
                 {/* Default */}
 
                 {category.id === open ? (

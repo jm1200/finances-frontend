@@ -18,6 +18,7 @@ export type CategoryEntity = {
   name: Scalars['String'];
   userId: Scalars['Int'];
   subCategories?: Maybe<Array<Scalars['String']>>;
+  transactions: Array<TransactionEntity>;
   user: UserEntity;
 };
 
@@ -41,7 +42,7 @@ export type Mutation = {
   revokeRefreshTokensForUser: Scalars['Boolean'];
   login: LoginResponse;
   register: LoginResponse;
-  updateTransaction: Scalars['Boolean'];
+  updateCategoriesInTransaction: Scalars['Boolean'];
   addCategory: Scalars['Boolean'];
   updateCategory: Scalars['Boolean'];
   deleteCategory: Scalars['Boolean'];
@@ -81,8 +82,7 @@ export type MutationRegisterArgs = {
 };
 
 
-export type MutationUpdateTransactionArgs = {
-  id: Scalars['Int'];
+export type MutationUpdateCategoriesInTransactionArgs = {
   data: UpdateTransactionInput;
 };
 
@@ -122,12 +122,25 @@ export type Query = {
   user: UserEntity;
   users: Array<UserEntity>;
   me?: Maybe<MeResponse>;
+  getAllTransactions: Array<TransactionEntity>;
+  getTransactionsById: TransactionEntity;
   getUserCategories: UserEntity;
+  getCategory: CategoryEntity;
 };
 
 
 export type QueryGetUserSettingsArgs = {
   userId: Scalars['Int'];
+};
+
+
+export type QueryGetTransactionsByIdArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryGetCategoryArgs = {
+  categoryId: Scalars['Int'];
 };
 
 export type RegisterInput = {
@@ -185,6 +198,8 @@ export type TransactionInput = {
 };
 
 export type UpdateTransactionInput = {
+  id: Scalars['String'];
+  categoryId: Scalars['Int'];
   subCategoryName?: Maybe<Scalars['String']>;
   categoryName?: Maybe<Scalars['String']>;
 };
@@ -369,6 +384,30 @@ export type UpdateThemeMutation = (
   )> }
 );
 
+export type GetAllTransactionsQueryVariables = {};
+
+
+export type GetAllTransactionsQuery = (
+  { __typename?: 'Query' }
+  & { getAllTransactions: Array<(
+    { __typename?: 'TransactionEntity' }
+    & Pick<TransactionEntity, 'id' | 'name' | 'categoryId' | 'categoryName' | 'subCategoryName'>
+  )> }
+);
+
+export type UpdateCategoriesInTransactionMutationVariables = {
+  id: Scalars['String'];
+  categoryId: Scalars['Int'];
+  categoryName?: Maybe<Scalars['String']>;
+  subCategoryName?: Maybe<Scalars['String']>;
+};
+
+
+export type UpdateCategoriesInTransactionMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'updateCategoriesInTransaction'>
+);
+
 export type UsersQueryVariables = {};
 
 
@@ -390,7 +429,7 @@ export type UserQuery = (
     & Pick<UserEntity, 'id'>
     & { transactions: Array<(
       { __typename?: 'TransactionEntity' }
-      & Pick<TransactionEntity, 'id' | 'transId' | 'name' | 'datePosted' | 'amount' | 'memo' | 'type' | 'account'>
+      & Pick<TransactionEntity, 'id' | 'transId' | 'name' | 'datePosted' | 'amount' | 'memo' | 'type' | 'account' | 'categoryId' | 'categoryName' | 'subCategoryName'>
     )>, categories: Array<(
       { __typename?: 'CategoryEntity' }
       & Pick<CategoryEntity, 'id' | 'name' | 'subCategories'>
@@ -795,6 +834,75 @@ export function useUpdateThemeMutation(baseOptions?: ApolloReactHooks.MutationHo
 export type UpdateThemeMutationHookResult = ReturnType<typeof useUpdateThemeMutation>;
 export type UpdateThemeMutationResult = ApolloReactCommon.MutationResult<UpdateThemeMutation>;
 export type UpdateThemeMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateThemeMutation, UpdateThemeMutationVariables>;
+export const GetAllTransactionsDocument = gql`
+    query GetAllTransactions {
+  getAllTransactions {
+    id
+    name
+    categoryId
+    categoryName
+    subCategoryName
+  }
+}
+    `;
+
+/**
+ * __useGetAllTransactionsQuery__
+ *
+ * To run a query within a React component, call `useGetAllTransactionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllTransactionsQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllTransactionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllTransactionsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAllTransactionsQuery, GetAllTransactionsQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetAllTransactionsQuery, GetAllTransactionsQueryVariables>(GetAllTransactionsDocument, baseOptions);
+      }
+export function useGetAllTransactionsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAllTransactionsQuery, GetAllTransactionsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetAllTransactionsQuery, GetAllTransactionsQueryVariables>(GetAllTransactionsDocument, baseOptions);
+        }
+export type GetAllTransactionsQueryHookResult = ReturnType<typeof useGetAllTransactionsQuery>;
+export type GetAllTransactionsLazyQueryHookResult = ReturnType<typeof useGetAllTransactionsLazyQuery>;
+export type GetAllTransactionsQueryResult = ApolloReactCommon.QueryResult<GetAllTransactionsQuery, GetAllTransactionsQueryVariables>;
+export const UpdateCategoriesInTransactionDocument = gql`
+    mutation UpdateCategoriesInTransaction($id: String!, $categoryId: Int!, $categoryName: String, $subCategoryName: String) {
+  updateCategoriesInTransaction(data: {id: $id, categoryId: $categoryId, categoryName: $categoryName, subCategoryName: $subCategoryName})
+}
+    `;
+export type UpdateCategoriesInTransactionMutationFn = ApolloReactCommon.MutationFunction<UpdateCategoriesInTransactionMutation, UpdateCategoriesInTransactionMutationVariables>;
+
+/**
+ * __useUpdateCategoriesInTransactionMutation__
+ *
+ * To run a mutation, you first call `useUpdateCategoriesInTransactionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCategoriesInTransactionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCategoriesInTransactionMutation, { data, loading, error }] = useUpdateCategoriesInTransactionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      categoryId: // value for 'categoryId'
+ *      categoryName: // value for 'categoryName'
+ *      subCategoryName: // value for 'subCategoryName'
+ *   },
+ * });
+ */
+export function useUpdateCategoriesInTransactionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateCategoriesInTransactionMutation, UpdateCategoriesInTransactionMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateCategoriesInTransactionMutation, UpdateCategoriesInTransactionMutationVariables>(UpdateCategoriesInTransactionDocument, baseOptions);
+      }
+export type UpdateCategoriesInTransactionMutationHookResult = ReturnType<typeof useUpdateCategoriesInTransactionMutation>;
+export type UpdateCategoriesInTransactionMutationResult = ApolloReactCommon.MutationResult<UpdateCategoriesInTransactionMutation>;
+export type UpdateCategoriesInTransactionMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateCategoriesInTransactionMutation, UpdateCategoriesInTransactionMutationVariables>;
 export const UsersDocument = gql`
     query Users {
   users {
@@ -841,6 +949,9 @@ export const UserDocument = gql`
       memo
       type
       account
+      categoryId
+      categoryName
+      subCategoryName
     }
     categories {
       id
