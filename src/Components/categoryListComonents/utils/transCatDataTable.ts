@@ -1,11 +1,12 @@
 export function getTransCatDataForTable(transactions: any) {
   let groupedTransactions: any = {};
-  transactions.forEach((obj: any) => {
+  transactions.forEach((obj: any, index: number) => {
     const keyName = obj.name.concat(obj.memo);
     if (Object.keys(groupedTransactions).includes(keyName)) {
       groupedTransactions[keyName].ids.push(obj.id);
     } else {
       groupedTransactions[keyName] = {
+        id: index + 1,
         name: obj.name,
         memo: obj.memo,
         categoryName: obj.categoryName,

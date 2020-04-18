@@ -28,6 +28,11 @@ const Categories: React.FC<ICategoriesProps> = (props) => {
 
   if (data && data.user) {
     categories = data.user.categories;
+    categories.sort((a, b) => {
+      if (b.name > a.name) return -1;
+      if (a.name < b.name) return 1;
+      return 0;
+    });
     transactions = data.user.transactions;
   }
   return (
@@ -36,11 +41,7 @@ const Categories: React.FC<ICategoriesProps> = (props) => {
         {loading ? <div>Loading..</div> : null}
         {categories && !loading ? (
           <CategoryList
-            categories={categories.sort((a, b) => {
-              if (b.name > a.name) return -1;
-              if (a.name < b.name) return 1;
-              return 0;
-            })}
+            categories={categories}
             refetchUserQuery={refetchUserQuery}
           />
         ) : (
@@ -48,7 +49,11 @@ const Categories: React.FC<ICategoriesProps> = (props) => {
         )}
       </div>
       <div className={classes.transactions}>
-        <TransactionCategoryTable transactions={transactions} />
+        <TransactionCategoryTable
+          transactions={transactions}
+          categories={categories}
+          refetchUserQuery={refetchUserQuery}
+        />
       </div>
     </div>
   );

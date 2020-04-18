@@ -198,10 +198,9 @@ export type TransactionInput = {
 };
 
 export type UpdateTransactionInput = {
-  id: Scalars['String'];
+  ids: Array<Scalars['String']>;
   categoryId: Scalars['Int'];
   subCategoryName?: Maybe<Scalars['String']>;
-  categoryName?: Maybe<Scalars['String']>;
 };
 
 
@@ -396,9 +395,8 @@ export type GetAllTransactionsQuery = (
 );
 
 export type UpdateCategoriesInTransactionMutationVariables = {
-  id: Scalars['String'];
+  ids: Array<Scalars['String']>;
   categoryId: Scalars['Int'];
-  categoryName?: Maybe<Scalars['String']>;
   subCategoryName?: Maybe<Scalars['String']>;
 };
 
@@ -871,8 +869,8 @@ export type GetAllTransactionsQueryHookResult = ReturnType<typeof useGetAllTrans
 export type GetAllTransactionsLazyQueryHookResult = ReturnType<typeof useGetAllTransactionsLazyQuery>;
 export type GetAllTransactionsQueryResult = ApolloReactCommon.QueryResult<GetAllTransactionsQuery, GetAllTransactionsQueryVariables>;
 export const UpdateCategoriesInTransactionDocument = gql`
-    mutation UpdateCategoriesInTransaction($id: String!, $categoryId: Int!, $categoryName: String, $subCategoryName: String) {
-  updateCategoriesInTransaction(data: {id: $id, categoryId: $categoryId, categoryName: $categoryName, subCategoryName: $subCategoryName})
+    mutation UpdateCategoriesInTransaction($ids: [String!]!, $categoryId: Int!, $subCategoryName: String) {
+  updateCategoriesInTransaction(data: {ids: $ids, categoryId: $categoryId, subCategoryName: $subCategoryName})
 }
     `;
 export type UpdateCategoriesInTransactionMutationFn = ApolloReactCommon.MutationFunction<UpdateCategoriesInTransactionMutation, UpdateCategoriesInTransactionMutationVariables>;
@@ -890,9 +888,8 @@ export type UpdateCategoriesInTransactionMutationFn = ApolloReactCommon.Mutation
  * @example
  * const [updateCategoriesInTransactionMutation, { data, loading, error }] = useUpdateCategoriesInTransactionMutation({
  *   variables: {
- *      id: // value for 'id'
+ *      ids: // value for 'ids'
  *      categoryId: // value for 'categoryId'
- *      categoryName: // value for 'categoryName'
  *      subCategoryName: // value for 'subCategoryName'
  *   },
  * });

@@ -8,16 +8,14 @@ query GetAllTransactions {
   }
 }
 mutation UpdateCategoriesInTransaction(
-  $id: String!
+  $ids: [String!]!
   $categoryId: Int!
-  $categoryName: String
   $subCategoryName: String
 ) {
   updateCategoriesInTransaction(
     data: {
-      id: $id
+      ids: $ids
       categoryId: $categoryId
-      categoryName: $categoryName
       subCategoryName: $subCategoryName
     }
   )
