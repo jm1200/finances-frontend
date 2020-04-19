@@ -6,6 +6,7 @@ import ImportFile from "../pages/ImportFile";
 import Settings from "../pages/Settings";
 import Transactions from "../pages/Transactions";
 import Categories from "../pages/Categories";
+import CategoriesTotals from "../pages/CategoriesTotals";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import { Settings as SettingsIcon } from "@material-ui/icons";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
@@ -59,6 +60,12 @@ export const routes: IRoutes = {
       name: "Categories",
       path: "/categories",
       component: Categories,
+      icon: InboxIcon,
+    },
+    {
+      name: "CategoriesTotals",
+      path: "/categories-totals",
+      component: CategoriesTotals,
       icon: InboxIcon,
     },
     {
