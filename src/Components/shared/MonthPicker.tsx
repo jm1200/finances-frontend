@@ -3,8 +3,6 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import { ArrowLeft, ArrowRight } from "@material-ui/icons";
 
-interface IMonthPickerProps {}
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -68,20 +66,25 @@ const MONTHS = [
   "Dec",
 ];
 
-const MonthPicker: React.FC<IMonthPickerProps> = (props) => {
+interface IMonthPickerProps {
+  selectedMonth: string;
+  setSelectedMonth: React.Dispatch<React.SetStateAction<string>>;
+  selectedYear: number;
+  setSelectedYear: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const MonthPicker: React.FC<IMonthPickerProps> = (props: IMonthPickerProps) => {
   const classes = useStyles();
-  const [selectedMonth, setSelectedMonth] = React.useState("Apr");
-  const [selectedYear, setSelectedYear] = React.useState(2020);
 
   const handleMonthChange = (month: string) => {
-    setSelectedMonth(month);
+    props.setSelectedMonth(month);
   };
 
   const handleYearChange = (click: string) => {
     if (click === "left") {
-      setSelectedYear(selectedYear - 1);
+      props.setSelectedYear(props.selectedYear - 1);
     } else {
-      setSelectedYear(selectedYear + 1);
+      props.setSelectedYear(props.selectedYear + 1);
     }
   };
   return (
@@ -98,7 +101,7 @@ const MonthPicker: React.FC<IMonthPickerProps> = (props) => {
           align="center"
           className={classes.yearText}
         >
-          {selectedYear}
+          {props.selectedYear}
         </Typography>
         <ArrowRight
           className={classes.icons}
@@ -115,7 +118,7 @@ const MonthPicker: React.FC<IMonthPickerProps> = (props) => {
               component="div"
               key={month}
               className={`${classes.cell} ${
-                month === selectedMonth ? classes.active : ""
+                month === props.selectedMonth ? classes.active : ""
               }`}
               onClick={() => {
                 handleMonthChange(month);

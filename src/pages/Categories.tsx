@@ -1,7 +1,7 @@
 import React from "react";
 import { useUserQuery, UserQuery } from "../generated/graphql";
-import CategoryList from "../Components/categoryListComonents/CategoryList";
-import TransactionCategoryTable from "../Components/categoryListComonents/TransactionCategoryTable";
+import CategoryList from "../Components/categoriesComponents/CategoryList";
+import TransactionCategoryTable from "../Components/categoriesComponents/TransactionCategoryTable";
 import { createStyles, makeStyles, Theme } from "@material-ui/core";
 
 interface ICategoriesProps {}

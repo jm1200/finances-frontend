@@ -39,11 +39,15 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface IDatePickerProps {}
+interface IDatePickerProps {
+  selectedMonth: string;
+  setSelectedMonth: React.Dispatch<React.SetStateAction<string>>;
+  selectedYear: number;
+  setSelectedYear: React.Dispatch<React.SetStateAction<number>>;
+}
 
-export default function DatePicker() {
+export default function DatePicker(props: IDatePickerProps) {
   const classes = useStyles();
-  const [dateSelectOption, setDateSelectOption] = React.useState("month");
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -63,7 +67,12 @@ export default function DatePicker() {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <MonthPicker />
+        <MonthPicker
+          selectedMonth={props.selectedMonth}
+          setSelectedMonth={props.setSelectedMonth}
+          selectedYear={props.selectedYear}
+          setSelectedYear={props.setSelectedYear}
+        />
       </TabPanel>
       <TabPanel value={value} index={1}>
         Date Range Select
