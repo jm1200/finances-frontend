@@ -2,6 +2,8 @@
 - Set up testing environment. react-testing-library? https://www.youtube.com/watch?v=is83bEK3n5A
 - clean up nav
 - redis user?
+- category CRUD tests, do something other than toBeDefined()
+- type safe categoriesComponent/utils/transCateDataTable
 
 Material table
 - make amounts display dollars
