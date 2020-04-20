@@ -4,6 +4,7 @@
 - redis user?
 - category CRUD tests, do something other than toBeDefined()
 - type safe categoriesComponent/utils/transCateDataTable
+- check all routes for auth. categories is not protected.
 
 Material table
 - make amounts display dollars
