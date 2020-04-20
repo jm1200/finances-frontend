@@ -51,12 +51,11 @@ export default function TransactionCategoryTable(
     updateCategoriesInTransaction,
   ] = useUpdateCategoriesInTransactionMutation();
 
-  let subCategories: string[] | null | undefined = [];
+  let subCategories: any = [];
   if (categoryId) {
-    subCategories = props.categories.find((category) => {
-      if (category.id === categoryId) return true;
-      return false;
-    })!.subCategories;
+    subCategories = props.categories.filter(
+      (category) => category.id === categoryId
+    )[0].subCategories;
   }
 
   const handleEditTransactionMode = (id: number) => {

@@ -75,9 +75,11 @@ export default function CategoryList({
   ) => {
     categoryId === open ? setOpen(0) : setOpen(categoryId);
   };
+
+  //TODO why is this empty?
   const handleSubCategoryClick = (
     e: React.MouseEvent<HTMLDivElement>,
-    subCategoryName: string
+    subCategoryId: number
   ) => {};
 
   const handleAddCategoryMode = () => {
@@ -99,11 +101,10 @@ export default function CategoryList({
   };
   const handleDeleteSubCategory = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    subCategoryName: string,
-    categoryId: number
+    subCategoryId: number
   ) => {
     e.stopPropagation();
-    _deleteSubCategory(subCategoryName, categoryId);
+    _deleteSubCategory(subCategoryId);
   };
 
   //API calls
@@ -114,7 +115,6 @@ export default function CategoryList({
   const [deleteSubCategory] = useDeleteSubCategoryMutation();
 
   const _addCategory = async (newCategory: string) => {
-    console.log("Category to add: ", newCategory);
     await addCategory({
       variables: {
         name: newCategory,
@@ -131,7 +131,6 @@ export default function CategoryList({
     editCategory: string,
     categoryId: number
   ) => {
-    console.log("Category to edit: ", editCategory, categoryId);
     e.stopPropagation();
     setEditCategoryMode(0);
     await updateCategory({ variables: { categoryId, name: editCategory } });
@@ -142,7 +141,6 @@ export default function CategoryList({
     e: React.MouseEvent<SVGSVGElement, MouseEvent>,
     categoryId: number
   ) => {
-    console.log("Category to delete: ", categoryId);
     e.stopPropagation();
     await deleteCategory({ variables: { categoryId } });
     refetchUserQuery();
@@ -153,14 +151,12 @@ export default function CategoryList({
     newSubCategory: string,
     categoryId: number
   ) => {
-    console.log("Sub Category to add: ", newSubCategory, categoryId);
     await addSubCategory({ variables: { categoryId, name: newSubCategory } });
     refetchUserQuery();
   };
 
-  const _deleteSubCategory = async (name: string, categoryId: number) => {
-    console.log("delete subCategory: ", name);
-    await deleteSubCategory({ variables: { categoryId, name } });
+  const _deleteSubCategory = async (subCategoryId: number) => {
+    await deleteSubCategory({ variables: { subCategoryId } });
     refetchUserQuery();
   };
 
@@ -191,9 +187,9 @@ export default function CategoryList({
       className={classes.root}
     >
       {categories &&
-        categories.map((category) => {
+        categories.map((category, index) => {
           return (
-            <div key={category.name}>
+            <div key={index}>
               <ListItem
                 button
                 onClick={(e) => handleCategoryClick(e, category.id)}
@@ -262,22 +258,18 @@ export default function CategoryList({
                           <ListItem
                             button
                             onClick={(e) =>
-                              handleSubCategoryClick(e, subCategory)
+                              handleSubCategoryClick(e, subCategory.id)
                             }
                             className={classes.nested}
                           >
                             <ListItemIcon>
                               <StarBorder />
                             </ListItemIcon>
-                            <ListItemText primary={subCategory} />
+                            <ListItemText primary={subCategory.name} />
                             <ListItemSecondaryAction>
                               <IconButton
                                 onClick={(e) =>
-                                  handleDeleteSubCategory(
-                                    e,
-                                    subCategory,
-                                    category.id
-                                  )
+                                  handleDeleteSubCategory(e, subCategory.id)
                                 }
                                 edge="end"
                                 aria-label="delete"

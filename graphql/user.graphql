@@ -24,7 +24,10 @@ query User {
     categories {
       id
       name
-      subCategories
+      subCategories {
+        id
+        name
+      }
     }
   }
 }

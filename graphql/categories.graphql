@@ -10,9 +10,19 @@ mutation AddSubCategory($name: String!, $categoryId: Int!) {
   addSubCategory(name: $name, categoryId: $categoryId)
 }
 
-mutation DeleteSubCategory($name: String!, $categoryId: Int!) {
-  deleteSubCategory(name: $name, categoryId: $categoryId)
+mutation DeleteSubCategory($subCategoryId: Int!) {
+  deleteSubCategory(subCategoryId: $subCategoryId)
 }
 mutation DeleteCategory($categoryId: Int!) {
   deleteCategory(categoryId: $categoryId)
+}
+query GetCategory($categoryId: Int!) {
+  getCategorybyId(categoryId: $categoryId) {
+    id
+    name
+    subCategories {
+      id
+      name
+    }
+  }
 }
