@@ -37,19 +37,36 @@ const useStyles = makeStyles((theme: Theme) =>
 interface ITransactionCategoryTableProps {
   transactions: UserQuery["user"]["transactions"];
   categories: UserQuery["user"]["categories"];
+  subCategories: UserQuery["user"]["subCategories"];
   refetchUserQuery: any;
 }
 
 export default function TransactionCategoryTable(
   props: ITransactionCategoryTableProps
 ) {
+  //console.log("transcattable 46 props:", props.transactions);
   const classes = useStyles();
   const [editTransactionMode, setTransactionEditMode] = React.useState(0);
   const [categoryId, setCategoryId] = React.useState(0);
-  const [subCategoryName, setSubCategoryName] = React.useState("");
+  const [subCategoryId, setSubCategoryId] = React.useState(0);
   const [
     updateCategoriesInTransaction,
   ] = useUpdateCategoriesInTransactionMutation();
+
+  let categoriesMap: any = [];
+  if (props.categories.length !== 0) {
+    props.categories.forEach((category) => {
+      categoriesMap[category.id] = category;
+    });
+  }
+
+  let subCategoriesMap: any = [];
+  if (props.subCategories.length !== 0) {
+    props.subCategories.forEach((subCategory) => {
+      console.log("TCT 65", subCategory);
+      subCategoriesMap[subCategory.id] = subCategory;
+    });
+  }
 
   let subCategories: any = [];
   if (categoryId) {
@@ -72,16 +89,17 @@ export default function TransactionCategoryTable(
 
     console.log("ids to update: ", ids);
     console.log("categoryId to add: ", categoryId);
-    console.log("sub category to add: ", subCategoryName);
+    console.log("sub category to add: ", subCategoryId);
 
     await updateCategoriesInTransaction({
-      variables: { ids, categoryId, subCategoryName },
+      variables: { ids, categoryId, subCategoryId },
     });
     setTransactionEditMode(0);
     props.refetchUserQuery();
   };
 
   let data = getTransCatDataForTable(props.transactions);
+
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} size="small" aria-label="a dense table">
@@ -114,8 +132,8 @@ export default function TransactionCategoryTable(
                     {categoryId !== 0 && (
                       <SubCategorySelect
                         categories={subCategories}
-                        currentValue={subCategoryName}
-                        setFunction={setSubCategoryName}
+                        currentValue={subCategoryId}
+                        setFunction={setSubCategoryId}
                       />
                     )}
                   </TableCell>
@@ -134,8 +152,16 @@ export default function TransactionCategoryTable(
                 </>
               ) : (
                 <>
-                  <TableCell>{row.categoryName}</TableCell>
-                  <TableCell>{row.subCategoryName}</TableCell>
+                  <TableCell>
+                    {categoriesMap[row.categoryId]
+                      ? categoriesMap[row.categoryId].name
+                      : ""}
+                  </TableCell>
+                  <TableCell>
+                    {subCategoriesMap[row.subCategoryId]
+                      ? subCategoriesMap[row.subCategoryId].name
+                      : ""}
+                  </TableCell>
                   <TableCell>
                     <Edit onClick={() => handleEditTransactionMode(row.id)} />
                   </TableCell>

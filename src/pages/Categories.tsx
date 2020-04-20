@@ -23,9 +23,11 @@ const useStyles = makeStyles((theme: Theme) =>
 const Categories: React.FC<ICategoriesProps> = (props) => {
   const classes = useStyles();
   const { data, loading, refetch: refetchUserQuery } = useUserQuery();
+  console.log("Categories 26 data", data);
 
   let categories: UserQuery["user"]["categories"] = [];
   let transactions: UserQuery["user"]["transactions"] = [];
+  let subCategories: UserQuery["user"]["subCategories"] = [];
 
   if (data && data.user) {
     categories = data.user.categories;
@@ -35,6 +37,7 @@ const Categories: React.FC<ICategoriesProps> = (props) => {
       return 0;
     });
     transactions = data.user.transactions;
+    subCategories = data.user.subCategories;
   }
   return (
     <div className={classes.root}>
@@ -54,6 +57,7 @@ const Categories: React.FC<ICategoriesProps> = (props) => {
           transactions={transactions}
           categories={categories}
           refetchUserQuery={refetchUserQuery}
+          subCategories={subCategories}
         />
       </div>
     </div>

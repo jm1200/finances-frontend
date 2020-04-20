@@ -15,9 +15,9 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface ISubCategorySelect {
-  categories: string[] | null | undefined;
-  setFunction: React.Dispatch<React.SetStateAction<string>>;
-  currentValue: string;
+  categories: any;
+  setFunction: React.Dispatch<React.SetStateAction<number>>;
+  currentValue: number;
 }
 
 export default function SubCategorySelect(props: ISubCategorySelect) {
@@ -37,12 +37,12 @@ export default function SubCategorySelect(props: ISubCategorySelect) {
           value={props.currentValue}
           onChange={handleChange}
         >
-          <MenuItem value={""}>none</MenuItem>
+          <MenuItem value={0}>none</MenuItem>
           {props.categories &&
-            props.categories.map((name) => {
+            props.categories.map((category: any) => {
               return (
-                <MenuItem key={name} value={name}>
-                  {name}
+                <MenuItem key={category.id} value={category.id}>
+                  {category.name}
                 </MenuItem>
               );
             })}

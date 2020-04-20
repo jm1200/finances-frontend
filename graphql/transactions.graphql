@@ -3,20 +3,15 @@ query GetAllTransactions {
     id
     name
     categoryId
-    categoryName
-    subCategoryName
+    subCategoryId
   }
 }
 mutation UpdateCategoriesInTransaction(
   $ids: [String!]!
   $categoryId: Int!
-  $subCategoryName: String
+  $subCategoryId: Int!
 ) {
   updateCategoriesInTransaction(
-    data: {
-      ids: $ids
-      categoryId: $categoryId
-      subCategoryName: $subCategoryName
-    }
+    data: { ids: $ids, categoryId: $categoryId, subCategoryId: $subCategoryId }
   )
 }

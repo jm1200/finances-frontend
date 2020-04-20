@@ -1,5 +1,7 @@
 export function getTransCatDataForTable(transactions: any) {
   let groupedTransactions: any = {};
+
+  //Create array of objects where each obj is unique if both name and memo are the same.
   transactions.forEach((obj: any, index: number) => {
     const keyName = obj.name.concat(obj.memo);
     if (Object.keys(groupedTransactions).includes(keyName)) {
@@ -9,8 +11,7 @@ export function getTransCatDataForTable(transactions: any) {
         id: index + 1,
         name: obj.name,
         memo: obj.memo,
-        categoryName: obj.categoryName,
-        subCategoryName: obj.subCategoryName,
+        subCategoryId: obj.subCategoryId,
         categoryId: obj.categoryId,
         ids: [obj.id],
       };
@@ -30,6 +31,8 @@ export function getTransCatDataForTable(transactions: any) {
 
   return arrayedGroupedTransactions;
 }
+
+//SOME EXAMPLES FOR MAYBE HOW TO TYPE THE ABOVE FUNCTION
 
 // data.forEach((obj) => {
 //     if (Object.keys(moreData).includes(obj.name)) {

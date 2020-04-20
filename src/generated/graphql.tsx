@@ -189,8 +189,7 @@ export type TransactionEntity = {
   name: Scalars['String'];
   memo: Scalars['String'];
   amount: Scalars['Float'];
-  subCategoryName?: Maybe<Scalars['String']>;
-  categoryName?: Maybe<Scalars['String']>;
+  subCategoryId?: Maybe<Scalars['Int']>;
   categoryId?: Maybe<Scalars['Int']>;
   category?: Maybe<CategoryEntity>;
   subCategory?: Maybe<SubCategoryEntity>;
@@ -210,8 +209,8 @@ export type TransactionInput = {
 
 export type UpdateTransactionInput = {
   ids: Array<Scalars['String']>;
-  categoryId: Scalars['Int'];
-  subCategoryName?: Maybe<Scalars['String']>;
+  categoryId?: Maybe<Scalars['Int']>;
+  subCategoryId?: Maybe<Scalars['Int']>;
 };
 
 
@@ -418,14 +417,14 @@ export type GetAllTransactionsQuery = (
   { __typename?: 'Query' }
   & { getAllTransactions: Array<(
     { __typename?: 'TransactionEntity' }
-    & Pick<TransactionEntity, 'id' | 'name' | 'categoryId' | 'categoryName' | 'subCategoryName'>
+    & Pick<TransactionEntity, 'id' | 'name' | 'categoryId' | 'subCategoryId'>
   )> }
 );
 
 export type UpdateCategoriesInTransactionMutationVariables = {
   ids: Array<Scalars['String']>;
   categoryId: Scalars['Int'];
-  subCategoryName?: Maybe<Scalars['String']>;
+  subCategoryId: Scalars['Int'];
 };
 
 
@@ -455,7 +454,7 @@ export type UserQuery = (
     & Pick<UserEntity, 'id'>
     & { transactions: Array<(
       { __typename?: 'TransactionEntity' }
-      & Pick<TransactionEntity, 'id' | 'transId' | 'name' | 'datePosted' | 'amount' | 'memo' | 'type' | 'account' | 'categoryId' | 'categoryName' | 'subCategoryName'>
+      & Pick<TransactionEntity, 'id' | 'transId' | 'name' | 'datePosted' | 'amount' | 'memo' | 'type' | 'account' | 'categoryId' | 'subCategoryId'>
     )>, categories: Array<(
       { __typename?: 'CategoryEntity' }
       & Pick<CategoryEntity, 'id' | 'name'>
@@ -463,6 +462,9 @@ export type UserQuery = (
         { __typename?: 'SubCategoryEntity' }
         & Pick<SubCategoryEntity, 'id' | 'name'>
       )>> }
+    )>, subCategories: Array<(
+      { __typename?: 'SubCategoryEntity' }
+      & Pick<SubCategoryEntity, 'id' | 'name'>
     )> }
   ) }
 );
@@ -907,8 +909,7 @@ export const GetAllTransactionsDocument = gql`
     id
     name
     categoryId
-    categoryName
-    subCategoryName
+    subCategoryId
   }
 }
     `;
@@ -938,8 +939,8 @@ export type GetAllTransactionsQueryHookResult = ReturnType<typeof useGetAllTrans
 export type GetAllTransactionsLazyQueryHookResult = ReturnType<typeof useGetAllTransactionsLazyQuery>;
 export type GetAllTransactionsQueryResult = ApolloReactCommon.QueryResult<GetAllTransactionsQuery, GetAllTransactionsQueryVariables>;
 export const UpdateCategoriesInTransactionDocument = gql`
-    mutation UpdateCategoriesInTransaction($ids: [String!]!, $categoryId: Int!, $subCategoryName: String) {
-  updateCategoriesInTransaction(data: {ids: $ids, categoryId: $categoryId, subCategoryName: $subCategoryName})
+    mutation UpdateCategoriesInTransaction($ids: [String!]!, $categoryId: Int!, $subCategoryId: Int!) {
+  updateCategoriesInTransaction(data: {ids: $ids, categoryId: $categoryId, subCategoryId: $subCategoryId})
 }
     `;
 export type UpdateCategoriesInTransactionMutationFn = ApolloReactCommon.MutationFunction<UpdateCategoriesInTransactionMutation, UpdateCategoriesInTransactionMutationVariables>;
@@ -959,7 +960,7 @@ export type UpdateCategoriesInTransactionMutationFn = ApolloReactCommon.Mutation
  *   variables: {
  *      ids: // value for 'ids'
  *      categoryId: // value for 'categoryId'
- *      subCategoryName: // value for 'subCategoryName'
+ *      subCategoryId: // value for 'subCategoryId'
  *   },
  * });
  */
@@ -1016,8 +1017,7 @@ export const UserDocument = gql`
       type
       account
       categoryId
-      categoryName
-      subCategoryName
+      subCategoryId
     }
     categories {
       id
@@ -1026,6 +1026,10 @@ export const UserDocument = gql`
         id
         name
       }
+    }
+    subCategories {
+      id
+      name
     }
   }
 }
