@@ -53,21 +53,6 @@ export default function TransactionCategoryTable(
     updateCategoriesInTransaction,
   ] = useUpdateCategoriesInTransactionMutation();
 
-  let categoriesMap: any = [];
-  if (props.categories.length !== 0) {
-    props.categories.forEach((category) => {
-      categoriesMap[category.id] = category;
-    });
-  }
-
-  let subCategoriesMap: any = [];
-  if (props.subCategories.length !== 0) {
-    props.subCategories.forEach((subCategory) => {
-      console.log("TCT 65", subCategory);
-      subCategoriesMap[subCategory.id] = subCategory;
-    });
-  }
-
   let subCategories: any = [];
   if (categoryId) {
     subCategories = props.categories.filter(
@@ -80,16 +65,14 @@ export default function TransactionCategoryTable(
   };
 
   const handleUpdateTransactionCategory = async (rowId: number) => {
-    const ids: string[] = getTransCatDataForTable(props.transactions).find(
-      (obj: any) => {
-        if (obj.id === rowId) return true;
-        return false;
-      }
-    ).ids;
-
-    console.log("ids to update: ", ids);
-    console.log("categoryId to add: ", categoryId);
-    console.log("sub category to add: ", subCategoryId);
+    const ids: string[] = getTransCatDataForTable(
+      props.transactions,
+      props.categories,
+      props.subCategories
+    ).find((obj: any) => {
+      if (obj.id === rowId) return true;
+      return false;
+    }).ids;
 
     await updateCategoriesInTransaction({
       variables: { ids, categoryId, subCategoryId },
@@ -98,7 +81,11 @@ export default function TransactionCategoryTable(
     props.refetchUserQuery();
   };
 
-  let data = getTransCatDataForTable(props.transactions);
+  let data = getTransCatDataForTable(
+    props.transactions,
+    props.categories,
+    props.subCategories
+  );
 
   return (
     <TableContainer component={Paper}>
@@ -152,16 +139,8 @@ export default function TransactionCategoryTable(
                 </>
               ) : (
                 <>
-                  <TableCell>
-                    {categoriesMap[row.categoryId]
-                      ? categoriesMap[row.categoryId].name
-                      : ""}
-                  </TableCell>
-                  <TableCell>
-                    {subCategoriesMap[row.subCategoryId]
-                      ? subCategoriesMap[row.subCategoryId].name
-                      : ""}
-                  </TableCell>
+                  <TableCell>{row.categoryName}</TableCell>
+                  <TableCell>{row.subCategoryName}</TableCell>
                   <TableCell>
                     <Edit onClick={() => handleEditTransactionMode(row.id)} />
                   </TableCell>

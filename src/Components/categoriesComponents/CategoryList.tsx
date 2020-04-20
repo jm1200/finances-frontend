@@ -76,12 +76,6 @@ export default function CategoryList({
     categoryId === open ? setOpen(0) : setOpen(categoryId);
   };
 
-  //TODO why is this empty?
-  const handleSubCategoryClick = (
-    e: React.MouseEvent<HTMLDivElement>,
-    subCategoryId: number
-  ) => {};
-
   const handleAddCategoryMode = () => {
     setAddCategoryMode(true);
   };
@@ -255,13 +249,7 @@ export default function CategoryList({
                     .map((subCategory, index) => {
                       return (
                         <List key={index} component="div" disablePadding>
-                          <ListItem
-                            button
-                            onClick={(e) =>
-                              handleSubCategoryClick(e, subCategory.id)
-                            }
-                            className={classes.nested}
-                          >
+                          <ListItem button className={classes.nested}>
                             <ListItemIcon>
                               <StarBorder />
                             </ListItemIcon>

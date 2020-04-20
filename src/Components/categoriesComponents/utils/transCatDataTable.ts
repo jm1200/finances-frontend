@@ -1,4 +1,23 @@
-export function getTransCatDataForTable(transactions: any) {
+export function getTransCatDataForTable(
+  transactions: any,
+  categories: any,
+  subCategories: any
+) {
+  let categoriesMap: any = [];
+  if (categories.length !== 0) {
+    categories.forEach((category: any) => {
+      categoriesMap[category.id] = category;
+    });
+  }
+
+  let subCategoriesMap: any = [];
+  if (subCategories.length !== 0) {
+    subCategories.forEach((subCategory: any) => {
+      console.log("TCT 65", subCategory);
+      subCategoriesMap[subCategory.id] = subCategory;
+    });
+  }
+
   let groupedTransactions: any = {};
 
   //Create array of objects where each obj is unique if both name and memo are the same.
@@ -11,8 +30,12 @@ export function getTransCatDataForTable(transactions: any) {
         id: index + 1,
         name: obj.name,
         memo: obj.memo,
-        subCategoryId: obj.subCategoryId,
-        categoryId: obj.categoryId,
+        subCategoryName: subCategoriesMap[obj.subCategoryId]
+          ? subCategoriesMap[obj.subCategoryId].name
+          : "",
+        categoryName: categoriesMap[obj.categoryId]
+          ? categoriesMap[obj.categoryId].name
+          : "",
         ids: [obj.id],
       };
     }
