@@ -15,7 +15,6 @@ const Transactions: React.FC<ITransactionsProps> = (props) => {
     transNoTypename = trans.map((obj: TransactionEntity) => ({
       id: obj.id,
       userId: obj.userId,
-      transId: obj.transId,
       account: obj.account,
       type: obj.type,
       datePosted: obj.datePosted,

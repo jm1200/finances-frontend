@@ -167,7 +167,6 @@ export type SubmitTransactionsResponse = {
 export type TransactionClass = {
    __typename?: 'TransactionClass';
   id: Scalars['String'];
-  transId: Scalars['String'];
   userId: Scalars['Float'];
   account: Scalars['String'];
   type: Scalars['String'];
@@ -180,7 +179,6 @@ export type TransactionClass = {
 export type TransactionEntity = {
    __typename?: 'TransactionEntity';
   id: Scalars['String'];
-  transId: Scalars['String'];
   userId: Scalars['Int'];
   user: UserEntity;
   account: Scalars['String'];
@@ -198,7 +196,6 @@ export type TransactionEntity = {
 export type TransactionInput = {
   id: Scalars['String'];
   userId: Scalars['Int'];
-  transId: Scalars['String'];
   account: Scalars['String'];
   type: Scalars['String'];
   datePosted: Scalars['String'];
@@ -454,7 +451,7 @@ export type UserQuery = (
     & Pick<UserEntity, 'id'>
     & { transactions: Array<(
       { __typename?: 'TransactionEntity' }
-      & Pick<TransactionEntity, 'id' | 'transId' | 'name' | 'datePosted' | 'amount' | 'memo' | 'type' | 'account' | 'categoryId' | 'subCategoryId'>
+      & Pick<TransactionEntity, 'id' | 'name' | 'datePosted' | 'amount' | 'memo' | 'type' | 'account' | 'categoryId' | 'subCategoryId'>
     )>, categories: Array<(
       { __typename?: 'CategoryEntity' }
       & Pick<CategoryEntity, 'id' | 'name'>
@@ -1009,7 +1006,6 @@ export const UserDocument = gql`
     id
     transactions {
       id
-      transId
       name
       datePosted
       amount

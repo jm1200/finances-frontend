@@ -1,7 +1,6 @@
 //Mimics Transaction type from entity Transaction
 export interface Transaction {
   id: string;
-  transId: string;
   userId: number;
   account: string;
   type: string;

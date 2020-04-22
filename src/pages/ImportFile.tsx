@@ -22,7 +22,6 @@ const uploadFileMutation = gql`
         account
         type
         datePosted
-        transId
         name
         memo
         amount
@@ -81,7 +80,6 @@ const ImportFile: React.FC = () => {
       (obj: TransactionEntity) => ({
         id: obj.id,
         userId: obj.userId,
-        transId: obj.transId,
         account: obj.account,
         type: obj.type,
         datePosted: obj.datePosted,
