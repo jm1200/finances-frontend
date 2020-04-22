@@ -1,23 +1,12 @@
+import { createCategoriesMap } from "../../../utils/createCategoryMaps";
+
 export function getTransCatDataForTable(
   transactions: any,
   categories: any,
   subCategories: any
 ) {
-  let categoriesMap: any = [];
-  if (categories.length !== 0) {
-    categories.forEach((category: any) => {
-      categoriesMap[category.id] = category;
-    });
-  }
-
-  let subCategoriesMap: any = [];
-  if (subCategories.length !== 0) {
-    subCategories.forEach((subCategory: any) => {
-      console.log("TCT 65", subCategory);
-      subCategoriesMap[subCategory.id] = subCategory;
-    });
-  }
-
+  const categoriesMap = createCategoriesMap(categories);
+  const subCategoriesMap = createCategoriesMap(subCategories);
   let groupedTransactions: any = {};
 
   //Create array of objects where each obj is unique if both name and memo are the same.

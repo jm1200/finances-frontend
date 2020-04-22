@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme: Theme) =>
 const Categories: React.FC<ICategoriesProps> = (props) => {
   const classes = useStyles();
   const { data, loading, refetch: refetchUserQuery } = useUserQuery();
-  console.log("Categories 26 data", data);
 
   let categories: UserQuery["user"]["categories"] = [];
   let transactions: UserQuery["user"]["transactions"] = [];

@@ -5,6 +5,7 @@
 - category CRUD tests, do something other than toBeDefined()
 - type safe categoriesComponent/utils/transCateDataTable
 - check all routes for auth. categories is not protected.
+- Loading spinner from updating transaction category
 
 Material table
 - make amounts display dollars
