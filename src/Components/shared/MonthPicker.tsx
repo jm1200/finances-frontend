@@ -73,7 +73,9 @@ interface IMonthPickerProps {
   setSelectedYear: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const MonthPicker: React.FC<IMonthPickerProps> = (props: IMonthPickerProps) => {
+export const MonthPicker: React.FC<IMonthPickerProps> = (
+  props: IMonthPickerProps
+) => {
   const classes = useStyles();
 
   const handleMonthChange = (month: string) => {
@@ -132,5 +134,3 @@ const MonthPicker: React.FC<IMonthPickerProps> = (props: IMonthPickerProps) => {
     </div>
   );
 };
-
-export default MonthPicker;

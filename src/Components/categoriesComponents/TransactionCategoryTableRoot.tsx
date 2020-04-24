@@ -5,7 +5,10 @@ import {
   useGetUserCategoriesQuery,
 } from "../../generated/graphql";
 
-interface ITransactionCategoryTableRootProps {}
+interface ITransactionCategoryTableRootProps {
+  selectedMonth: string;
+  selectedYear: number;
+}
 
 export const TransactionCategoryTableRoot: React.FC<ITransactionCategoryTableRootProps> = (
   props

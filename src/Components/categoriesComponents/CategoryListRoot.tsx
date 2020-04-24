@@ -1,10 +1,32 @@
 import React from "react";
 import CategoryList from "./CategoryList";
 import { useGetUserCategoriesForListQuery } from "../../generated/graphql";
+import { createStyles, Theme, makeStyles, Paper } from "@material-ui/core";
+import { MonthPicker } from "../shared/MonthPicker";
 
-interface ICategoryListRootProps {}
+interface ICategoryListRootProps {
+  selectedMonth: string;
+  selectedYear: number;
+  setSelectedMonth: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedYear: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      display: "flex",
+      flexDirection: "column",
+    },
+    monthPicker: {
+      marginTop: 15,
+      padding: 20,
+      maxHeight: 280,
+    },
+  })
+);
 
 export const CategoryListRoot: React.FC<ICategoryListRootProps> = (props) => {
+  const classes = useStyles();
   const {
     data,
     loading,
@@ -21,10 +43,23 @@ export const CategoryListRoot: React.FC<ICategoryListRootProps> = (props) => {
     return <div>No data!</div>;
   } else {
     return (
-      <CategoryList
-        categories={data.getUserCategories}
-        refetchCategories={refetchCategories}
-      />
+      <div className={classes.root}>
+        <div>
+          <CategoryList
+            categories={data.getUserCategories}
+            refetchCategories={refetchCategories}
+          />
+        </div>
+
+        <Paper component="div" className={classes.monthPicker}>
+          <MonthPicker
+            selectedMonth={props.selectedMonth}
+            selectedYear={props.selectedYear}
+            setSelectedMonth={props.setSelectedMonth}
+            setSelectedYear={props.setSelectedYear}
+          />
+        </Paper>
+      </div>
     );
   }
 };

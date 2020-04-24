@@ -2,6 +2,7 @@ import React from "react";
 import { useUserQuery, UserQuery } from "../generated/graphql";
 import { CategoryListRoot } from "../Components/categoriesComponents/CategoryListRoot";
 import { TransactionCategoryTableRoot } from "../Components/categoriesComponents/TransactionCategoryTableRoot";
+import { MonthPicker } from "../Components/shared/MonthPicker";
 
 import { createStyles, makeStyles, Theme } from "@material-ui/core";
 
@@ -23,34 +24,26 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Categories: React.FC<ICategoriesProps> = (props) => {
   const classes = useStyles();
+  const [selectedMonth, setSelectedMonth] = React.useState("Apr");
+  const [selectedYear, setSelectedYear] = React.useState(2019);
   const { data, loading, refetch: refetchUserQuery } = useUserQuery();
 
-  // let categories: UserQuery["user"]["categories"] = [];
-  // let transactions: UserQuery["user"]["transactions"] = [];
-  // let subCategories: UserQuery["user"]["subCategories"] = [];
-
-  // if (data && data.user) {
-  //   categories = data.user.categories;
-  //   categories.sort((a, b) => {
-  //     if (b.name > a.name) return -1;
-  //     if (a.name < b.name) return 1;
-  //     return 0;
-  //   });
-  //   transactions = data.user.transactions;
-  //   subCategories = data.user.subCategories;
-  // }
   return (
     <div className={classes.root}>
       <div className={classes.categories}>
-        {/* {loading ? <div>Loading..</div> : null}
-        {categories && !loading ? ( */}
         <CategoryListRoot
-        // categories={categories}
-        // refetchUserQuery={refetchUserQuery}
+          selectedMonth={selectedMonth}
+          selectedYear={selectedYear}
+          setSelectedMonth={setSelectedMonth}
+          setSelectedYear={setSelectedYear}
         />
       </div>
+
       <div className={classes.transactions}>
-        <TransactionCategoryTableRoot />
+        <TransactionCategoryTableRoot
+          selectedMonth={selectedMonth}
+          selectedYear={selectedYear}
+        />
       </div>
     </div>
   );
