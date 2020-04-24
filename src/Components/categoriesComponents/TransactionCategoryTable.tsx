@@ -13,26 +13,15 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import {
-  UserQuery,
   useUpdateCategoriesInTransactionMutation,
-  UserQueryVariables,
   GetTransactionsToCategorizeQuery,
   GetUserCategoriesQuery,
-  SubCategoryEntity,
 } from "../../generated/graphql";
-import { getTransCatDataForTable } from "./utils/transCatDataTable";
 import { Edit, Cancel, CheckCircle } from "@material-ui/icons";
 import CategorySelect from "./CategorySelect";
 import SubCategorySelect from "./SubCategorySelect";
-import { ApolloQueryResult } from "apollo-boost";
-import { ITransactionCategoryTableData } from "../../types";
-import {
-  Toolbar,
-  Typography,
-  Tooltip,
-  IconButton,
-  Button,
-} from "@material-ui/core";
+import { Toolbar, Typography, Button } from "@material-ui/core";
+import numeral from "numeral";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -106,6 +95,7 @@ export function TransactionCategoryTable(
               <TableRow>
                 <TableCell>Name</TableCell>
                 <TableCell>Memo</TableCell>
+                <TableCell>Average Amount</TableCell>
                 <TableCell>Category</TableCell>
                 <TableCell>Sub Category</TableCell>
                 <TableCell>Edit</TableCell>
@@ -118,6 +108,9 @@ export function TransactionCategoryTable(
                     {row.name}
                   </TableCell>
                   <TableCell>{row.memo}</TableCell>
+                  <TableCell align="right">
+                    {numeral(row.averageAmount).format("$0,0.00")}
+                  </TableCell>
                   {editTransactionMode === row.id ? (
                     <>
                       <TableCell>

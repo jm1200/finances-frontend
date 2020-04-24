@@ -40,6 +40,8 @@ export type IGroupedTransactionsClass = {
   id: Scalars['String'];
   name: Scalars['String'];
   memo: Scalars['String'];
+  amounts: Array<Scalars['Float']>;
+  averageAmount: Scalars['Float'];
   categoryName: Scalars['String'];
   subCategoryName: Scalars['String'];
   ids: Array<Scalars['String']>;
@@ -506,7 +508,7 @@ export type GetTransactionsToCategorizeQuery = (
   { __typename?: 'Query' }
   & { getTransactionsToCategorize: Array<(
     { __typename?: 'IGroupedTransactionsClass' }
-    & Pick<IGroupedTransactionsClass, 'id' | 'name' | 'memo' | 'categoryName' | 'subCategoryName' | 'ids'>
+    & Pick<IGroupedTransactionsClass, 'id' | 'name' | 'memo' | 'averageAmount' | 'categoryName' | 'subCategoryName' | 'ids'>
   )> }
 );
 
@@ -1140,6 +1142,7 @@ export const GetTransactionsToCategorizeDocument = gql`
     id
     name
     memo
+    averageAmount
     categoryName
     subCategoryName
     ids

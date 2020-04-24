@@ -15,12 +15,12 @@ export const TransactionCategoryTableRoot: React.FC<ITransactionCategoryTableRoo
     loading,
     error,
     refetch,
-  } = useGetTransactionsToCategorizeQuery();
+  } = useGetTransactionsToCategorizeQuery({ fetchPolicy: "network-only" });
   const {
     data: categoriesData,
     loading: categoriesLoading,
     error: categoriesError,
-  } = useGetUserCategoriesQuery();
+  } = useGetUserCategoriesQuery({ fetchPolicy: "network-only" });
 
   if (loading || categoriesLoading) {
     return <div>Loading Transaction Categories...</div>;
