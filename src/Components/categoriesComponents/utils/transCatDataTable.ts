@@ -1,47 +1,49 @@
 import { createCategoriesMap } from "../../../utils/createCategoryMaps";
+import { ITransactionCategoryTableData } from "../../../types";
+import { UserQuery } from "../../../generated/graphql";
 
 export function getTransCatDataForTable(
-  transactions: any,
-  categories: any,
-  subCategories: any
-) {
+  //transactions: UserQuery["user"]["transactions"],
+  categories: UserQuery["user"]["categories"],
+  subCategories: UserQuery["user"]["subCategories"]
+): any {
   const categoriesMap = createCategoriesMap(categories);
-  const subCategoriesMap = createCategoriesMap(subCategories);
-  let groupedTransactions: any = {};
+  //const subCategoriesMap = createCategoriesMap(subCategories);
+  // let groupedTransactions: any = {};
 
-  //Create array of objects where each obj is unique if both name and memo are the same.
-  transactions.forEach((obj: any, index: number) => {
-    const keyName = obj.name.concat(obj.memo);
-    if (Object.keys(groupedTransactions).includes(keyName)) {
-      groupedTransactions[keyName].ids.push(obj.id);
-    } else {
-      groupedTransactions[keyName] = {
-        id: index + 1,
-        name: obj.name,
-        memo: obj.memo,
-        subCategoryName: subCategoriesMap[obj.subCategoryId]
-          ? subCategoriesMap[obj.subCategoryId].name
-          : "",
-        categoryName: categoriesMap[obj.categoryId]
-          ? categoriesMap[obj.categoryId].name
-          : "",
-        ids: [obj.id],
-      };
-    }
-  });
+  // //Create array of objects where each obj is unique if both name and memo are the same.
+  // transactions.forEach((obj: any, index: number) => {
+  //   const keyName = obj.name.concat(obj.memo);
+  //   if (Object.keys(groupedTransactions).includes(keyName)) {
+  //     groupedTransactions[keyName].ids.push(obj.id);
+  //   } else {
+  //     groupedTransactions[keyName] = {
+  //       id: index + 1,
+  //       name: obj.name,
+  //       memo: obj.memo,
+  //       subCategoryName: subCategoriesMap[obj.subCategoryId]
+  //         ? subCategoriesMap[obj.subCategoryId].name
+  //         : "",
+  //       categoryName: categoriesMap[obj.categoryId]
+  //         ? categoriesMap[obj.categoryId].name
+  //         : "",
+  //       ids: [obj.id],
+  //     };
+  //   }
+  // });
 
-  const arrayedGroupedTransactions: any = [];
-  Object.keys(groupedTransactions).forEach((obj) => {
-    arrayedGroupedTransactions.push(groupedTransactions[obj]);
-  });
+  // const arrayedGroupedTransactions: any = [];
+  // Object.keys(groupedTransactions).forEach((obj) => {
+  //   arrayedGroupedTransactions.push(groupedTransactions[obj]);
+  // });
 
-  arrayedGroupedTransactions.sort((a: any, b: any) => {
-    if (b.ids.length < a.ids.length) return -1;
-    if (a.ids.length > b.ids.length) return 1;
-    return 0;
-  });
+  // arrayedGroupedTransactions.sort((a: any, b: any) => {
+  //   if (b.ids.length < a.ids.length) return -1;
+  //   if (a.ids.length > b.ids.length) return 1;
+  //   return 0;
+  // });
 
-  return arrayedGroupedTransactions;
+  //return arrayedGroupedTransactions;
 }
 
 //SOME EXAMPLES FOR MAYBE HOW TO TYPE THE ABOVE FUNCTION

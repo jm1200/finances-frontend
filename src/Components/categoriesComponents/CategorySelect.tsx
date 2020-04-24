@@ -17,8 +17,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface ICategorySelect {
   categories: UserQuery["user"]["categories"];
-  setFunction: React.Dispatch<React.SetStateAction<number>>;
-  currentValue: number;
+  setFunction: React.Dispatch<React.SetStateAction<string>>;
+  currentValue: string;
 }
 
 export default function CategorySelect(props: ICategorySelect) {

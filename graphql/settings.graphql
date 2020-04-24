@@ -1,4 +1,4 @@
-mutation UpdateTheme($id: Int!, $theme: String!) {
+mutation UpdateTheme($id: String!, $theme: String!) {
   updateTheme(id: $id, theme: $theme) {
     theme
   }

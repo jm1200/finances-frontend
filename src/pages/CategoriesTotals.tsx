@@ -69,8 +69,8 @@ const CategoriesTotals: React.FC<ICategoriesTotalsProps> = (props) => {
     transactions = data.user.transactions;
     subCategories = data.user.subCategories;
 
-    categoriesMap = createCategoriesMap(categories);
-    subCategoriesMap = createCategoriesMap(subCategories);
+    // categoriesMap = createCategoriesMap(categories);
+    // subCategoriesMap = createCategoriesMap(subCategories);
 
     const filteredTransactions = filterTransactionsByMonthAndYear(
       transactions,

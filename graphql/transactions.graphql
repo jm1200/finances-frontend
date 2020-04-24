@@ -1,5 +1,5 @@
-query GetAllTransactions {
-  getAllTransactions {
+query GetUserTransactions {
+  getUserTransactions {
     id
     name
     categoryId
@@ -8,10 +8,20 @@ query GetAllTransactions {
 }
 mutation UpdateCategoriesInTransaction(
   $ids: [String!]!
-  $categoryId: Int!
-  $subCategoryId: Int!
+  $categoryId: String!
+  $subCategoryId: String!
 ) {
   updateCategoriesInTransaction(
     data: { ids: $ids, categoryId: $categoryId, subCategoryId: $subCategoryId }
   )
+}
+query GetTransactionsToCategorize {
+  getTransactionsToCategorize {
+    id
+    name
+    memo
+    categoryName
+    subCategoryName
+    ids
+  }
 }

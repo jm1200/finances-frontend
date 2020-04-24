@@ -26,9 +26,9 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface IAddSubCategoryFormProps {
-  setAddSubCategoryMode: Dispatch<SetStateAction<number>>;
-  addSubCategory: (newSubCategory: string, categoryId: number) => void;
-  categoryId: number;
+  setAddSubCategoryMode: Dispatch<SetStateAction<string>>;
+  addSubCategory: (newSubCategory: string, categoryId: string) => void;
+  categoryId: string;
 }
 
 export default function AddSubCategoryForm(props: IAddSubCategoryFormProps) {
@@ -46,7 +46,7 @@ export default function AddSubCategoryForm(props: IAddSubCategoryFormProps) {
   ) => {
     e.preventDefault();
     props.addSubCategory(newSubCategory, props.categoryId);
-    props.setAddSubCategoryMode(0);
+    props.setAddSubCategoryMode("");
   };
 
   return (
@@ -70,7 +70,7 @@ export default function AddSubCategoryForm(props: IAddSubCategoryFormProps) {
         <CheckCircle className={classes.ok} onClick={(e) => handleSubmit(e)} />
         <Cancel
           className={classes.cancel}
-          onClick={() => props.setAddSubCategoryMode(0)}
+          onClick={() => props.setAddSubCategoryMode("")}
         />
       </div>
     </form>

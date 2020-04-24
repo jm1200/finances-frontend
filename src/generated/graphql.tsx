@@ -12,14 +12,37 @@ export type Scalars = {
   Upload: any;
 };
 
+export type CategorizedTransactionsEntity = {
+   __typename?: 'CategorizedTransactionsEntity';
+  id: Scalars['String'];
+  name: Scalars['String'];
+  memo?: Maybe<Scalars['String']>;
+  keyName: Scalars['String'];
+  userId: Scalars['String'];
+  categoryId: Scalars['String'];
+  category: CategoryEntity;
+  subCategoryId?: Maybe<Scalars['String']>;
+  subCategory?: Maybe<SubCategoryEntity>;
+};
+
 export type CategoryEntity = {
    __typename?: 'CategoryEntity';
-  id: Scalars['Int'];
+  id: Scalars['String'];
   name: Scalars['String'];
-  userId: Scalars['Int'];
+  userId: Scalars['String'];
   user: UserEntity;
   subCategories?: Maybe<Array<SubCategoryEntity>>;
   transactions: Array<TransactionEntity>;
+};
+
+export type IGroupedTransactionsClass = {
+   __typename?: 'IGroupedTransactionsClass';
+  id: Scalars['String'];
+  name: Scalars['String'];
+  memo: Scalars['String'];
+  categoryName: Scalars['String'];
+  subCategoryName: Scalars['String'];
+  ids: Array<Scalars['String']>;
 };
 
 export type LoginResponse = {
@@ -62,13 +85,13 @@ export type MutationSubmitTransactionsArgs = {
 
 
 export type MutationUpdateThemeArgs = {
-  id: Scalars['Int'];
+  id: Scalars['String'];
   theme: Scalars['String'];
 };
 
 
 export type MutationRevokeRefreshTokensForUserArgs = {
-  userId: Scalars['Int'];
+  userId: Scalars['String'];
 };
 
 
@@ -93,24 +116,24 @@ export type MutationAddCategoryArgs = {
 
 
 export type MutationUpdateCategoryArgs = {
-  categoryId: Scalars['Int'];
+  categoryId: Scalars['String'];
   name: Scalars['String'];
 };
 
 
 export type MutationDeleteCategoryArgs = {
-  categoryId: Scalars['Int'];
+  categoryId: Scalars['String'];
 };
 
 
 export type MutationAddSubCategoryArgs = {
-  categoryId: Scalars['Int'];
+  categoryId: Scalars['String'];
   name: Scalars['String'];
 };
 
 
 export type MutationDeleteSubCategoryArgs = {
-  subCategoryId: Scalars['Int'];
+  subCategoryId: Scalars['String'];
 };
 
 export type Query = {
@@ -121,8 +144,9 @@ export type Query = {
   user: UserEntity;
   users: Array<UserEntity>;
   me?: Maybe<MeResponse>;
-  getAllTransactions: Array<TransactionEntity>;
+  getUserTransactions: Array<TransactionEntity>;
   getTransactionsById: TransactionEntity;
+  getTransactionsToCategorize: Array<IGroupedTransactionsClass>;
   getUserCategories: Array<CategoryEntity>;
   getCategorybyId: CategoryEntity;
 };
@@ -139,7 +163,7 @@ export type QueryGetTransactionsByIdArgs = {
 
 
 export type QueryGetCategorybyIdArgs = {
-  categoryId: Scalars['Int'];
+  categoryId: Scalars['String'];
 };
 
 export type RegisterInput = {
@@ -149,11 +173,11 @@ export type RegisterInput = {
 
 export type SubCategoryEntity = {
    __typename?: 'SubCategoryEntity';
-  id: Scalars['Int'];
+  id: Scalars['String'];
   name: Scalars['String'];
-  categoryId: Scalars['Int'];
+  categoryId: Scalars['String'];
   category: CategoryEntity;
-  userId: Scalars['Int'];
+  userId: Scalars['String'];
   user: UserEntity;
   transactions: Array<TransactionEntity>;
 };
@@ -167,11 +191,13 @@ export type SubmitTransactionsResponse = {
 export type TransactionClass = {
    __typename?: 'TransactionClass';
   id: Scalars['String'];
-  userId: Scalars['Float'];
+  userId: Scalars['String'];
   account: Scalars['String'];
   type: Scalars['String'];
   datePosted: Scalars['String'];
   name: Scalars['String'];
+  categoryId: Scalars['String'];
+  subCategoryId: Scalars['String'];
   memo: Scalars['String'];
   amount: Scalars['Float'];
 };
@@ -179,35 +205,38 @@ export type TransactionClass = {
 export type TransactionEntity = {
    __typename?: 'TransactionEntity';
   id: Scalars['String'];
-  userId: Scalars['Int'];
+  userId: Scalars['String'];
   user: UserEntity;
   account: Scalars['String'];
   type: Scalars['String'];
   datePosted: Scalars['String'];
   name: Scalars['String'];
   memo: Scalars['String'];
+  keyName: Scalars['String'];
   amount: Scalars['Float'];
-  subCategoryId?: Maybe<Scalars['Int']>;
-  categoryId?: Maybe<Scalars['Int']>;
+  subCategoryId?: Maybe<Scalars['String']>;
+  categoryId?: Maybe<Scalars['String']>;
   category?: Maybe<CategoryEntity>;
   subCategory?: Maybe<SubCategoryEntity>;
 };
 
 export type TransactionInput = {
   id: Scalars['String'];
-  userId: Scalars['Int'];
+  userId: Scalars['String'];
   account: Scalars['String'];
   type: Scalars['String'];
   datePosted: Scalars['String'];
   name: Scalars['String'];
+  categoryId: Scalars['String'];
+  subCategoryId: Scalars['String'];
   memo: Scalars['String'];
   amount: Scalars['Float'];
 };
 
 export type UpdateTransactionInput = {
   ids: Array<Scalars['String']>;
-  categoryId?: Maybe<Scalars['Int']>;
-  subCategoryId?: Maybe<Scalars['Int']>;
+  categoryId?: Maybe<Scalars['String']>;
+  subCategoryId?: Maybe<Scalars['String']>;
 };
 
 
@@ -223,9 +252,9 @@ export type UploadResponse = {
 
 export type UserEntity = {
    __typename?: 'UserEntity';
-  id: Scalars['Int'];
+  id: Scalars['String'];
   email: Scalars['String'];
-  userSettingsId: Scalars['Int'];
+  userSettingsId: Scalars['String'];
   userSettings: UserSettingsEntity;
   transactions: Array<TransactionEntity>;
   categories: Array<CategoryEntity>;
@@ -234,7 +263,7 @@ export type UserEntity = {
 
 export type UserSettingsEntity = {
    __typename?: 'UserSettingsEntity';
-  id: Scalars['Int'];
+  id: Scalars['String'];
   theme: Scalars['String'];
 };
 
@@ -257,7 +286,7 @@ export type AddCategoryMutation = (
 );
 
 export type UpdateCategoryMutationVariables = {
-  categoryId: Scalars['Int'];
+  categoryId: Scalars['String'];
   name: Scalars['String'];
 };
 
@@ -269,7 +298,7 @@ export type UpdateCategoryMutation = (
 
 export type AddSubCategoryMutationVariables = {
   name: Scalars['String'];
-  categoryId: Scalars['Int'];
+  categoryId: Scalars['String'];
 };
 
 
@@ -279,7 +308,7 @@ export type AddSubCategoryMutation = (
 );
 
 export type DeleteSubCategoryMutationVariables = {
-  subCategoryId: Scalars['Int'];
+  subCategoryId: Scalars['String'];
 };
 
 
@@ -289,7 +318,7 @@ export type DeleteSubCategoryMutation = (
 );
 
 export type DeleteCategoryMutationVariables = {
-  categoryId: Scalars['Int'];
+  categoryId: Scalars['String'];
 };
 
 
@@ -299,7 +328,7 @@ export type DeleteCategoryMutation = (
 );
 
 export type GetCategoryQueryVariables = {
-  categoryId: Scalars['Int'];
+  categoryId: Scalars['String'];
 };
 
 
@@ -313,6 +342,46 @@ export type GetCategoryQuery = (
       & Pick<SubCategoryEntity, 'id' | 'name'>
     )>> }
   ) }
+);
+
+export type GetUserCategoriesQueryVariables = {};
+
+
+export type GetUserCategoriesQuery = (
+  { __typename?: 'Query' }
+  & { getUserCategories: Array<(
+    { __typename?: 'CategoryEntity' }
+    & Pick<CategoryEntity, 'name' | 'id'>
+    & { subCategories?: Maybe<Array<(
+      { __typename?: 'SubCategoryEntity' }
+      & Pick<SubCategoryEntity, 'name' | 'id'>
+    )>>, transactions: Array<(
+      { __typename?: 'TransactionEntity' }
+      & Pick<TransactionEntity, 'id' | 'name' | 'amount'>
+      & { category?: Maybe<(
+        { __typename?: 'CategoryEntity' }
+        & Pick<CategoryEntity, 'id' | 'name'>
+      )>, subCategory?: Maybe<(
+        { __typename?: 'SubCategoryEntity' }
+        & Pick<SubCategoryEntity, 'id' | 'name'>
+      )> }
+    )> }
+  )> }
+);
+
+export type GetUserCategoriesForListQueryVariables = {};
+
+
+export type GetUserCategoriesForListQuery = (
+  { __typename?: 'Query' }
+  & { getUserCategories: Array<(
+    { __typename?: 'CategoryEntity' }
+    & Pick<CategoryEntity, 'id' | 'name'>
+    & { subCategories?: Maybe<Array<(
+      { __typename?: 'SubCategoryEntity' }
+      & Pick<SubCategoryEntity, 'name' | 'id'>
+    )>> }
+  )> }
 );
 
 export type HelloQueryVariables = {};
@@ -394,7 +463,7 @@ export type RegisterMutation = (
 );
 
 export type UpdateThemeMutationVariables = {
-  id: Scalars['Int'];
+  id: Scalars['String'];
   theme: Scalars['String'];
 };
 
@@ -407,12 +476,12 @@ export type UpdateThemeMutation = (
   )> }
 );
 
-export type GetAllTransactionsQueryVariables = {};
+export type GetUserTransactionsQueryVariables = {};
 
 
-export type GetAllTransactionsQuery = (
+export type GetUserTransactionsQuery = (
   { __typename?: 'Query' }
-  & { getAllTransactions: Array<(
+  & { getUserTransactions: Array<(
     { __typename?: 'TransactionEntity' }
     & Pick<TransactionEntity, 'id' | 'name' | 'categoryId' | 'subCategoryId'>
   )> }
@@ -420,14 +489,25 @@ export type GetAllTransactionsQuery = (
 
 export type UpdateCategoriesInTransactionMutationVariables = {
   ids: Array<Scalars['String']>;
-  categoryId: Scalars['Int'];
-  subCategoryId: Scalars['Int'];
+  categoryId: Scalars['String'];
+  subCategoryId: Scalars['String'];
 };
 
 
 export type UpdateCategoriesInTransactionMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'updateCategoriesInTransaction'>
+);
+
+export type GetTransactionsToCategorizeQueryVariables = {};
+
+
+export type GetTransactionsToCategorizeQuery = (
+  { __typename?: 'Query' }
+  & { getTransactionsToCategorize: Array<(
+    { __typename?: 'IGroupedTransactionsClass' }
+    & Pick<IGroupedTransactionsClass, 'id' | 'name' | 'memo' | 'categoryName' | 'subCategoryName' | 'ids'>
+  )> }
 );
 
 export type UsersQueryVariables = {};
@@ -528,7 +608,7 @@ export type AddCategoryMutationHookResult = ReturnType<typeof useAddCategoryMuta
 export type AddCategoryMutationResult = ApolloReactCommon.MutationResult<AddCategoryMutation>;
 export type AddCategoryMutationOptions = ApolloReactCommon.BaseMutationOptions<AddCategoryMutation, AddCategoryMutationVariables>;
 export const UpdateCategoryDocument = gql`
-    mutation UpdateCategory($categoryId: Int!, $name: String!) {
+    mutation UpdateCategory($categoryId: String!, $name: String!) {
   updateCategory(categoryId: $categoryId, name: $name)
 }
     `;
@@ -559,7 +639,7 @@ export type UpdateCategoryMutationHookResult = ReturnType<typeof useUpdateCatego
 export type UpdateCategoryMutationResult = ApolloReactCommon.MutationResult<UpdateCategoryMutation>;
 export type UpdateCategoryMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateCategoryMutation, UpdateCategoryMutationVariables>;
 export const AddSubCategoryDocument = gql`
-    mutation AddSubCategory($name: String!, $categoryId: Int!) {
+    mutation AddSubCategory($name: String!, $categoryId: String!) {
   addSubCategory(name: $name, categoryId: $categoryId)
 }
     `;
@@ -590,7 +670,7 @@ export type AddSubCategoryMutationHookResult = ReturnType<typeof useAddSubCatego
 export type AddSubCategoryMutationResult = ApolloReactCommon.MutationResult<AddSubCategoryMutation>;
 export type AddSubCategoryMutationOptions = ApolloReactCommon.BaseMutationOptions<AddSubCategoryMutation, AddSubCategoryMutationVariables>;
 export const DeleteSubCategoryDocument = gql`
-    mutation DeleteSubCategory($subCategoryId: Int!) {
+    mutation DeleteSubCategory($subCategoryId: String!) {
   deleteSubCategory(subCategoryId: $subCategoryId)
 }
     `;
@@ -620,7 +700,7 @@ export type DeleteSubCategoryMutationHookResult = ReturnType<typeof useDeleteSub
 export type DeleteSubCategoryMutationResult = ApolloReactCommon.MutationResult<DeleteSubCategoryMutation>;
 export type DeleteSubCategoryMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteSubCategoryMutation, DeleteSubCategoryMutationVariables>;
 export const DeleteCategoryDocument = gql`
-    mutation DeleteCategory($categoryId: Int!) {
+    mutation DeleteCategory($categoryId: String!) {
   deleteCategory(categoryId: $categoryId)
 }
     `;
@@ -650,7 +730,7 @@ export type DeleteCategoryMutationHookResult = ReturnType<typeof useDeleteCatego
 export type DeleteCategoryMutationResult = ApolloReactCommon.MutationResult<DeleteCategoryMutation>;
 export type DeleteCategoryMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteCategoryMutation, DeleteCategoryMutationVariables>;
 export const GetCategoryDocument = gql`
-    query GetCategory($categoryId: Int!) {
+    query GetCategory($categoryId: String!) {
   getCategorybyId(categoryId: $categoryId) {
     id
     name
@@ -687,6 +767,93 @@ export function useGetCategoryLazyQuery(baseOptions?: ApolloReactHooks.LazyQuery
 export type GetCategoryQueryHookResult = ReturnType<typeof useGetCategoryQuery>;
 export type GetCategoryLazyQueryHookResult = ReturnType<typeof useGetCategoryLazyQuery>;
 export type GetCategoryQueryResult = ApolloReactCommon.QueryResult<GetCategoryQuery, GetCategoryQueryVariables>;
+export const GetUserCategoriesDocument = gql`
+    query GetUserCategories {
+  getUserCategories {
+    name
+    id
+    subCategories {
+      name
+      id
+    }
+    transactions {
+      id
+      name
+      amount
+      category {
+        id
+        name
+      }
+      subCategory {
+        id
+        name
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUserCategoriesQuery__
+ *
+ * To run a query within a React component, call `useGetUserCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserCategoriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetUserCategoriesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetUserCategoriesQuery, GetUserCategoriesQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetUserCategoriesQuery, GetUserCategoriesQueryVariables>(GetUserCategoriesDocument, baseOptions);
+      }
+export function useGetUserCategoriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetUserCategoriesQuery, GetUserCategoriesQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetUserCategoriesQuery, GetUserCategoriesQueryVariables>(GetUserCategoriesDocument, baseOptions);
+        }
+export type GetUserCategoriesQueryHookResult = ReturnType<typeof useGetUserCategoriesQuery>;
+export type GetUserCategoriesLazyQueryHookResult = ReturnType<typeof useGetUserCategoriesLazyQuery>;
+export type GetUserCategoriesQueryResult = ApolloReactCommon.QueryResult<GetUserCategoriesQuery, GetUserCategoriesQueryVariables>;
+export const GetUserCategoriesForListDocument = gql`
+    query GetUserCategoriesForList {
+  getUserCategories {
+    id
+    name
+    subCategories {
+      name
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUserCategoriesForListQuery__
+ *
+ * To run a query within a React component, call `useGetUserCategoriesForListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserCategoriesForListQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserCategoriesForListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetUserCategoriesForListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetUserCategoriesForListQuery, GetUserCategoriesForListQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetUserCategoriesForListQuery, GetUserCategoriesForListQueryVariables>(GetUserCategoriesForListDocument, baseOptions);
+      }
+export function useGetUserCategoriesForListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetUserCategoriesForListQuery, GetUserCategoriesForListQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetUserCategoriesForListQuery, GetUserCategoriesForListQueryVariables>(GetUserCategoriesForListDocument, baseOptions);
+        }
+export type GetUserCategoriesForListQueryHookResult = ReturnType<typeof useGetUserCategoriesForListQuery>;
+export type GetUserCategoriesForListLazyQueryHookResult = ReturnType<typeof useGetUserCategoriesForListLazyQuery>;
+export type GetUserCategoriesForListQueryResult = ApolloReactCommon.QueryResult<GetUserCategoriesForListQuery, GetUserCategoriesForListQueryVariables>;
 export const HelloDocument = gql`
     query Hello {
   hello
@@ -868,7 +1035,7 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = ApolloReactCommon.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const UpdateThemeDocument = gql`
-    mutation UpdateTheme($id: Int!, $theme: String!) {
+    mutation UpdateTheme($id: String!, $theme: String!) {
   updateTheme(id: $id, theme: $theme) {
     theme
   }
@@ -900,9 +1067,9 @@ export function useUpdateThemeMutation(baseOptions?: ApolloReactHooks.MutationHo
 export type UpdateThemeMutationHookResult = ReturnType<typeof useUpdateThemeMutation>;
 export type UpdateThemeMutationResult = ApolloReactCommon.MutationResult<UpdateThemeMutation>;
 export type UpdateThemeMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateThemeMutation, UpdateThemeMutationVariables>;
-export const GetAllTransactionsDocument = gql`
-    query GetAllTransactions {
-  getAllTransactions {
+export const GetUserTransactionsDocument = gql`
+    query GetUserTransactions {
+  getUserTransactions {
     id
     name
     categoryId
@@ -912,31 +1079,31 @@ export const GetAllTransactionsDocument = gql`
     `;
 
 /**
- * __useGetAllTransactionsQuery__
+ * __useGetUserTransactionsQuery__
  *
- * To run a query within a React component, call `useGetAllTransactionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllTransactionsQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * To run a query within a React component, call `useGetUserTransactionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserTransactionsQuery` returns an object from Apollo Client that contains loading, error, and data properties 
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetAllTransactionsQuery({
+ * const { data, loading, error } = useGetUserTransactionsQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetAllTransactionsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAllTransactionsQuery, GetAllTransactionsQueryVariables>) {
-        return ApolloReactHooks.useQuery<GetAllTransactionsQuery, GetAllTransactionsQueryVariables>(GetAllTransactionsDocument, baseOptions);
+export function useGetUserTransactionsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetUserTransactionsQuery, GetUserTransactionsQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetUserTransactionsQuery, GetUserTransactionsQueryVariables>(GetUserTransactionsDocument, baseOptions);
       }
-export function useGetAllTransactionsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAllTransactionsQuery, GetAllTransactionsQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<GetAllTransactionsQuery, GetAllTransactionsQueryVariables>(GetAllTransactionsDocument, baseOptions);
+export function useGetUserTransactionsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetUserTransactionsQuery, GetUserTransactionsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetUserTransactionsQuery, GetUserTransactionsQueryVariables>(GetUserTransactionsDocument, baseOptions);
         }
-export type GetAllTransactionsQueryHookResult = ReturnType<typeof useGetAllTransactionsQuery>;
-export type GetAllTransactionsLazyQueryHookResult = ReturnType<typeof useGetAllTransactionsLazyQuery>;
-export type GetAllTransactionsQueryResult = ApolloReactCommon.QueryResult<GetAllTransactionsQuery, GetAllTransactionsQueryVariables>;
+export type GetUserTransactionsQueryHookResult = ReturnType<typeof useGetUserTransactionsQuery>;
+export type GetUserTransactionsLazyQueryHookResult = ReturnType<typeof useGetUserTransactionsLazyQuery>;
+export type GetUserTransactionsQueryResult = ApolloReactCommon.QueryResult<GetUserTransactionsQuery, GetUserTransactionsQueryVariables>;
 export const UpdateCategoriesInTransactionDocument = gql`
-    mutation UpdateCategoriesInTransaction($ids: [String!]!, $categoryId: Int!, $subCategoryId: Int!) {
+    mutation UpdateCategoriesInTransaction($ids: [String!]!, $categoryId: String!, $subCategoryId: String!) {
   updateCategoriesInTransaction(data: {ids: $ids, categoryId: $categoryId, subCategoryId: $subCategoryId})
 }
     `;
@@ -967,6 +1134,43 @@ export function useUpdateCategoriesInTransactionMutation(baseOptions?: ApolloRea
 export type UpdateCategoriesInTransactionMutationHookResult = ReturnType<typeof useUpdateCategoriesInTransactionMutation>;
 export type UpdateCategoriesInTransactionMutationResult = ApolloReactCommon.MutationResult<UpdateCategoriesInTransactionMutation>;
 export type UpdateCategoriesInTransactionMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateCategoriesInTransactionMutation, UpdateCategoriesInTransactionMutationVariables>;
+export const GetTransactionsToCategorizeDocument = gql`
+    query GetTransactionsToCategorize {
+  getTransactionsToCategorize {
+    id
+    name
+    memo
+    categoryName
+    subCategoryName
+    ids
+  }
+}
+    `;
+
+/**
+ * __useGetTransactionsToCategorizeQuery__
+ *
+ * To run a query within a React component, call `useGetTransactionsToCategorizeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTransactionsToCategorizeQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTransactionsToCategorizeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetTransactionsToCategorizeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetTransactionsToCategorizeQuery, GetTransactionsToCategorizeQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetTransactionsToCategorizeQuery, GetTransactionsToCategorizeQueryVariables>(GetTransactionsToCategorizeDocument, baseOptions);
+      }
+export function useGetTransactionsToCategorizeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetTransactionsToCategorizeQuery, GetTransactionsToCategorizeQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetTransactionsToCategorizeQuery, GetTransactionsToCategorizeQueryVariables>(GetTransactionsToCategorizeDocument, baseOptions);
+        }
+export type GetTransactionsToCategorizeQueryHookResult = ReturnType<typeof useGetTransactionsToCategorizeQuery>;
+export type GetTransactionsToCategorizeLazyQueryHookResult = ReturnType<typeof useGetTransactionsToCategorizeLazyQuery>;
+export type GetTransactionsToCategorizeQueryResult = ApolloReactCommon.QueryResult<GetTransactionsToCategorizeQuery, GetTransactionsToCategorizeQueryVariables>;
 export const UsersDocument = gql`
     query Users {
   users {

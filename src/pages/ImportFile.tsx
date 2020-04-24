@@ -21,6 +21,8 @@ const uploadFileMutation = gql`
         id
         account
         type
+        categoryId
+        subCategoryId
         datePosted
         name
         memo
@@ -56,9 +58,7 @@ const ImportFile: React.FC = () => {
   const [uploadFile, { data, error, loading }] = useMutation(
     uploadFileMutation
   );
-  if (data) {
-    console.log("Transaction data", data);
-  }
+
   const [submitTransactions] = useMutation(submitTransactionsMutation);
 
   const onDrop = useCallback(
@@ -74,7 +74,6 @@ const ImportFile: React.FC = () => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const handleSubmitTransactions = () => {
-    console.log(data.uploadFile.transactions);
     const trans: TransactionEntity[] = data.uploadFile.transactions;
     let transNoTypename: Transaction[] = trans.map(
       (obj: TransactionEntity) => ({
@@ -86,12 +85,13 @@ const ImportFile: React.FC = () => {
         name: obj.name,
         memo: obj.memo,
         amount: obj.amount,
+        categoryId: obj.categoryId,
+        subCategoryId: obj.subCategoryId,
       })
     );
 
     submitTransactions({ variables: { transactions: transNoTypename } }).then(
       ({ data, errors }) => {
-        console.log("submit trans data: ", data);
         if (
           data &&
           data.submitTransactions &&

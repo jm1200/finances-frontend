@@ -20,11 +20,14 @@ import {
   useUpdateCategoryMutation,
   useAddSubCategoryMutation,
   useDeleteSubCategoryMutation,
+  GetUserCategoriesForListQuery,
+  GetUserCategoriesForListQueryVariables,
 } from "../../generated/graphql";
 import AddCategoryForm from "./AddCategoryForm";
 import AddSubCategoryForm from "./AddSubCategoryForm";
 import EditCategoryForm from "./EditCategoryForm";
 import { ListItemSecondaryAction, IconButton } from "@material-ui/core";
+import { ApolloQueryResult } from "apollo-boost";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -55,25 +58,27 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface ICategoryListProps {
-  categories: UserQuery["user"]["categories"];
-  refetchUserQuery: any;
+  categories: GetUserCategoriesForListQuery["getUserCategories"];
+  refetchCategories: (
+    variables?: GetUserCategoriesForListQueryVariables | undefined
+  ) => Promise<ApolloQueryResult<GetUserCategoriesForListQuery>>;
 }
 
 export default function CategoryList({
   categories,
-  refetchUserQuery,
+  refetchCategories,
 }: ICategoryListProps) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(0);
+  const [open, setOpen] = React.useState("");
   const [addCategoryMode, setAddCategoryMode] = React.useState(false);
-  const [editCategoryMode, setEditCategoryMode] = React.useState(0);
-  const [addSubCategoryMode, setAddSubCategoryMode] = React.useState(0);
+  const [editCategoryMode, setEditCategoryMode] = React.useState("");
+  const [addSubCategoryMode, setAddSubCategoryMode] = React.useState("");
 
   const handleCategoryClick = (
     e: React.MouseEvent<HTMLDivElement>,
-    categoryId: number
+    categoryId: string
   ) => {
-    categoryId === open ? setOpen(0) : setOpen(categoryId);
+    categoryId === open ? setOpen("") : setOpen(categoryId);
   };
 
   const handleAddCategoryMode = () => {
@@ -81,21 +86,21 @@ export default function CategoryList({
   };
   const handleAddSubCategoryMode = (
     e: React.MouseEvent<SVGSVGElement, MouseEvent>,
-    categoryId: number
+    categoryId: string
   ) => {
     e.stopPropagation();
     setAddSubCategoryMode(categoryId);
   };
   const handleEditCategoryMode = (
     e: React.MouseEvent<SVGSVGElement, MouseEvent>,
-    categoryId: number
+    categoryId: string
   ) => {
     e.stopPropagation();
     setEditCategoryMode(categoryId);
   };
   const handleDeleteSubCategory = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    subCategoryId: number
+    subCategoryId: string
   ) => {
     e.stopPropagation();
     _deleteSubCategory(subCategoryId);
@@ -114,7 +119,7 @@ export default function CategoryList({
         name: newCategory,
       },
     });
-    refetchUserQuery();
+    refetchCategories();
   };
 
   const _editCategory = async (
@@ -123,35 +128,35 @@ export default function CategoryList({
       | React.MouseEvent<SVGSVGElement, MouseEvent>
       | React.FormEvent<HTMLFormElement>,
     editCategory: string,
-    categoryId: number
+    categoryId: string
   ) => {
     e.stopPropagation();
-    setEditCategoryMode(0);
+    setEditCategoryMode("");
     await updateCategory({ variables: { categoryId, name: editCategory } });
-    refetchUserQuery();
+    refetchCategories();
   };
 
   const _deleteCategory = async (
     e: React.MouseEvent<SVGSVGElement, MouseEvent>,
-    categoryId: number
+    categoryId: string
   ) => {
     e.stopPropagation();
     await deleteCategory({ variables: { categoryId } });
-    refetchUserQuery();
-    setEditCategoryMode(0);
+    refetchCategories();
+    setEditCategoryMode("");
   };
 
   const _addSubCategory = async (
     newSubCategory: string,
-    categoryId: number
+    categoryId: string
   ) => {
     await addSubCategory({ variables: { categoryId, name: newSubCategory } });
-    refetchUserQuery();
+    refetchCategories();
   };
 
-  const _deleteSubCategory = async (subCategoryId: number) => {
+  const _deleteSubCategory = async (subCategoryId: string) => {
     await deleteSubCategory({ variables: { subCategoryId } });
-    refetchUserQuery();
+    refetchCategories();
   };
 
   return (

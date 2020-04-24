@@ -16,8 +16,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface ISubCategorySelect {
   categories: any;
-  setFunction: React.Dispatch<React.SetStateAction<number>>;
-  currentValue: number;
+  setFunction: React.Dispatch<React.SetStateAction<string>>;
+  currentValue: string;
 }
 
 export default function SubCategorySelect(props: ISubCategorySelect) {

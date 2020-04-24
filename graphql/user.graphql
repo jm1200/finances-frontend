@@ -19,6 +19,8 @@ query User {
       categoryId
       subCategoryId
     }
+    # need to add userId, user, transactions but not sure if I want to.
+    # may want seperate queries for each table??
     categories {
       id
       name

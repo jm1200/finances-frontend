@@ -6,6 +6,7 @@
 - type safe categoriesComponent/utils/transCateDataTable
 - check all routes for auth. categories is not protected.
 - Loading spinner from updating transaction category
+- look into higher order resolvers for resolves that need userId
 
 Material table
 - make amounts display dollars
@@ -13,6 +14,9 @@ Material table
 get userid function working for resolvers.
 
 check all useAuth middlewares in server resolvers.
+
+Files to delete?
+- transCatDataTable.ts
 
 
 categories tests:

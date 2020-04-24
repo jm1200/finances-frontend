@@ -1,9 +1,24 @@
-export const createCategoriesMap = (categories: any): any => {
-  let categoriesMap: any = {};
-  if (categories!.length !== 0) {
-    categories!.forEach((category: any) => {
-      categoriesMap[category.id] = category;
-    });
+import {
+  UserQuery,
+  SubCategoryEntity,
+  CategoryEntity,
+} from "../generated/graphql";
+
+type CategoriesArray = UserQuery["user"]["categories"];
+
+interface ICategoriesMap {
+  [key: string]: CategoryEntity;
+}
+
+export const createCategoriesMap = (
+  categories: CategoriesArray
+): ICategoriesMap => {
+  let categoriesMap: ICategoriesMap = {};
+
+  if (categories.length !== 0) {
+    for (let category of categories) {
+      // categoriesMap[category.id] = category;
+    }
   }
   return categoriesMap;
 };

@@ -2,27 +2,61 @@ mutation AddCategory($name: String!) {
   addCategory(name: $name)
 }
 
-mutation UpdateCategory($categoryId: Int!, $name: String!) {
+mutation UpdateCategory($categoryId: String!, $name: String!) {
   updateCategory(categoryId: $categoryId, name: $name)
 }
 
-mutation AddSubCategory($name: String!, $categoryId: Int!) {
+mutation AddSubCategory($name: String!, $categoryId: String!) {
   addSubCategory(name: $name, categoryId: $categoryId)
 }
 
-mutation DeleteSubCategory($subCategoryId: Int!) {
+mutation DeleteSubCategory($subCategoryId: String!) {
   deleteSubCategory(subCategoryId: $subCategoryId)
 }
-mutation DeleteCategory($categoryId: Int!) {
+mutation DeleteCategory($categoryId: String!) {
   deleteCategory(categoryId: $categoryId)
 }
-query GetCategory($categoryId: Int!) {
+query GetCategory($categoryId: String!) {
   getCategorybyId(categoryId: $categoryId) {
     id
     name
     subCategories {
       id
       name
+    }
+  }
+}
+query GetUserCategories {
+  getUserCategories {
+    name
+    id
+    subCategories {
+      name
+      id
+    }
+    transactions {
+      id
+      name
+      amount
+      category {
+        id
+        name
+      }
+      subCategory {
+        id
+        name
+      }
+    }
+  }
+}
+
+query GetUserCategoriesForList {
+  getUserCategories {
+    id
+    name
+    subCategories {
+      name
+      id
     }
   }
 }

@@ -30,20 +30,20 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface IEditCategoryFormProps {
-  setEditCategoryMode: Dispatch<SetStateAction<number>>;
+  setEditCategoryMode: Dispatch<SetStateAction<string>>;
   editCategory: (
     e:
       | React.MouseEvent<SVGSVGElement, MouseEvent>
       | React.FormEvent<HTMLFormElement>,
     editCategory: string,
-    categoryId: number
+    categoryId: string
   ) => void;
   deleteCategory: (
     e: React.MouseEvent<SVGSVGElement, MouseEvent>,
-    categoryId: number
+    categoryId: string
   ) => void;
   currentValue: string;
-  categoryId: number;
+  categoryId: string;
 }
 
 export default function EditCategoryForm(props: IEditCategoryFormProps) {
@@ -56,7 +56,7 @@ export default function EditCategoryForm(props: IEditCategoryFormProps) {
 
   const handleCancel = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     e.stopPropagation();
-    props.setEditCategoryMode(0);
+    props.setEditCategoryMode("");
   };
 
   const handleSubmit = (
