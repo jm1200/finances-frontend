@@ -16,23 +16,33 @@ import {
   useUpdateCategoriesInTransactionMutation,
   GetUserCategoriesQuery,
   GetTransactionsByMonthQuery,
+  useUpdateCategoriesInAllTransactionsMutation,
 } from "../../generated/graphql";
 import { Edit, Cancel, CheckCircle } from "@material-ui/icons";
 import CategorySelect from "./CategorySelect";
 import SubCategorySelect from "./SubCategorySelect";
-import { Toolbar, Typography, Button, TextField } from "@material-ui/core";
+import {
+  Toolbar,
+  Typography,
+  Button,
+  TextField,
+  Tooltip,
+} from "@material-ui/core";
 import numeral from "numeral";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     table: {
-      minWidth: 650,
+      width: "100%",
     },
     updateOptions: {
       display: "flex",
     },
     check: {
       color: theme.palette.success.main,
+    },
+    checkAll: {
+      color: theme.palette.warning.main,
     },
     cancel: {
       color: theme.palette.error.main,
@@ -58,6 +68,9 @@ export function TransactionCategoryTable(
   const [
     updateCategoriesInTransaction,
   ] = useUpdateCategoriesInTransactionMutation();
+  const [
+    updateCategoriesInAllTransactions,
+  ] = useUpdateCategoriesInAllTransactionsMutation();
 
   // interface ISubCategoryMap {
   //   [key:string] : GetUserCategoriesQuery["getUserCategories"] | null | undefined
@@ -98,11 +111,29 @@ export function TransactionCategoryTable(
     props.refetch();
   };
 
+  const handleUpdateAllTransactionCategory = async (row: any) => {
+    let name = row.name;
+    let memo = row.memo;
+
+    let note = row.note;
+
+    console.log("TCT 121:", name, memo, categoryId, subCategoryId, note);
+
+    await updateCategoriesInAllTransactions({
+      variables: { name, memo, categoryId, subCategoryId, note },
+    });
+    setTransactionEditMode("");
+    setNote("");
+    setCategoryId("");
+    setSubCategoryId("");
+    props.refetch();
+  };
+
   console.log("TCT 101", props.data);
 
   return (
     <div>
-      <Paper>
+      <Paper className={classes.table}>
         {/* <EnhancedTableToolbar refetch={props.refetch} /> */}
         <TableContainer component={Paper}>
           <Table
@@ -163,26 +194,43 @@ export function TransactionCategoryTable(
                       </TableCell>
                       <TableCell>
                         <div className={classes.updateOptions}>
-                          <CheckCircle
-                            className={classes.check}
-                            onClick={() =>
-                              handleUpdateTransactionCategory(row.id)
-                            }
-                          />
-                          <Cancel
-                            className={classes.cancel}
-                            onClick={() =>
-                              handleEditTransactionMode("", "", "", "")
-                            }
-                          />
+                          <Tooltip title="Update One">
+                            <CheckCircle
+                              className={classes.check}
+                              onClick={() =>
+                                handleUpdateTransactionCategory(row.id)
+                              }
+                            />
+                          </Tooltip>
+                          <Tooltip title="Update All">
+                            <CheckCircle
+                              className={classes.checkAll}
+                              onClick={() =>
+                                handleUpdateAllTransactionCategory(row)
+                              }
+                            />
+                          </Tooltip>
+                          <Tooltip title="Cancel">
+                            <Cancel
+                              className={classes.cancel}
+                              onClick={() =>
+                                handleEditTransactionMode("", "", "", "")
+                              }
+                            />
+                          </Tooltip>
                         </div>
                       </TableCell>
                     </>
                   ) : (
                     <>
                       <TableCell>{row.note}</TableCell>
-                      <TableCell>{row.category!.name}</TableCell>
-                      <TableCell>{row.subCategory!.name}</TableCell>
+                      {/* TODO figure out why row.category is null sometimes */}
+                      <TableCell>
+                        {row.category ? row.category!.name : "ERROR!"}
+                      </TableCell>
+                      <TableCell>
+                        {row.subCategory ? row.subCategory!.name : "Error!"}
+                      </TableCell>
 
                       <TableCell>
                         <Edit

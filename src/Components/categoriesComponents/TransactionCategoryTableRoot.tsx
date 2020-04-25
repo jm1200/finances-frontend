@@ -25,7 +25,7 @@ export const TransactionCategoryTableRoot: React.FC<ITransactionCategoryTableRoo
     error: categoriesError,
   } = useGetUserCategoriesQuery({ fetchPolicy: "network-only" });
   const { data, loading, error, refetch } = useGetTransactionsByMonthQuery({
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
     variables: {
       month: props.selectedMonth,
       year: props.selectedYear,
@@ -40,6 +40,8 @@ export const TransactionCategoryTableRoot: React.FC<ITransactionCategoryTableRoo
   } else if (!data || !categoriesData) {
     return <div>No data!</div>;
   } else {
+    console.log("TCTR 43, ", data.getTransactionsByMonth);
+    console.log("TCTR 44, ", categoriesData.getUserCategories);
     return (
       <TransactionCategoryTable
         data={data.getTransactionsByMonth}

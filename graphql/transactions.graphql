@@ -21,17 +21,35 @@ mutation UpdateCategoriesInTransaction(
     }
   )
 }
-query GetTransactionsToCategorize {
-  getTransactionsToCategorize {
-    id
-    name
-    memo
-    averageAmount
-    categoryName
-    subCategoryName
-    ids
-  }
+mutation UpdateCategoriesInAllTransactions(
+  $note: String
+  $name: String
+  $memo: String
+  $categoryId: String!
+  $subCategoryId: String!
+) {
+  updateCategoriesInAllTransactions(
+    data: {
+      name: $name
+      memo: $memo
+      note: $note
+      categoryId: $categoryId
+      subCategoryId: $subCategoryId
+    }
+  )
 }
+
+# query GetTransactionsToCategorize {
+#   getTransactionsToCategorize {
+#     id
+#     name
+#     memo
+#     averageAmount
+#     categoryName
+#     subCategoryName
+#     ids
+#   }
+# }
 query GetTransactionsByMonth($month: String!, $year: Int!) {
   getTransactionsByMonth(month: $month, year: $year) {
     id

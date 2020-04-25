@@ -70,6 +70,7 @@ export type Mutation = {
   login: LoginResponse;
   register: LoginResponse;
   updateCategoriesInTransaction: Scalars['Boolean'];
+  updateCategoriesInAllTransactions: Scalars['Boolean'];
   addCategory: Scalars['Boolean'];
   updateCategory: Scalars['Boolean'];
   deleteCategory: Scalars['Boolean'];
@@ -114,6 +115,11 @@ export type MutationUpdateCategoriesInTransactionArgs = {
 };
 
 
+export type MutationUpdateCategoriesInAllTransactionsArgs = {
+  data: UpdateAllTransactionsInput;
+};
+
+
 export type MutationAddCategoryArgs = {
   name: Scalars['String'];
 };
@@ -151,7 +157,6 @@ export type Query = {
   getUserTransactions: Array<TransactionEntity>;
   getTransactionsById: TransactionEntity;
   getTransactionsByMonth: Array<TransactionEntity>;
-  getTransactionsToCategorize: Array<IGroupedTransactionsClass>;
   getUserCategories: Array<CategoryEntity>;
   getCategorybyId: CategoryEntity;
 };
@@ -243,6 +248,14 @@ export type TransactionInput = {
   subCategoryId: Scalars['String'];
   memo: Scalars['String'];
   amount: Scalars['Float'];
+};
+
+export type UpdateAllTransactionsInput = {
+  name?: Maybe<Scalars['String']>;
+  memo?: Maybe<Scalars['String']>;
+  categoryId?: Maybe<Scalars['String']>;
+  subCategoryId?: Maybe<Scalars['String']>;
+  note?: Maybe<Scalars['String']>;
 };
 
 export type UpdateTransactionInput = {
@@ -513,15 +526,18 @@ export type UpdateCategoriesInTransactionMutation = (
   & Pick<Mutation, 'updateCategoriesInTransaction'>
 );
 
-export type GetTransactionsToCategorizeQueryVariables = {};
+export type UpdateCategoriesInAllTransactionsMutationVariables = {
+  note?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  memo?: Maybe<Scalars['String']>;
+  categoryId: Scalars['String'];
+  subCategoryId: Scalars['String'];
+};
 
 
-export type GetTransactionsToCategorizeQuery = (
-  { __typename?: 'Query' }
-  & { getTransactionsToCategorize: Array<(
-    { __typename?: 'IGroupedTransactionsClass' }
-    & Pick<IGroupedTransactionsClass, 'id' | 'name' | 'memo' | 'averageAmount' | 'categoryName' | 'subCategoryName' | 'ids'>
-  )> }
+export type UpdateCategoriesInAllTransactionsMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'updateCategoriesInAllTransactions'>
 );
 
 export type GetTransactionsByMonthQueryVariables = {
@@ -1170,44 +1186,40 @@ export function useUpdateCategoriesInTransactionMutation(baseOptions?: ApolloRea
 export type UpdateCategoriesInTransactionMutationHookResult = ReturnType<typeof useUpdateCategoriesInTransactionMutation>;
 export type UpdateCategoriesInTransactionMutationResult = ApolloReactCommon.MutationResult<UpdateCategoriesInTransactionMutation>;
 export type UpdateCategoriesInTransactionMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateCategoriesInTransactionMutation, UpdateCategoriesInTransactionMutationVariables>;
-export const GetTransactionsToCategorizeDocument = gql`
-    query GetTransactionsToCategorize {
-  getTransactionsToCategorize {
-    id
-    name
-    memo
-    averageAmount
-    categoryName
-    subCategoryName
-    ids
-  }
+export const UpdateCategoriesInAllTransactionsDocument = gql`
+    mutation UpdateCategoriesInAllTransactions($note: String, $name: String, $memo: String, $categoryId: String!, $subCategoryId: String!) {
+  updateCategoriesInAllTransactions(data: {name: $name, memo: $memo, note: $note, categoryId: $categoryId, subCategoryId: $subCategoryId})
 }
     `;
+export type UpdateCategoriesInAllTransactionsMutationFn = ApolloReactCommon.MutationFunction<UpdateCategoriesInAllTransactionsMutation, UpdateCategoriesInAllTransactionsMutationVariables>;
 
 /**
- * __useGetTransactionsToCategorizeQuery__
+ * __useUpdateCategoriesInAllTransactionsMutation__
  *
- * To run a query within a React component, call `useGetTransactionsToCategorizeQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTransactionsToCategorizeQuery` returns an object from Apollo Client that contains loading, error, and data properties 
- * you can use to render your UI.
+ * To run a mutation, you first call `useUpdateCategoriesInAllTransactionsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCategoriesInAllTransactionsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
  *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const { data, loading, error } = useGetTransactionsToCategorizeQuery({
+ * const [updateCategoriesInAllTransactionsMutation, { data, loading, error }] = useUpdateCategoriesInAllTransactionsMutation({
  *   variables: {
+ *      note: // value for 'note'
+ *      name: // value for 'name'
+ *      memo: // value for 'memo'
+ *      categoryId: // value for 'categoryId'
+ *      subCategoryId: // value for 'subCategoryId'
  *   },
  * });
  */
-export function useGetTransactionsToCategorizeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetTransactionsToCategorizeQuery, GetTransactionsToCategorizeQueryVariables>) {
-        return ApolloReactHooks.useQuery<GetTransactionsToCategorizeQuery, GetTransactionsToCategorizeQueryVariables>(GetTransactionsToCategorizeDocument, baseOptions);
+export function useUpdateCategoriesInAllTransactionsMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateCategoriesInAllTransactionsMutation, UpdateCategoriesInAllTransactionsMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateCategoriesInAllTransactionsMutation, UpdateCategoriesInAllTransactionsMutationVariables>(UpdateCategoriesInAllTransactionsDocument, baseOptions);
       }
-export function useGetTransactionsToCategorizeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetTransactionsToCategorizeQuery, GetTransactionsToCategorizeQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<GetTransactionsToCategorizeQuery, GetTransactionsToCategorizeQueryVariables>(GetTransactionsToCategorizeDocument, baseOptions);
-        }
-export type GetTransactionsToCategorizeQueryHookResult = ReturnType<typeof useGetTransactionsToCategorizeQuery>;
-export type GetTransactionsToCategorizeLazyQueryHookResult = ReturnType<typeof useGetTransactionsToCategorizeLazyQuery>;
-export type GetTransactionsToCategorizeQueryResult = ApolloReactCommon.QueryResult<GetTransactionsToCategorizeQuery, GetTransactionsToCategorizeQueryVariables>;
+export type UpdateCategoriesInAllTransactionsMutationHookResult = ReturnType<typeof useUpdateCategoriesInAllTransactionsMutation>;
+export type UpdateCategoriesInAllTransactionsMutationResult = ApolloReactCommon.MutationResult<UpdateCategoriesInAllTransactionsMutation>;
+export type UpdateCategoriesInAllTransactionsMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateCategoriesInAllTransactionsMutation, UpdateCategoriesInAllTransactionsMutationVariables>;
 export const GetTransactionsByMonthDocument = gql`
     query GetTransactionsByMonth($month: String!, $year: Int!) {
   getTransactionsByMonth(month: $month, year: $year) {

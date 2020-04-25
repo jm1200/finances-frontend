@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     transactions: {
       marginLeft: 20,
+      width: "100%",
     },
   })
 );
