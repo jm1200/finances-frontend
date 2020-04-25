@@ -1,7 +1,6 @@
 import React from "react";
 import { TransactionCategoryTable } from "./TransactionCategoryTable";
 import {
-  useGetTransactionsToCategorizeQuery,
   useGetUserCategoriesQuery,
   useGetTransactionsByMonthQuery,
 } from "../../generated/graphql";

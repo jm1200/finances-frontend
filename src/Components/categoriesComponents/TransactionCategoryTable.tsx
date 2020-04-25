@@ -14,7 +14,6 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import {
   useUpdateCategoriesInTransactionMutation,
-  GetTransactionsToCategorizeQuery,
   GetUserCategoriesQuery,
   GetTransactionsByMonthQuery,
 } from "../../generated/graphql";
@@ -88,7 +87,6 @@ export function TransactionCategoryTable(
   const handleUpdateTransactionCategory = async (rowId: string) => {
     const row = props.data.filter((row) => row.id === rowId);
     const id = row[0].id;
-    console.log(id);
 
     await updateCategoriesInTransaction({
       variables: { id, categoryId, subCategoryId, note },
@@ -97,7 +95,7 @@ export function TransactionCategoryTable(
     setNote("");
     props.refetch();
   };
-  console.log("TCT 84", props.data);
+
   // props.data.sort((a: any, b: any) => {
   //   let c = parseInt(a.datePosted);
   //   let d = parseInt(b.datePosted);

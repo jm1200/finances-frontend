@@ -1,8 +1,6 @@
 import React from "react";
-import { useUserQuery, UserQuery } from "../generated/graphql";
 import { CategoryListRoot } from "../Components/categoriesComponents/CategoryListRoot";
 import { TransactionCategoryTableRoot } from "../Components/categoriesComponents/TransactionCategoryTableRoot";
-import { MonthPicker } from "../Components/shared/MonthPicker";
 
 import { createStyles, makeStyles, Theme } from "@material-ui/core";
 
@@ -26,7 +24,6 @@ const Categories: React.FC<ICategoriesProps> = (props) => {
   const classes = useStyles();
   const [selectedMonth, setSelectedMonth] = React.useState("Apr");
   const [selectedYear, setSelectedYear] = React.useState(2019);
-  const { data, loading, refetch: refetchUserQuery } = useUserQuery();
 
   return (
     <div className={classes.root}>

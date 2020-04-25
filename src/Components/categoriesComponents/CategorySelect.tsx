@@ -24,8 +24,6 @@ interface ICategorySelect {
 export default function CategorySelect(props: ICategorySelect) {
   const classes = useStyles();
 
-  console.log("CS 27", props.currentValue);
-
   const handleChange = (event: any) => {
     props.setFunction(event.target.value);
   };

@@ -14,7 +14,6 @@ import AddCircle from "@material-ui/icons/AddCircle";
 import Delete from "@material-ui/icons/Delete";
 import Edit from "@material-ui/icons/Edit";
 import {
-  UserQuery,
   useAddCategoryMutation,
   useDeleteCategoryMutation,
   useUpdateCategoryMutation,
