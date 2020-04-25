@@ -16,11 +16,12 @@ import {
   useUpdateCategoriesInTransactionMutation,
   GetTransactionsToCategorizeQuery,
   GetUserCategoriesQuery,
+  GetTransactionsByMonthQuery,
 } from "../../generated/graphql";
 import { Edit, Cancel, CheckCircle } from "@material-ui/icons";
 import CategorySelect from "./CategorySelect";
 import SubCategorySelect from "./SubCategorySelect";
-import { Toolbar, Typography, Button } from "@material-ui/core";
+import { Toolbar, Typography, Button, TextField } from "@material-ui/core";
 import numeral from "numeral";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface ITransactionCategoryTableProps {
-  data: GetTransactionsToCategorizeQuery["getTransactionsToCategorize"];
+  data: GetTransactionsByMonthQuery["getTransactionsByMonth"];
   categoriesData: GetUserCategoriesQuery["getUserCategories"];
   refetch: any;
 }
@@ -51,6 +52,7 @@ export function TransactionCategoryTable(
   props: ITransactionCategoryTableProps
 ) {
   const classes = useStyles();
+  const [note, setNote] = React.useState("");
   const [editTransactionMode, setTransactionEditMode] = React.useState("");
   const [categoryId, setCategoryId] = React.useState("");
   const [subCategoryId, setSubCategoryId] = React.useState("");
@@ -67,19 +69,42 @@ export function TransactionCategoryTable(
     subCategoriesMap[category.id] = category.subCategories;
   });
 
-  const handleEditTransactionMode = (id: string) => {
+  const handleEditTransactionMode = (
+    id: string,
+    note: string,
+    categoryId: string,
+    subCategoryId: string
+  ) => {
     setTransactionEditMode(id);
+    setCategoryId(categoryId);
+    setSubCategoryId(subCategoryId);
+    setNote(note);
+  };
+
+  const handleEditNote = (e: any) => {
+    setNote(e.target.value);
   };
 
   const handleUpdateTransactionCategory = async (rowId: string) => {
     const row = props.data.filter((row) => row.id === rowId);
-    const ids = row[0].ids;
+    const id = row[0].id;
+    console.log(id);
 
     await updateCategoriesInTransaction({
-      variables: { ids, categoryId, subCategoryId },
+      variables: { id, categoryId, subCategoryId, note },
     });
     setTransactionEditMode("");
+    setNote("");
+    props.refetch();
   };
+  console.log("TCT 84", props.data);
+  // props.data.sort((a: any, b: any) => {
+  //   let c = parseInt(a.datePosted);
+  //   let d = parseInt(b.datePosted);
+  //   if (d > c) return -1;
+  //   if (d < c) return 1;
+  //   return 0;
+  // });
 
   return (
     <div>
@@ -93,9 +118,12 @@ export function TransactionCategoryTable(
           >
             <TableHead>
               <TableRow>
+                <TableCell>Date</TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>Memo</TableCell>
+
                 <TableCell>Average Amount</TableCell>
+                <TableCell>Note</TableCell>
                 <TableCell>Category</TableCell>
                 <TableCell>Sub Category</TableCell>
                 <TableCell>Edit</TableCell>
@@ -104,30 +132,40 @@ export function TransactionCategoryTable(
             <TableBody>
               {props.data.map((row) => (
                 <TableRow key={row.id}>
+                  <TableCell>{row.datePosted}</TableCell>
                   <TableCell component="th" scope="row">
                     {row.name}
                   </TableCell>
                   <TableCell>{row.memo}</TableCell>
+
                   <TableCell align="right">
-                    {numeral(row.averageAmount).format("$0,0.00")}
+                    {numeral(row.amount).format("$0,0.00")}
                   </TableCell>
                   {editTransactionMode === row.id ? (
                     <>
                       <TableCell>
+                        <TextField
+                          label="Note"
+                          id="outlined-size-small"
+                          value={note}
+                          variant="outlined"
+                          size="small"
+                          onChange={handleEditNote}
+                        />
+                      </TableCell>
+                      <TableCell>
                         <CategorySelect
                           categories={props.categoriesData}
-                          currentValue={categoryId}
+                          currentValue={row.category!.id}
                           setFunction={setCategoryId}
                         />
                       </TableCell>
                       <TableCell>
-                        {categoryId !== "" && (
-                          <SubCategorySelect
-                            categories={subCategoriesMap[categoryId]}
-                            currentValue={subCategoryId}
-                            setFunction={setSubCategoryId}
-                          />
-                        )}
+                        <SubCategorySelect
+                          categories={subCategoriesMap[row.category!.id]}
+                          currentValue={row.subCategory!.id}
+                          setFunction={setSubCategoryId}
+                        />
                       </TableCell>
                       <TableCell>
                         <div className={classes.updateOptions}>
@@ -139,18 +177,29 @@ export function TransactionCategoryTable(
                           />
                           <Cancel
                             className={classes.cancel}
-                            onClick={() => handleEditTransactionMode("")}
+                            onClick={() =>
+                              handleEditTransactionMode("", "", "", "")
+                            }
                           />
                         </div>
                       </TableCell>
                     </>
                   ) : (
                     <>
-                      <TableCell>{row.categoryName}</TableCell>
-                      <TableCell>{row.subCategoryName}</TableCell>
+                      <TableCell>{row.note}</TableCell>
+                      <TableCell>{row.category!.name}</TableCell>
+                      <TableCell>{row.subCategory!.name}</TableCell>
+
                       <TableCell>
                         <Edit
-                          onClick={() => handleEditTransactionMode(row.id)}
+                          onClick={() =>
+                            handleEditTransactionMode(
+                              row.id,
+                              row.note || "",
+                              row.category!.id,
+                              row.subCategory!.id
+                            )
+                          }
                         />
                       </TableCell>
                     </>

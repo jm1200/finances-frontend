@@ -18,11 +18,13 @@ const useStyles = makeStyles((theme: Theme) =>
 interface ICategorySelect {
   categories: UserQuery["user"]["categories"];
   setFunction: React.Dispatch<React.SetStateAction<string>>;
-  currentValue: string;
+  currentValue: any;
 }
 
 export default function CategorySelect(props: ICategorySelect) {
   const classes = useStyles();
+
+  console.log("CS 27", props.currentValue);
 
   const handleChange = (event: any) => {
     props.setFunction(event.target.value);
@@ -38,7 +40,6 @@ export default function CategorySelect(props: ICategorySelect) {
           value={props.currentValue}
           onChange={handleChange}
         >
-          <MenuItem value={0}>none</MenuItem>
           {props.categories &&
             props.categories.map((category) => {
               return (

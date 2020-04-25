@@ -3,6 +3,7 @@ import { TransactionCategoryTable } from "./TransactionCategoryTable";
 import {
   useGetTransactionsToCategorizeQuery,
   useGetUserCategoriesQuery,
+  useGetTransactionsByMonthQuery,
 } from "../../generated/graphql";
 
 interface ITransactionCategoryTableRootProps {
@@ -13,17 +14,24 @@ interface ITransactionCategoryTableRootProps {
 export const TransactionCategoryTableRoot: React.FC<ITransactionCategoryTableRootProps> = (
   props
 ) => {
-  const {
-    data,
-    loading,
-    error,
-    refetch,
-  } = useGetTransactionsToCategorizeQuery({ fetchPolicy: "network-only" });
+  // const {
+  //   data,
+  //   loading,
+  //   error,
+  //   refetch,
+  // } = useGetTransactionsToCategorizeQuery({ fetchPolicy: "network-only" });
   const {
     data: categoriesData,
     loading: categoriesLoading,
     error: categoriesError,
   } = useGetUserCategoriesQuery({ fetchPolicy: "network-only" });
+  const { data, loading, error, refetch } = useGetTransactionsByMonthQuery({
+    fetchPolicy: "network-only",
+    variables: {
+      month: props.selectedMonth,
+      year: props.selectedYear,
+    },
+  });
 
   if (loading || categoriesLoading) {
     return <div>Loading Transaction Categories...</div>;
@@ -35,7 +43,7 @@ export const TransactionCategoryTableRoot: React.FC<ITransactionCategoryTableRoo
   } else {
     return (
       <TransactionCategoryTable
-        data={data.getTransactionsToCategorize}
+        data={data.getTransactionsByMonth}
         categoriesData={categoriesData.getUserCategories}
         refetch={refetch}
       />

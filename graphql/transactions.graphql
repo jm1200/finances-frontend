@@ -7,12 +7,18 @@ query GetUserTransactions {
   }
 }
 mutation UpdateCategoriesInTransaction(
-  $ids: [String!]!
+  $note: String
+  $id: String!
   $categoryId: String!
   $subCategoryId: String!
 ) {
   updateCategoriesInTransaction(
-    data: { ids: $ids, categoryId: $categoryId, subCategoryId: $subCategoryId }
+    data: {
+      id: $id
+      note: $note
+      categoryId: $categoryId
+      subCategoryId: $subCategoryId
+    }
   )
 }
 query GetTransactionsToCategorize {
@@ -24,5 +30,24 @@ query GetTransactionsToCategorize {
     categoryName
     subCategoryName
     ids
+  }
+}
+query GetTransactionsByMonth($month: String!, $year: Int!) {
+  getTransactionsByMonth(month: $month, year: $year) {
+    id
+    datePosted
+    name
+    memo
+    note
+    amount
+    keyName
+    category {
+      id
+      name
+    }
+    subCategory {
+      id
+      name
+    }
   }
 }

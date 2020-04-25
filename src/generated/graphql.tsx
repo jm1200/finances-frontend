@@ -38,8 +38,10 @@ export type CategoryEntity = {
 export type IGroupedTransactionsClass = {
    __typename?: 'IGroupedTransactionsClass';
   id: Scalars['String'];
+  datePosted: Scalars['String'];
   name: Scalars['String'];
   memo: Scalars['String'];
+  note: Scalars['String'];
   amounts: Array<Scalars['Float']>;
   averageAmount: Scalars['Float'];
   categoryName: Scalars['String'];
@@ -148,6 +150,7 @@ export type Query = {
   me?: Maybe<MeResponse>;
   getUserTransactions: Array<TransactionEntity>;
   getTransactionsById: TransactionEntity;
+  getTransactionsByMonth: Array<TransactionEntity>;
   getTransactionsToCategorize: Array<IGroupedTransactionsClass>;
   getUserCategories: Array<CategoryEntity>;
   getCategorybyId: CategoryEntity;
@@ -161,6 +164,12 @@ export type QueryGetUserSettingsArgs = {
 
 export type QueryGetTransactionsByIdArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryGetTransactionsByMonthArgs = {
+  year: Scalars['Int'];
+  month: Scalars['String'];
 };
 
 
@@ -214,6 +223,7 @@ export type TransactionEntity = {
   datePosted: Scalars['String'];
   name: Scalars['String'];
   memo: Scalars['String'];
+  note?: Maybe<Scalars['String']>;
   keyName: Scalars['String'];
   amount: Scalars['Float'];
   subCategoryId?: Maybe<Scalars['String']>;
@@ -236,9 +246,10 @@ export type TransactionInput = {
 };
 
 export type UpdateTransactionInput = {
-  ids: Array<Scalars['String']>;
+  id: Scalars['String'];
   categoryId?: Maybe<Scalars['String']>;
   subCategoryId?: Maybe<Scalars['String']>;
+  note?: Maybe<Scalars['String']>;
 };
 
 
@@ -490,7 +501,8 @@ export type GetUserTransactionsQuery = (
 );
 
 export type UpdateCategoriesInTransactionMutationVariables = {
-  ids: Array<Scalars['String']>;
+  note?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
   categoryId: Scalars['String'];
   subCategoryId: Scalars['String'];
 };
@@ -509,6 +521,27 @@ export type GetTransactionsToCategorizeQuery = (
   & { getTransactionsToCategorize: Array<(
     { __typename?: 'IGroupedTransactionsClass' }
     & Pick<IGroupedTransactionsClass, 'id' | 'name' | 'memo' | 'averageAmount' | 'categoryName' | 'subCategoryName' | 'ids'>
+  )> }
+);
+
+export type GetTransactionsByMonthQueryVariables = {
+  month: Scalars['String'];
+  year: Scalars['Int'];
+};
+
+
+export type GetTransactionsByMonthQuery = (
+  { __typename?: 'Query' }
+  & { getTransactionsByMonth: Array<(
+    { __typename?: 'TransactionEntity' }
+    & Pick<TransactionEntity, 'id' | 'datePosted' | 'name' | 'memo' | 'note' | 'amount' | 'keyName'>
+    & { category?: Maybe<(
+      { __typename?: 'CategoryEntity' }
+      & Pick<CategoryEntity, 'id' | 'name'>
+    )>, subCategory?: Maybe<(
+      { __typename?: 'SubCategoryEntity' }
+      & Pick<SubCategoryEntity, 'id' | 'name'>
+    )> }
   )> }
 );
 
@@ -1105,8 +1138,8 @@ export type GetUserTransactionsQueryHookResult = ReturnType<typeof useGetUserTra
 export type GetUserTransactionsLazyQueryHookResult = ReturnType<typeof useGetUserTransactionsLazyQuery>;
 export type GetUserTransactionsQueryResult = ApolloReactCommon.QueryResult<GetUserTransactionsQuery, GetUserTransactionsQueryVariables>;
 export const UpdateCategoriesInTransactionDocument = gql`
-    mutation UpdateCategoriesInTransaction($ids: [String!]!, $categoryId: String!, $subCategoryId: String!) {
-  updateCategoriesInTransaction(data: {ids: $ids, categoryId: $categoryId, subCategoryId: $subCategoryId})
+    mutation UpdateCategoriesInTransaction($note: String, $id: String!, $categoryId: String!, $subCategoryId: String!) {
+  updateCategoriesInTransaction(data: {id: $id, note: $note, categoryId: $categoryId, subCategoryId: $subCategoryId})
 }
     `;
 export type UpdateCategoriesInTransactionMutationFn = ApolloReactCommon.MutationFunction<UpdateCategoriesInTransactionMutation, UpdateCategoriesInTransactionMutationVariables>;
@@ -1124,7 +1157,8 @@ export type UpdateCategoriesInTransactionMutationFn = ApolloReactCommon.Mutation
  * @example
  * const [updateCategoriesInTransactionMutation, { data, loading, error }] = useUpdateCategoriesInTransactionMutation({
  *   variables: {
- *      ids: // value for 'ids'
+ *      note: // value for 'note'
+ *      id: // value for 'id'
  *      categoryId: // value for 'categoryId'
  *      subCategoryId: // value for 'subCategoryId'
  *   },
@@ -1174,6 +1208,54 @@ export function useGetTransactionsToCategorizeLazyQuery(baseOptions?: ApolloReac
 export type GetTransactionsToCategorizeQueryHookResult = ReturnType<typeof useGetTransactionsToCategorizeQuery>;
 export type GetTransactionsToCategorizeLazyQueryHookResult = ReturnType<typeof useGetTransactionsToCategorizeLazyQuery>;
 export type GetTransactionsToCategorizeQueryResult = ApolloReactCommon.QueryResult<GetTransactionsToCategorizeQuery, GetTransactionsToCategorizeQueryVariables>;
+export const GetTransactionsByMonthDocument = gql`
+    query GetTransactionsByMonth($month: String!, $year: Int!) {
+  getTransactionsByMonth(month: $month, year: $year) {
+    id
+    datePosted
+    name
+    memo
+    note
+    amount
+    keyName
+    category {
+      id
+      name
+    }
+    subCategory {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTransactionsByMonthQuery__
+ *
+ * To run a query within a React component, call `useGetTransactionsByMonthQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTransactionsByMonthQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTransactionsByMonthQuery({
+ *   variables: {
+ *      month: // value for 'month'
+ *      year: // value for 'year'
+ *   },
+ * });
+ */
+export function useGetTransactionsByMonthQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetTransactionsByMonthQuery, GetTransactionsByMonthQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetTransactionsByMonthQuery, GetTransactionsByMonthQueryVariables>(GetTransactionsByMonthDocument, baseOptions);
+      }
+export function useGetTransactionsByMonthLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetTransactionsByMonthQuery, GetTransactionsByMonthQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetTransactionsByMonthQuery, GetTransactionsByMonthQueryVariables>(GetTransactionsByMonthDocument, baseOptions);
+        }
+export type GetTransactionsByMonthQueryHookResult = ReturnType<typeof useGetTransactionsByMonthQuery>;
+export type GetTransactionsByMonthLazyQueryHookResult = ReturnType<typeof useGetTransactionsByMonthLazyQuery>;
+export type GetTransactionsByMonthQueryResult = ApolloReactCommon.QueryResult<GetTransactionsByMonthQuery, GetTransactionsByMonthQueryVariables>;
 export const UsersDocument = gql`
     query Users {
   users {
