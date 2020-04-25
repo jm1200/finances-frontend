@@ -93,21 +93,17 @@ export function TransactionCategoryTable(
     });
     setTransactionEditMode("");
     setNote("");
+    setCategoryId("");
+    setSubCategoryId("");
     props.refetch();
   };
 
-  // props.data.sort((a: any, b: any) => {
-  //   let c = parseInt(a.datePosted);
-  //   let d = parseInt(b.datePosted);
-  //   if (d > c) return -1;
-  //   if (d < c) return 1;
-  //   return 0;
-  // });
+  console.log("TCT 101", props.data);
 
   return (
     <div>
       <Paper>
-        <EnhancedTableToolbar refetch={props.refetch} />
+        {/* <EnhancedTableToolbar refetch={props.refetch} /> */}
         <TableContainer component={Paper}>
           <Table
             className={classes.table}
@@ -154,14 +150,14 @@ export function TransactionCategoryTable(
                       <TableCell>
                         <CategorySelect
                           categories={props.categoriesData}
-                          currentValue={row.category!.id}
+                          currentValue={categoryId}
                           setFunction={setCategoryId}
                         />
                       </TableCell>
                       <TableCell>
                         <SubCategorySelect
-                          categories={subCategoriesMap[row.category!.id]}
-                          currentValue={row.subCategory!.id}
+                          categories={subCategoriesMap[categoryId]}
+                          currentValue={subCategoryId}
                           setFunction={setSubCategoryId}
                         />
                       </TableCell>
@@ -212,53 +208,53 @@ export function TransactionCategoryTable(
   );
 }
 
-const useToolbarStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(1),
-    },
-    highlight:
-      theme.palette.type === "light"
-        ? {
-            color: theme.palette.secondary.main,
-            backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-          }
-        : {
-            color: theme.palette.text.primary,
-            backgroundColor: theme.palette.secondary.dark,
-          },
-    title: {
-      flex: "1 1 100%",
-    },
-  })
-);
+// const useToolbarStyles = makeStyles((theme: Theme) =>
+//   createStyles({
+//     root: {
+//       paddingLeft: theme.spacing(2),
+//       paddingRight: theme.spacing(1),
+//     },
+//     highlight:
+//       theme.palette.type === "light"
+//         ? {
+//             color: theme.palette.secondary.main,
+//             backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+//           }
+//         : {
+//             color: theme.palette.text.primary,
+//             backgroundColor: theme.palette.secondary.dark,
+//           },
+//     title: {
+//       flex: "1 1 100%",
+//     },
+//   })
+// );
 
-interface IEnhancedToolBarProps {
-  refetch: any;
-}
+// interface IEnhancedToolBarProps {
+//   refetch: any;
+// }
 
-function EnhancedTableToolbar(props: IEnhancedToolBarProps) {
-  const classes = useToolbarStyles();
+// function EnhancedTableToolbar(props: IEnhancedToolBarProps) {
+//   const classes = useToolbarStyles();
 
-  const handleClick = () => {
-    props.refetch();
-  };
+//   const handleClick = () => {
+//     props.refetch();
+//   };
 
-  return (
-    <Toolbar className={classes.root}>
-      <Typography
-        className={classes.title}
-        variant="h6"
-        id="tableTitle"
-        component="div"
-      >
-        List of Uncategorized Transactions
-      </Typography>
+//   return (
+//     <Toolbar className={classes.root}>
+//       <Typography
+//         className={classes.title}
+//         variant="h6"
+//         id="tableTitle"
+//         component="div"
+//       >
+//         List of Uncategorized Transactions
+//       </Typography>
 
-      <Button onClick={handleClick} variant="contained">
-        Get 10 more...
-      </Button>
-    </Toolbar>
-  );
-}
+//       <Button onClick={handleClick} variant="contained">
+//         Get 10 more...
+//       </Button>
+//     </Toolbar>
+//   );
+// }
