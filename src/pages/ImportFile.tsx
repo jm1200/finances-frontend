@@ -23,6 +23,7 @@ const uploadFileMutation = gql`
         type
         categoryId
         subCategoryId
+        savedCategory
         datePosted
         name
         memo
@@ -84,11 +85,14 @@ const ImportFile: React.FC = () => {
         datePosted: obj.datePosted,
         name: obj.name,
         memo: obj.memo,
+        savedCategory: obj.savedCategory,
         amount: obj.amount,
         categoryId: obj.categoryId,
         subCategoryId: obj.subCategoryId,
       })
     );
+
+    console.log("IF 94: ", transNoTypename[0]);
 
     submitTransactions({ variables: { transactions: transNoTypename } }).then(
       ({ data, errors }) => {

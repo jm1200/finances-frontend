@@ -36,3 +36,24 @@ categories tests:
 
 
 
+add property to entity:
+1. add property to entity
+
+
+in the table I have a switch to decide which mutations to run
+
+add savedCategory to Trans Entity
+
+if saved category {
+    update all categories
+    if saved category has changed {
+        update savedCategories Entity with change
+    }
+} else {
+    update one category
+    if saved category has changed {
+        update savedCategories Entity with change
+    } 
+}
+
+when importing files, check for saved categories

@@ -12,19 +12,6 @@ export type Scalars = {
   Upload: any;
 };
 
-export type CategorizedTransactionsEntity = {
-   __typename?: 'CategorizedTransactionsEntity';
-  id: Scalars['String'];
-  name: Scalars['String'];
-  memo?: Maybe<Scalars['String']>;
-  keyName: Scalars['String'];
-  userId: Scalars['String'];
-  categoryId: Scalars['String'];
-  category: CategoryEntity;
-  subCategoryId?: Maybe<Scalars['String']>;
-  subCategory?: Maybe<SubCategoryEntity>;
-};
-
 export type CategoryEntity = {
    __typename?: 'CategoryEntity';
   id: Scalars['String'];
@@ -76,6 +63,8 @@ export type Mutation = {
   deleteCategory: Scalars['Boolean'];
   addSubCategory: Scalars['Boolean'];
   deleteSubCategory: Scalars['Boolean'];
+  createSavedCategory: Scalars['Boolean'];
+  deleteSavedCategory: Scalars['Boolean'];
 };
 
 
@@ -146,6 +135,16 @@ export type MutationDeleteSubCategoryArgs = {
   subCategoryId: Scalars['String'];
 };
 
+
+export type MutationCreateSavedCategoryArgs = {
+  data: SavedCategoriesInput;
+};
+
+
+export type MutationDeleteSavedCategoryArgs = {
+  id: Scalars['String'];
+};
+
 export type Query = {
    __typename?: 'Query';
   getUserSettings: UserSettingsEntity;
@@ -159,6 +158,7 @@ export type Query = {
   getTransactionsByMonth: Array<TransactionEntity>;
   getUserCategories: Array<CategoryEntity>;
   getCategorybyId: CategoryEntity;
+  getUserSavedCategories: Array<SavedCategoriesEntity>;
 };
 
 
@@ -187,6 +187,26 @@ export type RegisterInput = {
   password: Scalars['String'];
 };
 
+export type SavedCategoriesEntity = {
+   __typename?: 'SavedCategoriesEntity';
+  id: Scalars['String'];
+  name: Scalars['String'];
+  memo?: Maybe<Scalars['String']>;
+  keyName: Scalars['String'];
+  userId: Scalars['String'];
+  categoryId: Scalars['String'];
+  category: CategoryEntity;
+  subCategoryId?: Maybe<Scalars['String']>;
+  subCategory?: Maybe<SubCategoryEntity>;
+};
+
+export type SavedCategoriesInput = {
+  name: Scalars['String'];
+  memo: Scalars['String'];
+  categoryId: Scalars['String'];
+  subCategoryId: Scalars['String'];
+};
+
 export type SubCategoryEntity = {
    __typename?: 'SubCategoryEntity';
   id: Scalars['String'];
@@ -212,6 +232,7 @@ export type TransactionClass = {
   type: Scalars['String'];
   datePosted: Scalars['String'];
   name: Scalars['String'];
+  savedCategory: Scalars['Boolean'];
   categoryId: Scalars['String'];
   subCategoryId: Scalars['String'];
   memo: Scalars['String'];
@@ -229,6 +250,7 @@ export type TransactionEntity = {
   name: Scalars['String'];
   memo: Scalars['String'];
   note?: Maybe<Scalars['String']>;
+  savedCategory: Scalars['Boolean'];
   keyName: Scalars['String'];
   amount: Scalars['Float'];
   subCategoryId?: Maybe<Scalars['String']>;
@@ -246,6 +268,7 @@ export type TransactionInput = {
   name: Scalars['String'];
   categoryId: Scalars['String'];
   subCategoryId: Scalars['String'];
+  savedCategory: Scalars['Boolean'];
   memo: Scalars['String'];
   amount: Scalars['Float'];
 };
