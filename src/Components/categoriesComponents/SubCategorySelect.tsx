@@ -37,7 +37,6 @@ export default function SubCategorySelect(props: ISubCategorySelect) {
           value={props.currentValue}
           onChange={handleChange}
         >
-          <MenuItem value={0}>none</MenuItem>
           {props.categories &&
             props.categories.map((category: any) => {
               return (

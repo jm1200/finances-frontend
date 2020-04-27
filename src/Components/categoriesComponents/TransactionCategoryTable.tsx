@@ -27,6 +27,7 @@ import {
   Button,
   TextField,
   Tooltip,
+  Checkbox,
 } from "@material-ui/core";
 import numeral from "numeral";
 
@@ -37,6 +38,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     updateOptions: {
       display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
     },
     check: {
       color: theme.palette.success.main,
@@ -48,6 +51,9 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.error.main,
       marginLeft: 7,
     },
+    // edit: {
+    //   width: 100,
+    // },
   })
 );
 
@@ -62,6 +68,9 @@ export function TransactionCategoryTable(
 ) {
   const classes = useStyles();
   const [note, setNote] = React.useState("");
+  const [savedCategoryCheckBox, setSavedCategoryCheckBox] = React.useState(
+    false
+  );
   const [editTransactionMode, setTransactionEditMode] = React.useState("");
   const [categoryId, setCategoryId] = React.useState("");
   const [subCategoryId, setSubCategoryId] = React.useState("");
@@ -81,51 +90,67 @@ export function TransactionCategoryTable(
     subCategoriesMap[category.id] = category.subCategories;
   });
 
+  const handleSavedCategoryCheckBox = () => {
+    setSavedCategoryCheckBox(!savedCategoryCheckBox);
+  };
+
   const handleEditTransactionMode = (
     id: string,
     note: string,
     categoryId: string,
-    subCategoryId: string
+    subCategoryId: string,
+    savedCategory: boolean
   ) => {
     setTransactionEditMode(id);
     setCategoryId(categoryId);
     setSubCategoryId(subCategoryId);
     setNote(note);
+    setSavedCategoryCheckBox(savedCategory);
   };
 
   const handleEditNote = (e: any) => {
     setNote(e.target.value);
   };
 
-  const handleUpdateTransactionCategory = async (rowId: string) => {
-    const row = props.data.filter((row) => row.id === rowId);
-    const id = row[0].id;
-
-    await updateCategoriesInTransaction({
-      variables: { id, categoryId, subCategoryId, note },
-    });
-    setTransactionEditMode("");
-    setNote("");
-    setCategoryId("");
-    setSubCategoryId("");
-    props.refetch();
-  };
-
-  const handleUpdateAllTransactionCategory = async (row: any) => {
+  const handleUpdateTransactionCategory = async (row: any) => {
+    let id = row.id;
     let name = row.name;
     let memo = row.memo;
-
+    let savedCategory = savedCategoryCheckBox;
     let note = row.note;
 
-    console.log("TCT 121:", name, memo, categoryId, subCategoryId, note);
+    if (savedCategoryCheckBox) {
+      await updateCategoriesInAllTransactions({
+        variables: {
+          name,
+          memo,
+          categoryId,
+          subCategoryId,
+          note,
+          savedCategory,
+        },
+      });
+    } else {
+      await updateCategoriesInAllTransactions({
+        variables: {
+          name,
+          memo,
+          categoryId: row.category.id,
+          subCategoryId: row.subCategory.id,
+          note,
+          savedCategory,
+        },
+      });
+      await updateCategoriesInTransaction({
+        variables: { id, categoryId, subCategoryId, note, savedCategory },
+      });
+    }
 
-    await updateCategoriesInAllTransactions({
-      variables: { name, memo, categoryId, subCategoryId, note },
-    });
     setTransactionEditMode("");
     setNote("");
     setCategoryId("");
     setSubCategoryId("");
+    setSavedCategoryCheckBox(false);
     props.refetch();
   };
 
@@ -194,28 +219,31 @@ export function TransactionCategoryTable(
                       </TableCell>
                       <TableCell>
                         <div className={classes.updateOptions}>
-                          <Tooltip title="Update One">
+                          <Tooltip title="Submit">
                             <CheckCircle
                               className={classes.check}
                               onClick={() =>
-                                handleUpdateTransactionCategory(row.id)
+                                handleUpdateTransactionCategory(row)
                               }
                             />
                           </Tooltip>
-                          <Tooltip title="Update All">
-                            <CheckCircle
-                              className={classes.checkAll}
-                              onClick={() =>
-                                handleUpdateAllTransactionCategory(row)
-                              }
-                            />
-                          </Tooltip>
+
                           <Tooltip title="Cancel">
                             <Cancel
                               className={classes.cancel}
                               onClick={() =>
-                                handleEditTransactionMode("", "", "", "")
+                                handleEditTransactionMode("", "", "", "", false)
                               }
+                            />
+                          </Tooltip>
+                          <Tooltip title="Apply">
+                            <Checkbox
+                              checked={savedCategoryCheckBox}
+                              onClick={handleSavedCategoryCheckBox}
+                              color="primary"
+                              inputProps={{
+                                "aria-label": "secondary checkbox",
+                              }}
                             />
                           </Tooltip>
                         </div>
@@ -239,7 +267,8 @@ export function TransactionCategoryTable(
                               row.id,
                               row.note || "",
                               row.category!.id,
-                              row.subCategory!.id
+                              row.subCategory!.id,
+                              row.savedCategory
                             )
                           }
                         />
