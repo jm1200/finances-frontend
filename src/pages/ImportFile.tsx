@@ -23,7 +23,7 @@ const uploadFileMutation = gql`
         type
         categoryId
         subCategoryId
-        savedCategory
+        savedCategoryId
         datePosted
         name
         memo
@@ -85,7 +85,7 @@ const ImportFile: React.FC = () => {
         datePosted: obj.datePosted,
         name: obj.name,
         memo: obj.memo,
-        savedCategory: obj.savedCategory,
+        savedCategoryId: obj.savedCategoryId,
         amount: obj.amount,
         categoryId: obj.categoryId,
         subCategoryId: obj.subCategoryId,

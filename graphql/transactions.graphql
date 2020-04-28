@@ -11,7 +11,7 @@ mutation UpdateCategoriesInTransaction(
   $id: String!
   $categoryId: String!
   $subCategoryId: String!
-  $savedCategory: Boolean!
+  $savedCategoryId: String
 ) {
   updateCategoriesInTransaction(
     data: {
@@ -19,7 +19,7 @@ mutation UpdateCategoriesInTransaction(
       note: $note
       categoryId: $categoryId
       subCategoryId: $subCategoryId
-      savedCategory: $savedCategory
+      savedCategoryId: $savedCategoryId
     }
   )
 }
@@ -29,7 +29,7 @@ mutation UpdateCategoriesInAllTransactions(
   $memo: String
   $categoryId: String!
   $subCategoryId: String!
-  $savedCategory: Boolean!
+  $savedCategoryId: String
 ) {
   updateCategoriesInAllTransactions(
     data: {
@@ -38,7 +38,7 @@ mutation UpdateCategoriesInAllTransactions(
       note: $note
       categoryId: $categoryId
       subCategoryId: $subCategoryId
-      savedCategory: $savedCategory
+      savedCategoryId: $savedCategoryId
     }
   )
 }
@@ -63,7 +63,7 @@ query GetTransactionsByMonth($month: String!, $year: Int!) {
     note
     amount
     keyName
-    savedCategory
+    savedCategoryId
     category {
       id
       name

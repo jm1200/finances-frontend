@@ -17,6 +17,8 @@ import {
   GetUserCategoriesQuery,
   GetTransactionsByMonthQuery,
   useUpdateCategoriesInAllTransactionsMutation,
+  useCreateSavedCategoryMutation,
+  useDeleteSavedCategoryMutation,
 } from "../../generated/graphql";
 import { Edit, Cancel, CheckCircle } from "@material-ui/icons";
 import CategorySelect from "./CategorySelect";
@@ -80,7 +82,11 @@ export function TransactionCategoryTable(
   const [
     updateCategoriesInAllTransactions,
   ] = useUpdateCategoriesInAllTransactionsMutation();
-
+  const [
+    createSavedCategory,
+    { data: createSavedCategoryData },
+  ] = useCreateSavedCategoryMutation();
+  const [deleteSavedCategory] = useDeleteSavedCategoryMutation();
   // interface ISubCategoryMap {
   //   [key:string] : GetUserCategoriesQuery["getUserCategories"] | null | undefined
   // }
@@ -90,8 +96,11 @@ export function TransactionCategoryTable(
     subCategoriesMap[category.id] = category.subCategories;
   });
 
-  const handleSavedCategoryCheckBox = () => {
-    setSavedCategoryCheckBox(!savedCategoryCheckBox);
+  const handleSavedCategoryCheckBox = (
+    savedCategoryId: string | null | undefined
+  ) => {
+    console.log("TCT 102", savedCategoryId);
+    setSavedCategoryCheckBox(!!!savedCategoryCheckBox);
   };
 
   const handleEditTransactionMode = (
@@ -99,13 +108,13 @@ export function TransactionCategoryTable(
     note: string,
     categoryId: string,
     subCategoryId: string,
-    savedCategory: boolean
+    savedCategoryId: string | null | undefined
   ) => {
     setTransactionEditMode(id);
     setCategoryId(categoryId);
     setSubCategoryId(subCategoryId);
     setNote(note);
-    setSavedCategoryCheckBox(savedCategory);
+    setSavedCategoryCheckBox(!!savedCategoryId);
   };
 
   const handleEditNote = (e: any) => {
@@ -113,24 +122,52 @@ export function TransactionCategoryTable(
   };
 
   const handleUpdateTransactionCategory = async (row: any) => {
-    let id = row.id;
+    let transactionId = row.id;
     let name = row.name;
     let memo = row.memo;
-    let savedCategory = savedCategoryCheckBox;
+    let savedCategoryId = row.savedCategoryId;
     let note = row.note;
 
+    console.log("TCT 131", savedCategoryId);
+
+    //if savedCategoryCheckBox is true we need to save the savedCategoryId.
+    //else savedCatgoryId is null
     if (savedCategoryCheckBox) {
-      await updateCategoriesInAllTransactions({
-        variables: {
-          name,
-          memo,
-          categoryId,
-          subCategoryId,
-          note,
-          savedCategory,
-        },
-      });
+      //does a savedCategoryId already exist? if so use it. else create a new one
+
+      if (savedCategoryId) {
+        console.log("A saved category exsits. using the old one");
+        await updateCategoriesInAllTransactions({
+          variables: {
+            name,
+            memo,
+            categoryId,
+            subCategoryId,
+            note,
+            savedCategoryId,
+          },
+        });
+      } else {
+        console.log("No saved category exsits. create new one.");
+        await createSavedCategory({
+          variables: { categoryId, subCategoryId, name, memo },
+        }).then(async ({ data }) => {
+          console.log("TCT 137", data!.createSavedCategory.id);
+          await updateCategoriesInAllTransactions({
+            variables: {
+              name,
+              memo,
+              categoryId,
+              subCategoryId,
+              note,
+              savedCategoryId: data!.createSavedCategory.id,
+            },
+          });
+        });
+      }
     } else {
+      //update all transactions with null savedCategoryId
+      console.log("updateing all transactions with null");
       await updateCategoriesInAllTransactions({
         variables: {
           name,
@@ -138,12 +175,29 @@ export function TransactionCategoryTable(
           categoryId: row.category.id,
           subCategoryId: row.subCategory.id,
           note,
-          savedCategory,
+          savedCategoryId: null,
         },
       });
+
+      //update the one transaction
+      console.log("updating one transaction with null and categories");
       await updateCategoriesInTransaction({
-        variables: { id, categoryId, subCategoryId, note, savedCategory },
+        variables: {
+          id: transactionId,
+          categoryId,
+          subCategoryId,
+          note,
+          savedCategoryId: null,
+        },
       });
+
+      //delete the saved category if there was one.
+      if (savedCategoryId) {
+        console.log("deleting old saved category");
+        await deleteSavedCategory({
+          variables: { savedCategoryId },
+        });
+      }
     }
 
     setTransactionEditMode("");
@@ -154,7 +208,7 @@ export function TransactionCategoryTable(
     props.refetch();
   };
 
-  console.log("TCT 101", props.data);
+  console.log("TCT 185", props.data);
 
   return (
     <div>
@@ -232,14 +286,16 @@ export function TransactionCategoryTable(
                             <Cancel
                               className={classes.cancel}
                               onClick={() =>
-                                handleEditTransactionMode("", "", "", "", false)
+                                handleEditTransactionMode("", "", "", "", null)
                               }
                             />
                           </Tooltip>
                           <Tooltip title="Apply">
                             <Checkbox
                               checked={savedCategoryCheckBox}
-                              onClick={handleSavedCategoryCheckBox}
+                              onClick={() =>
+                                handleSavedCategoryCheckBox(row.savedCategoryId)
+                              }
                               color="primary"
                               inputProps={{
                                 "aria-label": "secondary checkbox",
@@ -268,7 +324,7 @@ export function TransactionCategoryTable(
                               row.note || "",
                               row.category!.id,
                               row.subCategory!.id,
-                              row.savedCategory
+                              row.savedCategoryId
                             )
                           }
                         />
