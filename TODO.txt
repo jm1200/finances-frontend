@@ -8,7 +8,7 @@
 - Loading spinner from updating transaction category
 - look into higher order resolvers for resolves that need userId
 - subcategoryselect get first and set value for uncategorized id
-- bulk inserts for file import may not work because of dubplicate keys
+
 
 Material table
 - make amounts display dollars
