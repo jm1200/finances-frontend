@@ -18,7 +18,9 @@ const useStyles = makeStyles((theme: Theme) =>
 interface ICategorySelect {
   categories: UserQuery["user"]["categories"];
   setFunction: React.Dispatch<React.SetStateAction<string>>;
+  setSubCategoryFunction: React.Dispatch<React.SetStateAction<string>>;
   currentValue: string;
+  subCategoriesMap: any;
 }
 
 export default function CategorySelect(props: ICategorySelect) {
@@ -26,6 +28,9 @@ export default function CategorySelect(props: ICategorySelect) {
 
   const handleChange = (event: any) => {
     props.setFunction(event.target.value);
+    props.setSubCategoryFunction(
+      props.subCategoriesMap[event.target.value][0].id
+    );
   };
 
   return (

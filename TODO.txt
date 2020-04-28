@@ -7,7 +7,6 @@
 - check all routes for auth. categories is not protected.
 - Loading spinner from updating transaction category
 - look into higher order resolvers for resolves that need userId
-- subcategoryselect get first and set value for uncategorized id
 
 
 Material table

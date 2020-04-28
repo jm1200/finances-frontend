@@ -119,6 +119,12 @@ export function TransactionCategoryTable(
   const handleEditNote = (e: any) => {
     setNote(e.target.value);
   };
+  const handleSetCategory = () => {
+    setSubCategoryId(
+      subCategoryId || subCategoriesMap[categoryId].subCategories[0].id
+    );
+    return setCategoryId;
+  };
 
   const handleUpdateTransactionCategory = async (row: any) => {
     let transactionId = row.id;
@@ -251,6 +257,8 @@ export function TransactionCategoryTable(
                           categories={props.categoriesData}
                           currentValue={categoryId}
                           setFunction={setCategoryId}
+                          setSubCategoryFunction={setSubCategoryId}
+                          subCategoriesMap={subCategoriesMap}
                         />
                       </TableCell>
                       <TableCell>
