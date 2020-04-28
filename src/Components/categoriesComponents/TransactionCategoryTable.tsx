@@ -99,7 +99,6 @@ export function TransactionCategoryTable(
   const handleSavedCategoryCheckBox = (
     savedCategoryId: string | null | undefined
   ) => {
-    console.log("TCT 102", savedCategoryId);
     setSavedCategoryCheckBox(!!!savedCategoryCheckBox);
   };
 
@@ -128,15 +127,12 @@ export function TransactionCategoryTable(
     let savedCategoryId = row.savedCategoryId;
     let note = row.note;
 
-    console.log("TCT 131", savedCategoryId);
-
     //if savedCategoryCheckBox is true we need to save the savedCategoryId.
     //else savedCatgoryId is null
     if (savedCategoryCheckBox) {
       //does a savedCategoryId already exist? if so use it. else create a new one
 
       if (savedCategoryId) {
-        console.log("A saved category exsits. using the old one");
         await updateCategoriesInAllTransactions({
           variables: {
             name,
@@ -148,11 +144,9 @@ export function TransactionCategoryTable(
           },
         });
       } else {
-        console.log("No saved category exsits. create new one.");
         await createSavedCategory({
           variables: { categoryId, subCategoryId, name, memo },
         }).then(async ({ data }) => {
-          console.log("TCT 137", data!.createSavedCategory.id);
           await updateCategoriesInAllTransactions({
             variables: {
               name,
@@ -167,7 +161,6 @@ export function TransactionCategoryTable(
       }
     } else {
       //update all transactions with null savedCategoryId
-      console.log("updateing all transactions with null");
       await updateCategoriesInAllTransactions({
         variables: {
           name,
@@ -180,7 +173,6 @@ export function TransactionCategoryTable(
       });
 
       //update the one transaction
-      console.log("updating one transaction with null and categories");
       await updateCategoriesInTransaction({
         variables: {
           id: transactionId,
@@ -193,7 +185,6 @@ export function TransactionCategoryTable(
 
       //delete the saved category if there was one.
       if (savedCategoryId) {
-        console.log("deleting old saved category");
         await deleteSavedCategory({
           variables: { savedCategoryId },
         });
@@ -207,8 +198,6 @@ export function TransactionCategoryTable(
     setSavedCategoryCheckBox(false);
     props.refetch();
   };
-
-  console.log("TCT 185", props.data);
 
   return (
     <div>
