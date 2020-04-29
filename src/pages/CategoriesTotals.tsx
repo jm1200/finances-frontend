@@ -3,6 +3,7 @@ import { createStyles, makeStyles, Theme, Paper } from "@material-ui/core";
 import { CategoryTotalsTableRoot } from "../Components/categoryTotals/CategoryTotalsTableRoot";
 import { MonthPicker } from "../Components/shared/MonthPicker";
 import { SelectedCategoryTableRoot } from "../Components/categoryTotals/SelectedCategoryTableRoot";
+import { useGetTransactionsByMonthQuery } from "../generated/graphql";
 
 interface ICategoriesTotalsProps {}
 const useStyles = makeStyles((theme: Theme) =>
@@ -48,7 +49,13 @@ export const CategoriesTotals: React.FC<ICategoriesTotalsProps> = (props) => {
     string | null
   >(null);
 
-  console.log("CT 51", selectedCategory, selectedSubCategory);
+  const { data, loading, error } = useGetTransactionsByMonthQuery({
+    fetchPolicy: "no-cache",
+    variables: {
+      month: selectedMonth,
+      year: selectedYear,
+    },
+  });
 
   return (
     <div className={classes.root}>
@@ -63,17 +70,30 @@ export const CategoriesTotals: React.FC<ICategoriesTotalsProps> = (props) => {
         </Paper>
       </div>
       <div className={classes.main}>
-        <div className={classes.categories}>
-          <CategoryTotalsTableRoot
-            selectedMonth={selectedMonth}
-            selectedYear={selectedYear}
-            setSelectedCategory={setSelectedCategory}
-            setSelectedSubCategory={setSelectedSubCategory}
-          />
-        </div>
-        <div className={classes.transactions}>
-          <SelectedCategoryTableRoot />
-        </div>
+        {loading && <div>Loading monthly totals...</div>}
+        {error && <div>There was an error Loading Categories</div>}
+        {!data ||
+          (data.getTransactionsByMonth.length === 0 && <div>No data!</div>)}
+        {data && (
+          <>
+            <div className={classes.categories}>
+              <CategoryTotalsTableRoot
+                selectedMonth={selectedMonth}
+                selectedYear={selectedYear}
+                setSelectedCategory={setSelectedCategory}
+                setSelectedSubCategory={setSelectedSubCategory}
+                data={data}
+              />
+            </div>
+            <div className={classes.transactions}>
+              <SelectedCategoryTableRoot
+                selectedCategory={selectedCategory}
+                selectedSubCategory={selectedSubCategory}
+                data={data}
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
