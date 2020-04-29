@@ -7,12 +7,11 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Collapse from "@material-ui/core/Collapse";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
-import DraftsIcon from "@material-ui/icons/Drafts";
-import SendIcon from "@material-ui/icons/Send";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import StarBorder from "@material-ui/icons/StarBorder";
 import numeral from "numeral";
+import { ICategoryTotalsTableDisplayData } from "../../types";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -56,20 +55,28 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface ICategoryTotalsTableProps {
-  displayData: any;
-  grandTotal: any;
+  displayData: ICategoryTotalsTableDisplayData[];
+  grandTotal: number;
+  setSelectedCategory: React.Dispatch<React.SetStateAction<string | null>>;
+  setSelectedSubCategory: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export default function CategoryTotalsTable(props: ICategoryTotalsTableProps) {
+export function CategoryTotalsTable(props: ICategoryTotalsTableProps) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(null);
+  const [open, setOpen] = React.useState<string | null>(null);
 
-  const handleClick = (categoryId: any) => {
+  const handleClick = (categoryId: string) => {
+    props.setSelectedCategory(categoryId);
+    props.setSelectedSubCategory(null);
     if (categoryId === open) {
       setOpen(null);
     } else {
       setOpen(categoryId);
     }
+  };
+  const handleSubCategoryClick = (subCategoryId: string) => {
+    props.setSelectedCategory(null);
+    props.setSelectedSubCategory(subCategoryId);
   };
 
   return (
@@ -89,10 +96,10 @@ export default function CategoryTotalsTable(props: ICategoryTotalsTableProps) {
       className={classes.root}
     >
       {props.displayData &&
-        props.displayData.map((category: any, index: number) => {
+        props.displayData.map((category, index: number) => {
           return (
             <div key={index}>
-              <ListItem button onClick={() => handleClick(category.id)}>
+              <ListItem button onClick={() => handleClick(category.categoryId)}>
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
@@ -107,14 +114,25 @@ export default function CategoryTotalsTable(props: ICategoryTotalsTableProps) {
                   />
                 </div>
 
-                {open ? <ExpandLess /> : <ExpandMore />}
+                {open === category.categoryId ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
-              <Collapse in={open === category.id} timeout="auto" unmountOnExit>
+              <Collapse
+                in={open === category.categoryId}
+                timeout="auto"
+                unmountOnExit
+              >
                 <List component="div" disablePadding>
                   {category.subCategories.map(
                     (subCategory: any, index: number) => {
                       return (
-                        <ListItem key={index} button className={classes.nested}>
+                        <ListItem
+                          key={index}
+                          button
+                          className={classes.nested}
+                          onClick={() =>
+                            handleSubCategoryClick(subCategory.subCategoryId)
+                          }
+                        >
                           <ListItemIcon>
                             <StarBorder />
                           </ListItemIcon>

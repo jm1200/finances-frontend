@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  makeStyles,
-  Theme,
-  createStyles,
-  lighten,
-} from "@material-ui/core/styles";
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -23,14 +18,7 @@ import {
 import { Edit, Cancel, CheckCircle } from "@material-ui/icons";
 import CategorySelect from "./CategorySelect";
 import SubCategorySelect from "./SubCategorySelect";
-import {
-  Toolbar,
-  Typography,
-  Button,
-  TextField,
-  Tooltip,
-  Checkbox,
-} from "@material-ui/core";
+import { TextField, Tooltip, Checkbox } from "@material-ui/core";
 import numeral from "numeral";
 
 const useStyles = makeStyles((theme: Theme) =>

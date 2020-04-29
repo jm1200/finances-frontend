@@ -22,6 +22,18 @@ export interface ITransactionCategoryTableData {
   ids: Array<string>;
 }
 
+export interface SubCategory {
+  name: string;
+  subCategoryTotal: number;
+  subCategoryId: string;
+}
+export interface ICategoryTotalsTableDisplayData {
+  name: string;
+  categoryTotal: number;
+  categoryId: string;
+  subCategories: SubCategory[];
+}
+
 //Lists interfaces
 export interface ICategoryList {
   id: string;
