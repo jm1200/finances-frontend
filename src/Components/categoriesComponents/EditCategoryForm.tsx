@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       "& .MuiTextField-root": {
         margin: theme.spacing(1),
-        width: 200,
+        //width: 200,
       },
     },
     form: {

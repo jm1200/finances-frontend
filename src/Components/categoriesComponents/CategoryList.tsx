@@ -195,7 +195,8 @@ export default function CategoryList({
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
-                {editCategoryMode === category.id ? null : (
+                {editCategoryMode === category.id ||
+                addSubCategoryMode === category.id ? null : (
                   <ListItemText primary={category.name} />
                 )}
 
@@ -209,7 +210,8 @@ export default function CategoryList({
                       addSubCategory={_addSubCategory}
                     />
                   ) : (
-                    !editCategoryMode && (
+                    !editCategoryMode &&
+                    category.name !== "uncategorized" && (
                       <AddCircle
                         className={classes.icon}
                         onClick={(e) =>
@@ -230,7 +232,8 @@ export default function CategoryList({
                     setEditCategoryMode={setEditCategoryMode}
                   />
                 ) : (
-                  !addSubCategoryMode && (
+                  !addSubCategoryMode &&
+                  category.name !== "uncategorized" && (
                     <Edit
                       className={classes.icon}
                       onClick={(e) => handleEditCategoryMode(e, category.id)}
@@ -246,8 +249,8 @@ export default function CategoryList({
                 {category.subCategories &&
                   category.subCategories
                     .sort((a, b) => {
-                      if (b > a) return -1;
-                      if (a < b) return 1;
+                      if (b.name > a.name) return -1;
+                      if (b.name < a.name) return 1;
                       return 0;
                     })
                     .map((subCategory, index) => {
@@ -259,15 +262,17 @@ export default function CategoryList({
                             </ListItemIcon>
                             <ListItemText primary={subCategory.name} />
                             <ListItemSecondaryAction>
-                              <IconButton
-                                onClick={(e) =>
-                                  handleDeleteSubCategory(e, subCategory.id)
-                                }
-                                edge="end"
-                                aria-label="delete"
-                              >
-                                <Delete className={classes.delete} />
-                              </IconButton>
+                              {subCategory.name !== "uncategorized" && (
+                                <IconButton
+                                  onClick={(e) =>
+                                    handleDeleteSubCategory(e, subCategory.id)
+                                  }
+                                  edge="end"
+                                  aria-label="delete"
+                                >
+                                  <Delete className={classes.delete} />
+                                </IconButton>
+                              )}
                             </ListItemSecondaryAction>
                           </ListItem>
                         </List>
