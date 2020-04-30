@@ -7,6 +7,19 @@
 - check all routes for auth. categories is not protected.
 - Loading spinner from updating transaction category
 - look into higher order resolvers for resolves that need userId
+- don;t let user delete uncategorized categories
+- make current month or last transaction month active month
+- fix add subcategory input
+- sort categories so their position doesn't change
+- select category title says Age:
+- transactions where name and memo are the same, maybe compare amounts so they can be auto categorized
+- if a note exists don't allow apply to all or checkAmount
+
+
+- not enough room for notes in categories table
+-notes aren't saving.
+ - see only uncategorized.. maybe just table sort option?
+ -
 
 
 Material table
@@ -57,4 +70,52 @@ if saved category {
     } 
 }
 
-when importing files, check for saved categories
+When I import a transaction I check for name, memo and note. if they match a saved
+category I then add the appropriate category. The problem is that name, memo and note could
+match, but I want them to be different categories. I can't compare amounts too because:
+1.) the amounts may change slightly from month to month or year to year.
+2.) some saved categories, like McD's, the amounts could vary largely.
+
+I could add another check for saved categories that are recurring. need to check in update all categories, and
+file upload.
+
+
+if amount is clicked, I want to compare amounts aswell
+if amount is not clicked, just comparing name/memo/note is enough
+
+checkAmount true
+    savedCateogry true
+        applyToAll true
+             EXPECT-->
+                1. SavedCategory Update
+                    name: data.name,
+                    memo: data.memo,
+                    categoryId: data.categoryId,
+                    subCategoryId: data.subCategoryId,
+                    amount: data.amount,
+                2. applyToAll: transactions[] --> PASS
+                3. savedCategory: made a new category --> PASS
+
+        applyToAll false
+
+    savedCategory false
+        applyToAll true
+
+        applyToAll false
+
+checkAmount false
+    savedCateogry true
+        applyToAll true
+
+        applyToAll false
+
+    savedCategory false
+        applyToAll true 
+            EXPECT-->
+                1. amount: null --> PASS
+                2. applyToAll: transactions[] --> PASS
+                3. savedCategory: made a new category --> PASS
+
+
+               
+        applyToAll false

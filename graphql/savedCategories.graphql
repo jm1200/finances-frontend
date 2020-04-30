@@ -1,6 +1,7 @@
 mutation CreateSavedCategory(
   $name: String
   $memo: String
+  $amount: Float
   $categoryId: String!
   $subCategoryId: String!
 ) {
@@ -10,6 +11,7 @@ mutation CreateSavedCategory(
       memo: $memo
       categoryId: $categoryId
       subCategoryId: $subCategoryId
+      amount: $amount
     }
   ) {
     id
@@ -21,7 +23,7 @@ query GetUserSavedCategories {
     id
     name
     memo
-    keyName
+    amount
     userId
     category {
       name

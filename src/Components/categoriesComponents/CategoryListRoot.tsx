@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: "column",
     },
     monthPicker: {
-      marginTop: 15,
+      marginBottom: 15,
       padding: 20,
       maxHeight: 280,
     },
@@ -44,13 +44,6 @@ export const CategoryListRoot: React.FC<ICategoryListRootProps> = (props) => {
   } else {
     return (
       <div className={classes.root}>
-        <div>
-          <CategoryList
-            categories={data.getUserCategories}
-            refetchCategories={refetchCategories}
-          />
-        </div>
-
         <Paper component="div" className={classes.monthPicker}>
           <MonthPicker
             selectedMonth={props.selectedMonth}
@@ -59,6 +52,12 @@ export const CategoryListRoot: React.FC<ICategoryListRootProps> = (props) => {
             setSelectedYear={props.setSelectedYear}
           />
         </Paper>
+        <div>
+          <CategoryList
+            categories={data.getUserCategories}
+            refetchCategories={refetchCategories}
+          />
+        </div>
       </div>
     );
   }
