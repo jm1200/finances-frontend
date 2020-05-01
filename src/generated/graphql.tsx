@@ -9,6 +9,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -57,8 +58,6 @@ export type Mutation = {
   revokeRefreshTokensForUser: Scalars['Boolean'];
   login: LoginResponse;
   register: LoginResponse;
-  updateCategoriesInTransaction: Scalars['Boolean'];
-  updateCategoriesInAllTransactions: Scalars['Boolean'];
   updateCategoriesInTransactions: Scalars['Boolean'];
   addCategory: Scalars['Boolean'];
   updateCategory: Scalars['Boolean'];
@@ -98,16 +97,6 @@ export type MutationLoginArgs = {
 
 export type MutationRegisterArgs = {
   data: RegisterInput;
-};
-
-
-export type MutationUpdateCategoriesInTransactionArgs = {
-  data: UpdateTransactionInput;
-};
-
-
-export type MutationUpdateCategoriesInAllTransactionsArgs = {
-  data: UpdateAllTransactionsInput;
 };
 
 
@@ -199,7 +188,7 @@ export type SavedCategoriesEntity = {
   id: Scalars['String'];
   name: Scalars['String'];
   memo?: Maybe<Scalars['String']>;
-  amount?: Maybe<Scalars['Float']>;
+  amounts: Array<Scalars['Float']>;
   keyName: Scalars['String'];
   userId: Scalars['String'];
   categoryId: Scalars['String'];
@@ -212,7 +201,7 @@ export type SavedCategoriesEntity = {
 export type SavedCategoriesInput = {
   name?: Maybe<Scalars['String']>;
   memo?: Maybe<Scalars['String']>;
-  amount?: Maybe<Scalars['Float']>;
+  amounts?: Maybe<Array<Scalars['Float']>>;
   categoryId: Scalars['String'];
   subCategoryId: Scalars['String'];
 };
@@ -285,16 +274,6 @@ export type TransactionInput = {
   amount: Scalars['Float'];
 };
 
-export type UpdateAllTransactionsInput = {
-  name?: Maybe<Scalars['String']>;
-  memo?: Maybe<Scalars['String']>;
-  note?: Maybe<Scalars['String']>;
-  amount?: Maybe<Scalars['Float']>;
-  savedCategoryId?: Maybe<Scalars['String']>;
-  categoryId?: Maybe<Scalars['String']>;
-  subCategoryId?: Maybe<Scalars['String']>;
-};
-
 export type UpdateCategoriesInTransactionsInput = {
   id: Scalars['String'];
   name?: Maybe<Scalars['String']>;
@@ -302,8 +281,9 @@ export type UpdateCategoriesInTransactionsInput = {
   note?: Maybe<Scalars['String']>;
   amount: Scalars['Float'];
   savedCategoryId?: Maybe<Scalars['String']>;
-  categoryId?: Maybe<Scalars['String']>;
-  subCategoryId?: Maybe<Scalars['String']>;
+  savedCategoryAmounts?: Maybe<Array<Scalars['Float']>>;
+  selectedCategoryId: Scalars['String'];
+  selectedSubCategoryId: Scalars['String'];
   checkAmount: Scalars['Boolean'];
   applyToAll: Scalars['Boolean'];
 };
@@ -542,7 +522,7 @@ export type RegisterMutation = (
 export type CreateSavedCategoryMutationVariables = {
   name?: Maybe<Scalars['String']>;
   memo?: Maybe<Scalars['String']>;
-  amount?: Maybe<Scalars['Float']>;
+  amounts?: Maybe<Array<Scalars['Float']>>;
   categoryId: Scalars['String'];
   subCategoryId: Scalars['String'];
 };
@@ -563,7 +543,7 @@ export type GetUserSavedCategoriesQuery = (
   { __typename?: 'Query' }
   & { getUserSavedCategories: Array<(
     { __typename?: 'SavedCategoriesEntity' }
-    & Pick<SavedCategoriesEntity, 'id' | 'name' | 'memo' | 'amount' | 'userId'>
+    & Pick<SavedCategoriesEntity, 'id' | 'name' | 'memo' | 'amounts' | 'userId'>
     & { category: (
       { __typename?: 'CategoryEntity' }
       & Pick<CategoryEntity, 'name' | 'id'>
@@ -609,36 +589,6 @@ export type GetUserTransactionsQuery = (
   )> }
 );
 
-export type UpdateCategoriesInTransactionMutationVariables = {
-  note?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  categoryId: Scalars['String'];
-  subCategoryId: Scalars['String'];
-  savedCategoryId?: Maybe<Scalars['String']>;
-};
-
-
-export type UpdateCategoriesInTransactionMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'updateCategoriesInTransaction'>
-);
-
-export type UpdateCategoriesInAllTransactionsMutationVariables = {
-  note?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  memo?: Maybe<Scalars['String']>;
-  amount: Scalars['Float'];
-  categoryId?: Maybe<Scalars['String']>;
-  subCategoryId?: Maybe<Scalars['String']>;
-  savedCategoryId?: Maybe<Scalars['String']>;
-};
-
-
-export type UpdateCategoriesInAllTransactionsMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'updateCategoriesInAllTransactions'>
-);
-
 export type GetTransactionsByMonthQueryVariables = {
   month: Scalars['String'];
   year: Scalars['Int'];
@@ -652,7 +602,7 @@ export type GetTransactionsByMonthQuery = (
     & Pick<TransactionEntity, 'id' | 'datePosted' | 'name' | 'memo' | 'note' | 'amount' | 'keyName'>
     & { savedCategory?: Maybe<(
       { __typename?: 'SavedCategoriesEntity' }
-      & Pick<SavedCategoriesEntity, 'id' | 'name' | 'amount'>
+      & Pick<SavedCategoriesEntity, 'id' | 'name' | 'amounts'>
     )>, category?: Maybe<(
       { __typename?: 'CategoryEntity' }
       & Pick<CategoryEntity, 'id' | 'name'>
@@ -669,9 +619,10 @@ export type UpdateCategoriesInTransactionsMutationVariables = {
   name?: Maybe<Scalars['String']>;
   memo?: Maybe<Scalars['String']>;
   amount: Scalars['Float'];
-  categoryId?: Maybe<Scalars['String']>;
-  subCategoryId?: Maybe<Scalars['String']>;
+  selectedCategoryId: Scalars['String'];
+  selectedSubCategoryId: Scalars['String'];
   savedCategoryId?: Maybe<Scalars['String']>;
+  savedCategoryAmounts?: Maybe<Array<Scalars['Float']>>;
   checkAmount: Scalars['Boolean'];
   applyToAll: Scalars['Boolean'];
 };
@@ -1207,8 +1158,8 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = ApolloReactCommon.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const CreateSavedCategoryDocument = gql`
-    mutation CreateSavedCategory($name: String, $memo: String, $amount: Float, $categoryId: String!, $subCategoryId: String!) {
-  createSavedCategory(data: {name: $name, memo: $memo, categoryId: $categoryId, subCategoryId: $subCategoryId, amount: $amount}) {
+    mutation CreateSavedCategory($name: String, $memo: String, $amounts: [Float!], $categoryId: String!, $subCategoryId: String!) {
+  createSavedCategory(data: {name: $name, memo: $memo, categoryId: $categoryId, subCategoryId: $subCategoryId, amounts: $amounts}) {
     id
   }
 }
@@ -1230,7 +1181,7 @@ export type CreateSavedCategoryMutationFn = ApolloReactCommon.MutationFunction<C
  *   variables: {
  *      name: // value for 'name'
  *      memo: // value for 'memo'
- *      amount: // value for 'amount'
+ *      amounts: // value for 'amounts'
  *      categoryId: // value for 'categoryId'
  *      subCategoryId: // value for 'subCategoryId'
  *   },
@@ -1248,7 +1199,7 @@ export const GetUserSavedCategoriesDocument = gql`
     id
     name
     memo
-    amount
+    amounts
     userId
     category {
       name
@@ -1384,76 +1335,6 @@ export function useGetUserTransactionsLazyQuery(baseOptions?: ApolloReactHooks.L
 export type GetUserTransactionsQueryHookResult = ReturnType<typeof useGetUserTransactionsQuery>;
 export type GetUserTransactionsLazyQueryHookResult = ReturnType<typeof useGetUserTransactionsLazyQuery>;
 export type GetUserTransactionsQueryResult = ApolloReactCommon.QueryResult<GetUserTransactionsQuery, GetUserTransactionsQueryVariables>;
-export const UpdateCategoriesInTransactionDocument = gql`
-    mutation UpdateCategoriesInTransaction($note: String, $id: String!, $categoryId: String!, $subCategoryId: String!, $savedCategoryId: String) {
-  updateCategoriesInTransaction(data: {id: $id, note: $note, categoryId: $categoryId, subCategoryId: $subCategoryId, savedCategoryId: $savedCategoryId})
-}
-    `;
-export type UpdateCategoriesInTransactionMutationFn = ApolloReactCommon.MutationFunction<UpdateCategoriesInTransactionMutation, UpdateCategoriesInTransactionMutationVariables>;
-
-/**
- * __useUpdateCategoriesInTransactionMutation__
- *
- * To run a mutation, you first call `useUpdateCategoriesInTransactionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateCategoriesInTransactionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateCategoriesInTransactionMutation, { data, loading, error }] = useUpdateCategoriesInTransactionMutation({
- *   variables: {
- *      note: // value for 'note'
- *      id: // value for 'id'
- *      categoryId: // value for 'categoryId'
- *      subCategoryId: // value for 'subCategoryId'
- *      savedCategoryId: // value for 'savedCategoryId'
- *   },
- * });
- */
-export function useUpdateCategoriesInTransactionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateCategoriesInTransactionMutation, UpdateCategoriesInTransactionMutationVariables>) {
-        return ApolloReactHooks.useMutation<UpdateCategoriesInTransactionMutation, UpdateCategoriesInTransactionMutationVariables>(UpdateCategoriesInTransactionDocument, baseOptions);
-      }
-export type UpdateCategoriesInTransactionMutationHookResult = ReturnType<typeof useUpdateCategoriesInTransactionMutation>;
-export type UpdateCategoriesInTransactionMutationResult = ApolloReactCommon.MutationResult<UpdateCategoriesInTransactionMutation>;
-export type UpdateCategoriesInTransactionMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateCategoriesInTransactionMutation, UpdateCategoriesInTransactionMutationVariables>;
-export const UpdateCategoriesInAllTransactionsDocument = gql`
-    mutation UpdateCategoriesInAllTransactions($note: String, $name: String, $memo: String, $amount: Float!, $categoryId: String, $subCategoryId: String, $savedCategoryId: String) {
-  updateCategoriesInAllTransactions(data: {name: $name, memo: $memo, note: $note, amount: $amount, categoryId: $categoryId, subCategoryId: $subCategoryId, savedCategoryId: $savedCategoryId})
-}
-    `;
-export type UpdateCategoriesInAllTransactionsMutationFn = ApolloReactCommon.MutationFunction<UpdateCategoriesInAllTransactionsMutation, UpdateCategoriesInAllTransactionsMutationVariables>;
-
-/**
- * __useUpdateCategoriesInAllTransactionsMutation__
- *
- * To run a mutation, you first call `useUpdateCategoriesInAllTransactionsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateCategoriesInAllTransactionsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateCategoriesInAllTransactionsMutation, { data, loading, error }] = useUpdateCategoriesInAllTransactionsMutation({
- *   variables: {
- *      note: // value for 'note'
- *      name: // value for 'name'
- *      memo: // value for 'memo'
- *      amount: // value for 'amount'
- *      categoryId: // value for 'categoryId'
- *      subCategoryId: // value for 'subCategoryId'
- *      savedCategoryId: // value for 'savedCategoryId'
- *   },
- * });
- */
-export function useUpdateCategoriesInAllTransactionsMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateCategoriesInAllTransactionsMutation, UpdateCategoriesInAllTransactionsMutationVariables>) {
-        return ApolloReactHooks.useMutation<UpdateCategoriesInAllTransactionsMutation, UpdateCategoriesInAllTransactionsMutationVariables>(UpdateCategoriesInAllTransactionsDocument, baseOptions);
-      }
-export type UpdateCategoriesInAllTransactionsMutationHookResult = ReturnType<typeof useUpdateCategoriesInAllTransactionsMutation>;
-export type UpdateCategoriesInAllTransactionsMutationResult = ApolloReactCommon.MutationResult<UpdateCategoriesInAllTransactionsMutation>;
-export type UpdateCategoriesInAllTransactionsMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateCategoriesInAllTransactionsMutation, UpdateCategoriesInAllTransactionsMutationVariables>;
 export const GetTransactionsByMonthDocument = gql`
     query GetTransactionsByMonth($month: String!, $year: Int!) {
   getTransactionsByMonth(month: $month, year: $year) {
@@ -1467,7 +1348,7 @@ export const GetTransactionsByMonthDocument = gql`
     savedCategory {
       id
       name
-      amount
+      amounts
     }
     category {
       id
@@ -1508,8 +1389,8 @@ export type GetTransactionsByMonthQueryHookResult = ReturnType<typeof useGetTran
 export type GetTransactionsByMonthLazyQueryHookResult = ReturnType<typeof useGetTransactionsByMonthLazyQuery>;
 export type GetTransactionsByMonthQueryResult = ApolloReactCommon.QueryResult<GetTransactionsByMonthQuery, GetTransactionsByMonthQueryVariables>;
 export const UpdateCategoriesInTransactionsDocument = gql`
-    mutation UpdateCategoriesInTransactions($id: String!, $note: String, $name: String, $memo: String, $amount: Float!, $categoryId: String, $subCategoryId: String, $savedCategoryId: String, $checkAmount: Boolean!, $applyToAll: Boolean!) {
-  updateCategoriesInTransactions(data: {id: $id, name: $name, memo: $memo, note: $note, amount: $amount, categoryId: $categoryId, subCategoryId: $subCategoryId, savedCategoryId: $savedCategoryId, checkAmount: $checkAmount, applyToAll: $applyToAll})
+    mutation UpdateCategoriesInTransactions($id: String!, $note: String, $name: String, $memo: String, $amount: Float!, $selectedCategoryId: String!, $selectedSubCategoryId: String!, $savedCategoryId: String, $savedCategoryAmounts: [Float!], $checkAmount: Boolean!, $applyToAll: Boolean!) {
+  updateCategoriesInTransactions(data: {id: $id, name: $name, memo: $memo, note: $note, amount: $amount, selectedCategoryId: $selectedCategoryId, selectedSubCategoryId: $selectedSubCategoryId, savedCategoryId: $savedCategoryId, savedCategoryAmounts: $savedCategoryAmounts, checkAmount: $checkAmount, applyToAll: $applyToAll})
 }
     `;
 export type UpdateCategoriesInTransactionsMutationFn = ApolloReactCommon.MutationFunction<UpdateCategoriesInTransactionsMutation, UpdateCategoriesInTransactionsMutationVariables>;
@@ -1532,9 +1413,10 @@ export type UpdateCategoriesInTransactionsMutationFn = ApolloReactCommon.Mutatio
  *      name: // value for 'name'
  *      memo: // value for 'memo'
  *      amount: // value for 'amount'
- *      categoryId: // value for 'categoryId'
- *      subCategoryId: // value for 'subCategoryId'
+ *      selectedCategoryId: // value for 'selectedCategoryId'
+ *      selectedSubCategoryId: // value for 'selectedSubCategoryId'
  *      savedCategoryId: // value for 'savedCategoryId'
+ *      savedCategoryAmounts: // value for 'savedCategoryAmounts'
  *      checkAmount: // value for 'checkAmount'
  *      applyToAll: // value for 'applyToAll'
  *   },

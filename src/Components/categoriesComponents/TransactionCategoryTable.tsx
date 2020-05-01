@@ -8,12 +8,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import {
-  useUpdateCategoriesInTransactionMutation,
   GetUserCategoriesQuery,
   GetTransactionsByMonthQuery,
-  useUpdateCategoriesInAllTransactionsMutation,
-  useCreateSavedCategoryMutation,
-  useDeleteSavedCategoryMutation,
   useUpdateCategoriesInTransactionsMutation,
 } from "../../generated/graphql";
 import { Edit, Cancel, CheckCircle } from "@material-ui/icons";
@@ -21,6 +17,11 @@ import CategorySelect from "./CategorySelect";
 import SubCategorySelect from "./SubCategorySelect";
 import { TextField, Tooltip, Checkbox } from "@material-ui/core";
 import numeral from "numeral";
+import Maybe from "graphql/tsutils/Maybe";
+import { TransactionEntity } from "../../generated/graphql";
+import { CategoryEntity } from "../../generated/graphql";
+import { SavedCategoriesEntity } from "../../generated/graphql";
+import { SubCategoryEntity } from "../../generated/graphql";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,6 +58,7 @@ interface ITransactionCategoryTableProps {
 export function TransactionCategoryTable(
   props: ITransactionCategoryTableProps
 ) {
+  console.log("TCT 60", props.data[0]);
   const classes = useStyles();
   const [note, setNote] = React.useState("");
   const [savedCategoryCheckBox, setSavedCategoryCheckBox] = React.useState(
@@ -97,20 +99,13 @@ export function TransactionCategoryTable(
     setAmountCheckBox(!amountCheckBox);
   };
 
-  const handleEditTransactionMode = (
-    id: string,
-    note: string,
-    categoryId: string,
-    subCategoryId: string,
-    savedCategoryId: string | null | undefined,
-    savedCategoryAmount: number | null | undefined
-  ) => {
-    setTransactionEditMode(id);
-    setCategoryId(categoryId);
-    setSubCategoryId(subCategoryId);
-    setNote(note);
-    setSavedCategoryCheckBox(!!savedCategoryId);
-    setAmountCheckBox(!!savedCategoryAmount);
+  const handleEditTransactionMode = (row: any) => {
+    setTransactionEditMode(row.id);
+    setCategoryId(row.category!.id);
+    setSubCategoryId(row.subCategory!.id);
+    setNote(row.note || "");
+    setSavedCategoryCheckBox(!!row.savedCategory && !!row.savedCategory.id);
+    setAmountCheckBox(!!row.savedCategory && !!row.savedCategory.amounts);
   };
 
   const handleCancelTransactionMode = () => {
@@ -133,23 +128,24 @@ export function TransactionCategoryTable(
   // };
 
   const handleUpdateTransactionCategory = async (row: any) => {
-    let id = row.id;
-    let name = row.name;
-    let memo = row.memo;
-    let note = row.note;
-    let amount = row.amount;
-    let savedCategoryId = row.savedCategoryId;
+    let savedCategoryId,
+      savedCategoryAmounts = null;
+    if (row.savedCategory) {
+      savedCategoryId = row.savedCategory.id;
+      savedCategoryAmounts = row.savedCategory.amounts;
+    }
     try {
       await updateCategoriesInTransactions({
         variables: {
-          id,
-          name,
-          memo,
-          note,
-          amount,
-          categoryId,
-          subCategoryId,
+          id: row.id,
+          name: row.name,
+          memo: row.memo,
+          amount: row.amount,
           savedCategoryId,
+          savedCategoryAmounts,
+          selectedCategoryId: categoryId,
+          selectedSubCategoryId: subCategoryId,
+          note,
           checkAmount: amountCheckBox,
           applyToAll: savedCategoryCheckBox,
         },
@@ -354,18 +350,7 @@ export function TransactionCategoryTable(
                       </TableCell>
 
                       <TableCell>
-                        <Edit
-                          onClick={() =>
-                            handleEditTransactionMode(
-                              row.id,
-                              row.note || "",
-                              row.category!.id,
-                              row.subCategory!.id,
-                              row.savedCategory?.id,
-                              row.savedCategory?.amount
-                            )
-                          }
-                        />
+                        <Edit onClick={() => handleEditTransactionMode(row)} />
                       </TableCell>
                     </>
                   )}

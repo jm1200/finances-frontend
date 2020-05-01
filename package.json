@@ -16,6 +16,7 @@
     "formik": "^2.1.4",
     "graphql": "^14.6.0",
     "jwt-decode": "^2.2.0",
+    "moment": "2.24.0",
     "notistack": "^0.9.9",
     "numeral": "^2.0.6",
     "react": "^16.13.1",
@@ -50,8 +51,8 @@
     ]
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^1.13.1",
-    "@graphql-codegen/typescript": "1.13.1",
+    "@graphql-codegen/cli": "^1.13.4",
+    "@graphql-codegen/typescript": "^1.13.1",
     "@graphql-codegen/typescript-operations": "1.13.1",
     "@graphql-codegen/typescript-react-apollo": "1.13.1",
     "@testing-library/dom": "^7.2.0",

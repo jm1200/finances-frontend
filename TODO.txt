@@ -115,3 +115,48 @@ checkAmount false
 
                
         applyToAll false
+
+
+applyToAll  checkAmount
+    T           T           -> Allstate 
+    T           F           -> Tim Hortens
+    F           T           -> never?
+    F           F           -> single transaction
+
+row {name, memo, amount, note}, selectedCategoryId, selectedSubCategoryId, applyToAll, checkAmount
+
+if(!applyToAll){
+    if(savedCategoryId)
+        transactions.find(where: name, memo)
+        transactions.forEach(//delete savedCategoryId)
+        delete savedCategory
+    }
+    //update current transaction with selected categories
+} else {
+    if(savedCategoryId){
+        if(checkAmount){
+            if(!savedCategory.amounts.includes(row.amount)){
+                savedCategory.amounts.push(row.amount)
+            }
+           updateTransactions
+        } else {
+            savedCategory.amounts.filter(amt=>amt!==row.amount)
+           updateTransactions
+        }
+    }else{
+        //create new saved Category
+        if(checkAmount){
+            create with amount then ->
+               updateTransactions 
+        }else {
+            create with empty amount then ->
+               updateTransactions 
+        }
+    }
+}
+//update note
+
+updateTransactions(name, memo, amount?, selectedCategory, selectedSubCategoryId, savedCatgeoryId){
+    transactions.find(where: name, memo, amount?)
+     transactions.forEach( update transactions with selected categories, savedCategoryId)  
+}

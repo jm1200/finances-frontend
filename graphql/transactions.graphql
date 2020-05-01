@@ -6,56 +6,7 @@ query GetUserTransactions {
     subCategoryId
   }
 }
-mutation UpdateCategoriesInTransaction(
-  $note: String
-  $id: String!
-  $categoryId: String!
-  $subCategoryId: String!
-  $savedCategoryId: String
-) {
-  updateCategoriesInTransaction(
-    data: {
-      id: $id
-      note: $note
-      categoryId: $categoryId
-      subCategoryId: $subCategoryId
-      savedCategoryId: $savedCategoryId
-    }
-  )
-}
-mutation UpdateCategoriesInAllTransactions(
-  $note: String
-  $name: String
-  $memo: String
-  $amount: Float!
-  $categoryId: String
-  $subCategoryId: String
-  $savedCategoryId: String
-) {
-  updateCategoriesInAllTransactions(
-    data: {
-      name: $name
-      memo: $memo
-      note: $note
-      amount: $amount
-      categoryId: $categoryId
-      subCategoryId: $subCategoryId
-      savedCategoryId: $savedCategoryId
-    }
-  )
-}
 
-# query GetTransactionsToCategorize {
-#   getTransactionsToCategorize {
-#     id
-#     name
-#     memo
-#     averageAmount
-#     categoryName
-#     subCategoryName
-#     ids
-#   }
-# }
 query GetTransactionsByMonth($month: String!, $year: Int!) {
   getTransactionsByMonth(month: $month, year: $year) {
     id
@@ -68,7 +19,7 @@ query GetTransactionsByMonth($month: String!, $year: Int!) {
     savedCategory {
       id
       name
-      amount
+      amounts
     }
     category {
       id
@@ -87,9 +38,10 @@ mutation UpdateCategoriesInTransactions(
   $name: String
   $memo: String
   $amount: Float!
-  $categoryId: String
-  $subCategoryId: String
+  $selectedCategoryId: String!
+  $selectedSubCategoryId: String!
   $savedCategoryId: String
+  $savedCategoryAmounts: [Float!]
   $checkAmount: Boolean!
   $applyToAll: Boolean!
 ) {
@@ -100,9 +52,10 @@ mutation UpdateCategoriesInTransactions(
       memo: $memo
       note: $note
       amount: $amount
-      categoryId: $categoryId
-      subCategoryId: $subCategoryId
+      selectedCategoryId: $selectedCategoryId
+      selectedSubCategoryId: $selectedSubCategoryId
       savedCategoryId: $savedCategoryId
+      savedCategoryAmounts: $savedCategoryAmounts
       checkAmount: $checkAmount
       applyToAll: $applyToAll
     }
