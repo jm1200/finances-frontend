@@ -17,11 +17,6 @@ import CategorySelect from "./CategorySelect";
 import SubCategorySelect from "./SubCategorySelect";
 import { TextField, Tooltip, Checkbox } from "@material-ui/core";
 import numeral from "numeral";
-import Maybe from "graphql/tsutils/Maybe";
-import { TransactionEntity } from "../../generated/graphql";
-import { CategoryEntity } from "../../generated/graphql";
-import { SavedCategoriesEntity } from "../../generated/graphql";
-import { SubCategoryEntity } from "../../generated/graphql";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -68,23 +63,11 @@ export function TransactionCategoryTable(
   const [editTransactionMode, setTransactionEditMode] = React.useState("");
   const [categoryId, setCategoryId] = React.useState("");
   const [subCategoryId, setSubCategoryId] = React.useState("");
-  // const [
-  //   updateCategoriesInTransaction,
-  // ] = useUpdateCategoriesInTransactionMutation();
-  // const [
-  //   updateCategoriesInAllTransactions,
-  // ] = useUpdateCategoriesInAllTransactionsMutation();
+
   const [
     updateCategoriesInTransactions,
   ] = useUpdateCategoriesInTransactionsMutation();
-  // const [
-  //   createSavedCategory,
-  //   { data: createSavedCategoryData },
-  // ] = useCreateSavedCategoryMutation();
-  // const [deleteSavedCategory] = useDeleteSavedCategoryMutation();
-  // interface ISubCategoryMap {
-  //   [key:string] : GetUserCategoriesQuery["getUserCategories"] | null | undefined
-  // }
+
   const subCategoriesMap: any = {};
 
   props.categoriesData.forEach((category) => {
@@ -105,7 +88,9 @@ export function TransactionCategoryTable(
     setSubCategoryId(row.subCategory!.id);
     setNote(row.note || "");
     setSavedCategoryCheckBox(!!row.savedCategory && !!row.savedCategory.id);
-    setAmountCheckBox(!!row.savedCategory && !!row.savedCategory.amounts);
+    setAmountCheckBox(
+      !!row.savedCategory && row.savedCategory.amounts.length > 0
+    );
   };
 
   const handleCancelTransactionMode = () => {
@@ -120,12 +105,6 @@ export function TransactionCategoryTable(
   const handleEditNote = (e: any) => {
     setNote(e.target.value);
   };
-  // const handleSetCategory = () => {
-  //   setSubCategoryId(
-  //     subCategoryId || subCategoriesMap[categoryId].subCategories[0].id
-  //   );
-  //   return setCategoryId;
-  // };
 
   const handleUpdateTransactionCategory = async (row: any) => {
     let savedCategoryId,
@@ -135,6 +114,7 @@ export function TransactionCategoryTable(
       savedCategoryAmounts = row.savedCategory.amounts;
     }
     try {
+      console.log("TCT115 amountcheckbox", amountCheckBox);
       await updateCategoriesInTransactions({
         variables: {
           id: row.id,
@@ -154,82 +134,7 @@ export function TransactionCategoryTable(
       console.log("TCT 157", err);
     }
 
-    // //if savedCategoryCheckBox is true we need to save the savedCategoryId.
-    // //else savedCatgoryId is null
-    // if (savedCategoryCheckBox) {
-    //   //does a savedCategoryId already exist? if so use it. else create a new one
-    //   //save all checkbox is clicked so update all transactions with new Cat/SubCat id
-    //   if (savedCategoryId) {
-    //     await updateCategoriesInAllTransactions({
-    //       variables: {
-    //         name,
-    //         memo,
-    //         amount,
-    //         categoryId,
-    //         subCategoryId,
-    //         note,
-    //         savedCategoryId,
-    //       },
-    //     });
-    //   } else {
-    //     //else create a new saved category and then update all transactions with new Id's
-    //     await createSavedCategory({
-    //       variables: { categoryId, subCategoryId, name, memo, amount },
-    //     }).then(async ({ data }) => {
-    //       await updateCategoriesInAllTransactions({
-    //         variables: {
-    //           name,
-    //           memo,
-    //           amount,
-    //           categoryId,
-    //           subCategoryId,
-    //           note,
-    //           savedCategoryId: data!.createSavedCategory.id,
-    //         },
-    //       });
-    //     });
-    //   }
-    // } else {
-    //   //update all transactions with null savedCategoryId
-    //   console.log(
-    //     "TCT 158: updating all transactions with categories: ",
-    //     row.category.name,
-    //     row.subCategory.name
-    //   );
-    //   await updateCategoriesInAllTransactions({
-    //     variables: {
-    //       name,
-    //       memo,
-    //       note,
-    //       amount,
-    //       savedCategoryId: null,
-    //     },
-    //   });
-
-    //   //update the one transaction
-    //   await updateCategoriesInTransaction({
-    //     variables: {
-    //       id,
-    //       categoryId,
-    //       subCategoryId,
-    //       note,
-    //       savedCategoryId: null,
-    //     },
-    //   });
-
-    //   //delete the saved category if there was one.
-    //   if (savedCategoryId) {
-    //     await deleteSavedCategory({
-    //       variables: { savedCategoryId },
-    //     });
-    //   }
-    // }
-
-    // setTransactionEditMode("");
-    // setNote("");
-    // setCategoryId("");
-    // setSubCategoryId("");
-    // setSavedCategoryCheckBox(false);
+    //
     handleCancelTransactionMode();
 
     props.refetch();
