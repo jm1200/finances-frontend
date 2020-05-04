@@ -15,47 +15,51 @@ export const parseDisplayData = (
   let normalisedCategories: {
     [key: string]: INormalisedCategoryTotalsTableDisplayData;
   } = {};
-  transactions.forEach((transaction) => {
-    if (Object.keys(normalisedCategories).includes(transaction.category!.id)) {
-      //category already exists
-      normalisedCategories[transaction.category!.id].categoryTotal +=
-        transaction.amount;
+  transactions
+    .filter((transaction) => transaction.category!.name !== "zzIgnore")
+    .forEach((transaction) => {
       if (
-        Object.keys(
-          normalisedCategories[transaction.category!.id].subCategories
-        ).includes(transaction.subCategory!.id)
+        Object.keys(normalisedCategories).includes(transaction.category!.id)
       ) {
-        //subCategory exists
-        normalisedCategories[transaction.category!.id].subCategories[
-          transaction.subCategory!.id
-        ].subCategoryTotal += transaction.amount;
-      } else {
-        //make new subCategory object
+        //category already exists
+        normalisedCategories[transaction.category!.id].categoryTotal +=
+          transaction.amount;
+        if (
+          Object.keys(
+            normalisedCategories[transaction.category!.id].subCategories
+          ).includes(transaction.subCategory!.id)
+        ) {
+          //subCategory exists
+          normalisedCategories[transaction.category!.id].subCategories[
+            transaction.subCategory!.id
+          ].subCategoryTotal += transaction.amount;
+        } else {
+          //make new subCategory object
 
-        normalisedCategories[transaction.category!.id].subCategories[
-          transaction.subCategory!.id
-        ] = {
+          normalisedCategories[transaction.category!.id].subCategories[
+            transaction.subCategory!.id
+          ] = {
+            name: transaction.subCategory!.name,
+            subCategoryId: transaction.subCategory!.id,
+            subCategoryTotal: transaction.amount,
+          };
+        }
+      } else {
+        //make new object
+        let normalisedSubCategories: { [key: string]: SubCategory } = {};
+        normalisedSubCategories[transaction.subCategory!.id] = {
           name: transaction.subCategory!.name,
           subCategoryId: transaction.subCategory!.id,
           subCategoryTotal: transaction.amount,
         };
+        normalisedCategories[transaction.category!.id] = {
+          name: transaction.category!.name,
+          categoryId: transaction.category!.id,
+          categoryTotal: transaction.amount,
+          subCategories: normalisedSubCategories,
+        };
       }
-    } else {
-      //make new object
-      let normalisedSubCategories: { [key: string]: SubCategory } = {};
-      normalisedSubCategories[transaction.subCategory!.id] = {
-        name: transaction.subCategory!.name,
-        subCategoryId: transaction.subCategory!.id,
-        subCategoryTotal: transaction.amount,
-      };
-      normalisedCategories[transaction.category!.id] = {
-        name: transaction.category!.name,
-        categoryId: transaction.category!.id,
-        categoryTotal: transaction.amount,
-        subCategories: normalisedSubCategories,
-      };
-    }
-  });
+    });
 
   const displayData: ICategoryTotalsTableDisplayData[] = Object.keys(
     normalisedCategories

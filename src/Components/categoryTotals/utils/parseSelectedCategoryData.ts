@@ -15,8 +15,10 @@ export const parseSelectedCategoryData = (
   subCategoryId: string | null
 ) => {
   let displayData: DisplayData[] = [];
+
+  let data = transactions.filter((category) => category.name !== "zzIgnore");
   if (categoryId) {
-    displayData = transactions
+    displayData = data
       .filter((transaction) => transaction.category!.id === categoryId)
       .map((transaction) => ({
         name: transaction.name,
@@ -26,7 +28,7 @@ export const parseSelectedCategoryData = (
         datePosted: transaction.datePosted,
       }));
   } else {
-    displayData = transactions
+    displayData = data
       .filter((transaction) => transaction.subCategory!.id === subCategoryId)
       .map((transaction) => ({
         name: transaction.name,
