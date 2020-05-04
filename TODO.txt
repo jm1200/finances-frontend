@@ -12,9 +12,6 @@
 - maybe check some transactions for name while categorizing: Amazon, Tim Hortens, AMZN, McDonalds...
 - maybe make save category true the default.
 - must refresh to see new category but not subcat in selects
-- sort cashflow table by highest amount first
-- paginate transactions.
-- do moment calc serverside?
 
 
 - not enough room for notes in categories table
