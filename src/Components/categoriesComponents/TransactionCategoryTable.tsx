@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -15,7 +15,13 @@ import {
 import { Edit, Cancel, CheckCircle } from "@material-ui/icons";
 import CategorySelect from "./CategorySelect";
 import SubCategorySelect from "./SubCategorySelect";
-import { TextField, Tooltip, Checkbox } from "@material-ui/core";
+import {
+  TextField,
+  Tooltip,
+  Checkbox,
+  Toolbar,
+  FormControlLabel,
+} from "@material-ui/core";
 import numeral from "numeral";
 import moment from "moment";
 
@@ -64,6 +70,9 @@ export function TransactionCategoryTable(
   const [editTransactionMode, setTransactionEditMode] = React.useState("");
   const [categoryId, setCategoryId] = React.useState("");
   const [subCategoryId, setSubCategoryId] = React.useState("");
+  const [uncategorizedCheckBox, setUncategorizedCheckBox] = React.useState(
+    false
+  );
 
   const [
     updateCategoriesInTransactions,
@@ -141,10 +150,21 @@ export function TransactionCategoryTable(
     props.refetch();
   };
 
+  let data = props.data;
+
+  if (data && uncategorizedCheckBox) {
+    data = data.filter(
+      (transaction) => transaction.category!.name === "uncategorized"
+    );
+  }
+
   return (
     <div>
       <Paper className={classes.table}>
-        {/* <EnhancedTableToolbar refetch={props.refetch} /> */}
+        <EnhancedTableToolbar
+          uncategorizedCheckBox={uncategorizedCheckBox}
+          setUncategorizedCheckBox={setUncategorizedCheckBox}
+        />
         <TableContainer component={Paper}>
           <Table
             className={classes.table}
@@ -165,7 +185,7 @@ export function TransactionCategoryTable(
               </TableRow>
             </TableHead>
             <TableBody>
-              {props.data.map((row) => (
+              {data.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell>
                     {moment(row.datePosted, "YYYYMMDD").format("MMM Do YYYY")}
@@ -272,53 +292,37 @@ export function TransactionCategoryTable(
   );
 }
 
-// const useToolbarStyles = makeStyles((theme: Theme) =>
-//   createStyles({
-//     root: {
-//       paddingLeft: theme.spacing(2),
-//       paddingRight: theme.spacing(1),
-//     },
-//     highlight:
-//       theme.palette.type === "light"
-//         ? {
-//             color: theme.palette.secondary.main,
-//             backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-//           }
-//         : {
-//             color: theme.palette.text.primary,
-//             backgroundColor: theme.palette.secondary.dark,
-//           },
-//     title: {
-//       flex: "1 1 100%",
-//     },
-//   })
-// );
+const useToolbarStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      display: "flex",
+      justifyContent: "flex-end",
+    },
+  })
+);
 
-// interface IEnhancedToolBarProps {
-//   refetch: any;
-// }
+interface IEnhancedToolBarProps {
+  uncategorizedCheckBox: boolean;
+  setUncategorizedCheckBox: Dispatch<SetStateAction<boolean>>;
+}
 
-// function EnhancedTableToolbar(props: IEnhancedToolBarProps) {
-//   const classes = useToolbarStyles();
+function EnhancedTableToolbar(props: IEnhancedToolBarProps) {
+  const classes = useToolbarStyles();
 
-//   const handleClick = () => {
-//     props.refetch();
-//   };
+  const handleUncategorizedCheckBox = () => {
+    props.setUncategorizedCheckBox(!props.uncategorizedCheckBox);
+  };
 
-//   return (
-//     <Toolbar className={classes.root}>
-//       <Typography
-//         className={classes.title}
-//         variant="h6"
-//         id="tableTitle"
-//         component="div"
-//       >
-//         List of Uncategorized Transactions
-//       </Typography>
-
-//       <Button onClick={handleClick} variant="contained">
-//         Get 10 more...
-//       </Button>
-//     </Toolbar>
-//   );
-// }
+  return (
+    <Toolbar className={classes.root}>
+      <FormControlLabel
+        value={props.uncategorizedCheckBox}
+        control={
+          <Checkbox color="primary" onChange={handleUncategorizedCheckBox} />
+        }
+        label="Uncategorized only: "
+        labelPlacement="start"
+      />
+    </Toolbar>
+  );
+}
