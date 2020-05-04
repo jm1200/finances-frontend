@@ -1,6 +1,6 @@
 import React from "react";
 import CategoryList from "./CategoryList";
-import { useGetUserCategoriesForListQuery } from "../../generated/graphql";
+import { useGetUserCategoriesQuery } from "../../generated/graphql";
 import { createStyles, Theme, makeStyles, Paper } from "@material-ui/core";
 import { MonthPicker } from "../shared/MonthPicker";
 
@@ -32,7 +32,7 @@ export const CategoryListRoot: React.FC<ICategoryListRootProps> = (props) => {
     loading,
     error,
     refetch: refetchCategories,
-  } = useGetUserCategoriesForListQuery();
+  } = useGetUserCategoriesQuery();
 
   if (loading) {
     return <div>Loading Categories...</div>;

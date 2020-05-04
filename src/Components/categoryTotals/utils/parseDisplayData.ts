@@ -74,6 +74,23 @@ export const parseDisplayData = (
     )
   );
 
+  //sort displayData
+  displayData
+    .sort((a, b) => {
+      if (Math.abs(b.categoryTotal) < Math.abs(a.categoryTotal)) return -1;
+      if (Math.abs(b.categoryTotal) > Math.abs(a.categoryTotal)) return 1;
+      return 0;
+    })
+    .forEach((category) => {
+      category.subCategories.sort((a, b) => {
+        if (Math.abs(b.subCategoryTotal) < Math.abs(a.subCategoryTotal))
+          return -1;
+        if (Math.abs(b.subCategoryTotal) > Math.abs(a.subCategoryTotal))
+          return 1;
+        return 0;
+      });
+    });
+
   return displayData;
 };
 

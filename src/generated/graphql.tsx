@@ -24,20 +24,6 @@ export type CategoryEntity = {
   savedCategories: Array<SavedCategoriesEntity>;
 };
 
-export type IGroupedTransactionsClass = {
-   __typename?: 'IGroupedTransactionsClass';
-  id: Scalars['String'];
-  datePosted: Scalars['String'];
-  name: Scalars['String'];
-  memo: Scalars['String'];
-  note: Scalars['String'];
-  amounts: Array<Scalars['Float']>;
-  averageAmount: Scalars['Float'];
-  categoryName: Scalars['String'];
-  subCategoryName: Scalars['String'];
-  ids: Array<Scalars['String']>;
-};
-
 export type LoginResponse = {
    __typename?: 'LoginResponse';
   accessToken: Scalars['String'];
@@ -288,14 +274,6 @@ export type UpdateCategoriesInTransactionsInput = {
   applyToAll: Scalars['Boolean'];
 };
 
-export type UpdateTransactionInput = {
-  id: Scalars['String'];
-  categoryId?: Maybe<Scalars['String']>;
-  subCategoryId?: Maybe<Scalars['String']>;
-  note?: Maybe<Scalars['String']>;
-  savedCategoryId?: Maybe<Scalars['String']>;
-};
-
 
 export type UploadResponse = {
    __typename?: 'UploadResponse';
@@ -409,31 +387,6 @@ export type GetUserCategoriesQuery = (
   & { getUserCategories: Array<(
     { __typename?: 'CategoryEntity' }
     & Pick<CategoryEntity, 'name' | 'id'>
-    & { subCategories?: Maybe<Array<(
-      { __typename?: 'SubCategoryEntity' }
-      & Pick<SubCategoryEntity, 'name' | 'id'>
-    )>>, transactions: Array<(
-      { __typename?: 'TransactionEntity' }
-      & Pick<TransactionEntity, 'id' | 'name' | 'amount'>
-      & { category?: Maybe<(
-        { __typename?: 'CategoryEntity' }
-        & Pick<CategoryEntity, 'id' | 'name'>
-      )>, subCategory?: Maybe<(
-        { __typename?: 'SubCategoryEntity' }
-        & Pick<SubCategoryEntity, 'id' | 'name'>
-      )> }
-    )> }
-  )> }
-);
-
-export type GetUserCategoriesForListQueryVariables = {};
-
-
-export type GetUserCategoriesForListQuery = (
-  { __typename?: 'Query' }
-  & { getUserCategories: Array<(
-    { __typename?: 'CategoryEntity' }
-    & Pick<CategoryEntity, 'id' | 'name'>
     & { subCategories?: Maybe<Array<(
       { __typename?: 'SubCategoryEntity' }
       & Pick<SubCategoryEntity, 'name' | 'id'>
@@ -899,19 +852,6 @@ export const GetUserCategoriesDocument = gql`
       name
       id
     }
-    transactions {
-      id
-      name
-      amount
-      category {
-        id
-        name
-      }
-      subCategory {
-        id
-        name
-      }
-    }
   }
 }
     `;
@@ -940,43 +880,6 @@ export function useGetUserCategoriesLazyQuery(baseOptions?: ApolloReactHooks.Laz
 export type GetUserCategoriesQueryHookResult = ReturnType<typeof useGetUserCategoriesQuery>;
 export type GetUserCategoriesLazyQueryHookResult = ReturnType<typeof useGetUserCategoriesLazyQuery>;
 export type GetUserCategoriesQueryResult = ApolloReactCommon.QueryResult<GetUserCategoriesQuery, GetUserCategoriesQueryVariables>;
-export const GetUserCategoriesForListDocument = gql`
-    query GetUserCategoriesForList {
-  getUserCategories {
-    id
-    name
-    subCategories {
-      name
-      id
-    }
-  }
-}
-    `;
-
-/**
- * __useGetUserCategoriesForListQuery__
- *
- * To run a query within a React component, call `useGetUserCategoriesForListQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUserCategoriesForListQuery` returns an object from Apollo Client that contains loading, error, and data properties 
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetUserCategoriesForListQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetUserCategoriesForListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetUserCategoriesForListQuery, GetUserCategoriesForListQueryVariables>) {
-        return ApolloReactHooks.useQuery<GetUserCategoriesForListQuery, GetUserCategoriesForListQueryVariables>(GetUserCategoriesForListDocument, baseOptions);
-      }
-export function useGetUserCategoriesForListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetUserCategoriesForListQuery, GetUserCategoriesForListQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<GetUserCategoriesForListQuery, GetUserCategoriesForListQueryVariables>(GetUserCategoriesForListDocument, baseOptions);
-        }
-export type GetUserCategoriesForListQueryHookResult = ReturnType<typeof useGetUserCategoriesForListQuery>;
-export type GetUserCategoriesForListLazyQueryHookResult = ReturnType<typeof useGetUserCategoriesForListLazyQuery>;
-export type GetUserCategoriesForListQueryResult = ApolloReactCommon.QueryResult<GetUserCategoriesForListQuery, GetUserCategoriesForListQueryVariables>;
 export const HelloDocument = gql`
     query Hello {
   hello

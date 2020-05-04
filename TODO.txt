@@ -5,23 +5,38 @@
 - category CRUD tests, do something other than toBeDefined()
 - Loading spinner from updating transaction category
 - look into higher order resolvers for resolves that need userId
-- don;t let user delete uncategorized categories
 - make current month or last transaction month active month
 - select category title says Age:
 - transactions where name and memo are the same, maybe compare amounts so they can be auto categorized
-- if a note exists don't allow apply to all or checkAmount
+- over flow: scroll fro tables. set height to screen height.
+- maybe check some transactions for name while categorizing: Amazon, Tim Hortens, AMZN, McDonalds...
+- maybe make save category true the default.
+- must refresh to see new category but not subcat in selects
+- sort cashflow table by highest amount first
+- paginate transactions.
+- do moment calc serverside?
 
 
 - not enough room for notes in categories table
--notes aren't saving.
  - see only uncategorized.. maybe just table sort option?
  -
 
 
+List of words to check for:
+McDonalds
+Time hortons
+AMZN
+Amazon
+RCSS
+Remark
+Burger King
+Grill
+LCBO
+Metro
+
 Material table
 - make amounts display dollars
 
-get userid function working for resolvers.
 
 check all useAuth middlewares in server resolvers.
 
@@ -45,118 +60,3 @@ categories tests:
 13. check edits category name
 
 
-
-add property to entity:
-1. add property to entity
-
-
-in the table I have a switch to decide which mutations to run
-
-add savedCategory to Trans Entity
-
-if saved category {
-    update all categories
-    if saved category has changed {
-        update savedCategories Entity with change
-    }
-} else {
-    update one category
-    if saved category has changed {
-        update savedCategories Entity with change
-    } 
-}
-
-When I import a transaction I check for name, memo and note. if they match a saved
-category I then add the appropriate category. The problem is that name, memo and note could
-match, but I want them to be different categories. I can't compare amounts too because:
-1.) the amounts may change slightly from month to month or year to year.
-2.) some saved categories, like McD's, the amounts could vary largely.
-
-I could add another check for saved categories that are recurring. need to check in update all categories, and
-file upload.
-
-
-if amount is clicked, I want to compare amounts aswell
-if amount is not clicked, just comparing name/memo/note is enough
-
-checkAmount true
-    savedCateogry true
-        applyToAll true
-             EXPECT-->
-                1. SavedCategory Update
-                    name: data.name,
-                    memo: data.memo,
-                    categoryId: data.categoryId,
-                    subCategoryId: data.subCategoryId,
-                    amount: data.amount,
-                2. applyToAll: transactions[] --> PASS
-                3. savedCategory: made a new category --> PASS
-
-        applyToAll false
-
-    savedCategory false
-        applyToAll true
-
-        applyToAll false
-
-checkAmount false
-    savedCateogry true
-        applyToAll true
-
-        applyToAll false
-
-    savedCategory false
-        applyToAll true 
-            EXPECT-->
-                1. amount: null --> PASS
-                2. applyToAll: transactions[] --> PASS
-                3. savedCategory: made a new category --> PASS
-
-
-               
-        applyToAll false
-
-
-applyToAll  checkAmount
-    T           T           -> Allstate 
-    T           F           -> Tim Hortens
-    F           T           -> never?
-    F           F           -> single transaction
-
-row {name, memo, amount, note}, selectedCategoryId, selectedSubCategoryId, applyToAll, checkAmount
-
-if(!applyToAll){
-    if(savedCategoryId)
-        transactions.find(where: name, memo)
-        transactions.forEach(//delete savedCategoryId)
-        delete savedCategory
-    }
-    //update current transaction with selected categories
-} else {
-    if(savedCategoryId){
-        if(checkAmount){
-            if(!savedCategory.amounts.includes(row.amount)){
-                savedCategory.amounts.push(row.amount)
-            }
-           updateTransactions
-        } else {
-            savedCategory.amounts.filter(amt=>amt!==row.amount)
-           updateTransactions
-        }
-    }else{
-        //create new saved Category
-        if(checkAmount){
-            create with amount then ->
-               updateTransactions 
-        }else {
-            create with empty amount then ->
-               updateTransactions 
-        }
-    }
-}
-//update note
-
-updateTransactions(name, memo, amount?, selectedCategory, selectedSubCategoryId, savedCatgeoryId){
-    transactions.find(where: name, memo, amount?)
-     transactions.forEach( update transactions with selected categories, savedCategoryId)  
-}

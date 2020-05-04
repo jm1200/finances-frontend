@@ -19,8 +19,8 @@ import {
   useUpdateCategoryMutation,
   useAddSubCategoryMutation,
   useDeleteSubCategoryMutation,
-  GetUserCategoriesForListQuery,
-  GetUserCategoriesForListQueryVariables,
+  GetUserCategoriesQuery,
+  GetUserCategoriesQueryVariables,
 } from "../../generated/graphql";
 import AddCategoryForm from "./AddCategoryForm";
 import AddSubCategoryForm from "./AddSubCategoryForm";
@@ -57,10 +57,10 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface ICategoryListProps {
-  categories: GetUserCategoriesForListQuery["getUserCategories"];
+  categories: GetUserCategoriesQuery["getUserCategories"];
   refetchCategories: (
-    variables?: GetUserCategoriesForListQueryVariables | undefined
-  ) => Promise<ApolloQueryResult<GetUserCategoriesForListQuery>>;
+    variables?: GetUserCategoriesQueryVariables | undefined
+  ) => Promise<ApolloQueryResult<GetUserCategoriesQuery>>;
 }
 
 export default function CategoryList({

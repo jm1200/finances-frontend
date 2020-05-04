@@ -34,29 +34,5 @@ query GetUserCategories {
       name
       id
     }
-    transactions {
-      id
-      name
-      amount
-      category {
-        id
-        name
-      }
-      subCategory {
-        id
-        name
-      }
-    }
-  }
-}
-
-query GetUserCategoriesForList {
-  getUserCategories {
-    id
-    name
-    subCategories {
-      name
-      id
-    }
   }
 }

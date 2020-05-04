@@ -17,6 +17,7 @@ import CategorySelect from "./CategorySelect";
 import SubCategorySelect from "./SubCategorySelect";
 import { TextField, Tooltip, Checkbox } from "@material-ui/core";
 import numeral from "numeral";
+import moment from "moment";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,7 +58,7 @@ export function TransactionCategoryTable(
   const classes = useStyles();
   const [note, setNote] = React.useState("");
   const [savedCategoryCheckBox, setSavedCategoryCheckBox] = React.useState(
-    false
+    true
   );
   const [amountCheckBox, setAmountCheckBox] = React.useState(false);
   const [editTransactionMode, setTransactionEditMode] = React.useState("");
@@ -156,7 +157,7 @@ export function TransactionCategoryTable(
                 <TableCell>Name</TableCell>
                 <TableCell>Memo</TableCell>
 
-                <TableCell>Average Amount</TableCell>
+                <TableCell>Amount</TableCell>
                 <TableCell>Note</TableCell>
                 <TableCell>Category</TableCell>
                 <TableCell>Sub Category</TableCell>
@@ -166,7 +167,9 @@ export function TransactionCategoryTable(
             <TableBody>
               {props.data.map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell>{row.datePosted}</TableCell>
+                  <TableCell>
+                    {moment(row.datePosted, "YYYYMMDD").format("MMM Do YYYY")}
+                  </TableCell>
                   <TableCell component="th" scope="row">
                     {row.name}
                   </TableCell>
