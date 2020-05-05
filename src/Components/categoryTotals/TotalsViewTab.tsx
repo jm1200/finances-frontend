@@ -5,8 +5,12 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import { SelectedCategoryTableRoot } from "./SelectedCategoryTableRoot";
-import { GetTransactionsByMonthQuery } from "../../generated/graphql";
+import {
+  ICategoriesTransactionsTableDisplayData,
+  ICategoriesGraphDisplayData,
+} from "../../types";
+import { SelectedCategoryGraph } from "./SelectedCategoryGraph";
+import { SelectedCategoryTable } from "./SelectedCategoryTable";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -40,13 +44,28 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.background.paper,
     width: "100%",
   },
+  graph: {
+    height: 500,
+  },
 }));
 
 interface ITotalsviewTabProps {
   selectedCategory: string | null;
   selectedSubCategory: string | null;
-  data: GetTransactionsByMonthQuery;
+  categoriesTransactionsTableDisplayData: ICategoriesTransactionsTableDisplayData[];
+  categoriesGraphDisplayData: ICategoriesGraphDisplayData[];
 }
+
+interface IDisplayData {
+  id: string;
+  label: string;
+  value: number;
+}
+
+const data2: IDisplayData[] = [
+  { id: "css", label: "css", value: 40 },
+  { id: "javascript", label: "css", value: 60 },
+];
 
 export const TotalsViewTab = (props: ITotalsviewTabProps) => {
   const classes = useStyles();
@@ -65,14 +84,16 @@ export const TotalsViewTab = (props: ITotalsviewTabProps) => {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <SelectedCategoryTableRoot
-          selectedCategory={props.selectedCategory}
-          selectedSubCategory={props.selectedSubCategory}
-          data={props.data}
+        <SelectedCategoryTable
+          displayData={props.categoriesTransactionsTableDisplayData}
         />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <div style={{ height: 600 }}>
+          <SelectedCategoryGraph
+            displayData={props.categoriesGraphDisplayData}
+          />
+        </div>
       </TabPanel>
     </div>
   );

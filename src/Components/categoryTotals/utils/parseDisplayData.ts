@@ -1,5 +1,5 @@
 import { GetTransactionsByMonthQuery } from "../../../generated/graphql";
-import { ICategoryTotalsTableDisplayData, SubCategory } from "../../../types";
+import { ICategoriesListDisplayData, SubCategory } from "../../../types";
 
 type transactions = GetTransactionsByMonthQuery["getTransactionsByMonth"];
 
@@ -11,7 +11,7 @@ interface INormalisedCategoryTotalsTableDisplayData {
 }
 export const parseDisplayData = (
   transactions: transactions
-): ICategoryTotalsTableDisplayData[] => {
+): ICategoriesListDisplayData[] => {
   let normalisedCategories: {
     [key: string]: INormalisedCategoryTotalsTableDisplayData;
   } = {};
@@ -61,7 +61,7 @@ export const parseDisplayData = (
       }
     });
 
-  const displayData: ICategoryTotalsTableDisplayData[] = Object.keys(
+  const displayData: ICategoriesListDisplayData[] = Object.keys(
     normalisedCategories
   ).map((categoryKey) =>
     Object.assign(

@@ -40,3 +40,25 @@ export interface ICategoryList {
   name: string;
   subCategories: SubCategoryEntity[];
 }
+
+//CategoriesTotals Display types
+export interface ICategoriesListDisplayData {
+  name: string;
+  categoryTotal: number;
+  categoryId: string;
+  subCategories: SubCategory[];
+}
+
+export interface ICategoriesTransactionsTableDisplayData {
+  name: string;
+  memo: string;
+  note?: string | null;
+  amount: number;
+  datePosted: string;
+}
+
+export interface ICategoriesGraphDisplayData {
+  id: string | number;
+  value: number;
+  [key: string]: string | number;
+}
