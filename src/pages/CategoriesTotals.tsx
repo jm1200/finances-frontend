@@ -4,6 +4,7 @@ import { CategoryTotalsTableRoot } from "../Components/categoryTotals/CategoryTo
 import { MonthPicker } from "../Components/shared/MonthPicker";
 import { SelectedCategoryTableRoot } from "../Components/categoryTotals/SelectedCategoryTableRoot";
 import { useGetTransactionsByMonthQuery } from "../generated/graphql";
+import { TotalsViewTab } from "../Components/categoryTotals/TotalsViewTab";
 
 interface ICategoriesTotalsProps {}
 const useStyles = makeStyles((theme: Theme) =>
@@ -23,12 +24,12 @@ const useStyles = makeStyles((theme: Theme) =>
     categories: {
       marginLeft: 10,
       backgroundColor: theme.palette.background.paper,
-      flex: 1,
+      width: "35%",
     },
     transactions: {
       marginLeft: 10,
       backgroundColor: theme.palette.background.paper,
-      flex: 1,
+      width: "65%",
     },
     monthPicker: {
       width: "100%",
@@ -86,7 +87,7 @@ export const CategoriesTotals: React.FC<ICategoriesTotalsProps> = (props) => {
               />
             </div>
             <div className={classes.transactions}>
-              <SelectedCategoryTableRoot
+              <TotalsViewTab
                 selectedCategory={selectedCategory}
                 selectedSubCategory={selectedSubCategory}
                 data={data}
