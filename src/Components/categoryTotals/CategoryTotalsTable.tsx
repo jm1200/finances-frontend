@@ -12,6 +12,7 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import StarBorder from "@material-ui/icons/StarBorder";
 import numeral from "numeral";
 import { ICategoryTotalsTableDisplayData } from "../../types";
+import { Button } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -58,7 +59,9 @@ interface ICategoryTotalsTableProps {
   displayData: ICategoryTotalsTableDisplayData[];
   grandTotal: number;
   setSelectedCategory: React.Dispatch<React.SetStateAction<string | null>>;
-  setSelectedSubCategory: React.Dispatch<React.SetStateAction<string | null>>;
+  setSelectedSubCategory: React.Dispatch<
+    React.SetStateAction<{ categoryId: string; subCategoryId: string } | null>
+  >;
 }
 
 export function CategoryTotalsTable(props: ICategoryTotalsTableProps) {
@@ -74,11 +77,18 @@ export function CategoryTotalsTable(props: ICategoryTotalsTableProps) {
       setOpen(categoryId);
     }
   };
-  const handleSubCategoryClick = (subCategoryId: string) => {
+  const handleSubCategoryClick = (
+    categoryId: string,
+    subCategoryId: string
+  ) => {
     props.setSelectedCategory(null);
-    props.setSelectedSubCategory(subCategoryId);
+    props.setSelectedSubCategory({ categoryId, subCategoryId });
   };
 
+  const handleReset = () => {
+    props.setSelectedCategory(null);
+    props.setSelectedSubCategory(null);
+  };
   return (
     <List
       component="nav"
@@ -90,6 +100,9 @@ export function CategoryTotalsTable(props: ICategoryTotalsTableProps) {
           id="nested-list-subheader"
         >
           <div>Cash Flow</div>
+          <Button size="small" variant="outlined" onClick={handleReset}>
+            Reset
+          </Button>
           <div>{numeral(props.grandTotal).format("$0,0.00")}</div>
         </ListSubheader>
       }
@@ -130,7 +143,10 @@ export function CategoryTotalsTable(props: ICategoryTotalsTableProps) {
                           button
                           className={classes.nested}
                           onClick={() =>
-                            handleSubCategoryClick(subCategory.subCategoryId)
+                            handleSubCategoryClick(
+                              category.categoryId,
+                              subCategory.subCategoryId
+                            )
                           }
                         >
                           <ListItemIcon>

@@ -11,6 +11,7 @@ import {
 import { parseDisplayData } from "./utils/parseDisplayData";
 import { CategoryTotalsTable } from "./CategoryTotalsTable";
 import { parseSelectedCategoryData } from "./utils/parseSelectedCategoryData";
+import { parseGraphData } from "./utils/parseGraphData";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,9 +54,10 @@ export const CategoriesTotalsData: React.FC<ICategoriesTotalsDataProps> = (
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(
     null
   );
-  const [selectedSubCategory, setSelectedSubCategory] = React.useState<
-    string | null
-  >(null);
+  const [selectedSubCategory, setSelectedSubCategory] = React.useState<{
+    categoryId: string;
+    subCategoryId: string;
+  } | null>(null);
 
   const { data, loading, error } = useGetTransactionsByMonthQuery({
     fetchPolicy: "no-cache",
@@ -83,6 +85,12 @@ export const CategoriesTotalsData: React.FC<ICategoriesTotalsDataProps> = (
     );
 
     categoriesTransactionsTableDisplayData = parseSelectedCategoryData(
+      data.getTransactionsByMonth,
+      selectedCategory,
+      selectedSubCategory
+    );
+
+    categoriesGraphDisplayData = parseGraphData(
       data.getTransactionsByMonth,
       selectedCategory,
       selectedSubCategory

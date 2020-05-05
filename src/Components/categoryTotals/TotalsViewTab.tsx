@@ -29,11 +29,7 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box p={3}>{children}</Box>}
     </div>
   );
 }
@@ -51,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface ITotalsviewTabProps {
   selectedCategory: string | null;
-  selectedSubCategory: string | null;
+  selectedSubCategory: { categoryId: string; subCategoryId: string } | null;
   categoriesTransactionsTableDisplayData: ICategoriesTransactionsTableDisplayData[];
   categoriesGraphDisplayData: ICategoriesGraphDisplayData[];
 }
@@ -84,9 +80,11 @@ export const TotalsViewTab = (props: ITotalsviewTabProps) => {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <SelectedCategoryTable
-          displayData={props.categoriesTransactionsTableDisplayData}
-        />
+        <div>
+          <SelectedCategoryTable
+            displayData={props.categoriesTransactionsTableDisplayData}
+          />
+        </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
         <div style={{ height: 600 }}>

@@ -12,7 +12,7 @@ interface DisplayData {
 export const parseSelectedCategoryData = (
   transactions: transactions,
   categoryId: string | null,
-  subCategoryId: string | null
+  subCategory: { categoryId: string; subCategoryId: string } | null
 ) => {
   let displayData: DisplayData[] = [];
 
@@ -29,7 +29,10 @@ export const parseSelectedCategoryData = (
       }));
   } else {
     displayData = data
-      .filter((transaction) => transaction.subCategory!.id === subCategoryId)
+      .filter(
+        (transaction) =>
+          transaction.subCategory!.id === subCategory?.subCategoryId
+      )
       .map((transaction) => ({
         name: transaction.name,
         memo: transaction.memo,
