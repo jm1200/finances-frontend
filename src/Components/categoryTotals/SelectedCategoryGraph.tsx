@@ -1,6 +1,8 @@
 import React from "react";
 import { ResponsivePie } from "@nivo/pie";
 import { ICategoriesGraphDisplayData } from "../../types";
+import numeral from "numeral";
+import { colors } from "@material-ui/core";
 // make sure parent container have a defined height when using
 // responsive component, otherwise height will be 0 and
 // no chart will be rendered.
@@ -21,9 +23,12 @@ export const SelectedCategoryGraph = ({
     colors={{ scheme: "pastel2" }}
     borderWidth={1}
     borderColor={{ from: "color", modifiers: [["darker", 0.2]] }}
+    radialLabel={(data) => {
+      return " " + data.label;
+    }}
     radialLabelsSkipAngle={10}
     radialLabelsTextXOffset={6}
-    radialLabelsTextColor="#333333"
+    radialLabelsTextColor="white"
     radialLabelsLinkOffset={0}
     radialLabelsLinkDiagonalLength={16}
     radialLabelsLinkHorizontalLength={24}
@@ -31,9 +36,10 @@ export const SelectedCategoryGraph = ({
     radialLabelsLinkColor={{ from: "color" }}
     slicesLabelsSkipAngle={10}
     slicesLabelsTextColor="#333333"
-    animate={true}
-    motionStiffness={90}
-    motionDamping={15}
+    sliceLabel={(data) => {
+      return numeral(data.value).format("$0,0.00");
+    }}
+    sortByValue={true}
     defs={[
       {
         id: "dots",
@@ -102,26 +108,6 @@ export const SelectedCategoryGraph = ({
           id: "javascript",
         },
         id: "lines",
-      },
-    ]}
-    legends={[
-      {
-        anchor: "bottom",
-        direction: "row",
-        translateY: 56,
-        itemWidth: 100,
-        itemHeight: 18,
-        itemTextColor: "#999",
-        symbolSize: 18,
-        symbolShape: "circle",
-        effects: [
-          {
-            on: "hover",
-            style: {
-              itemTextColor: "#000",
-            },
-          },
-        ],
       },
     ]}
   />

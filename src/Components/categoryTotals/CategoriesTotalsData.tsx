@@ -91,6 +91,7 @@ export const CategoriesTotalsData: React.FC<ICategoriesTotalsDataProps> = (
     );
 
     categoriesGraphDisplayData = parseGraphData(
+      categoriesListDisplayData,
       data.getTransactionsByMonth,
       selectedCategory,
       selectedSubCategory
@@ -131,7 +132,8 @@ export const CategoriesTotalsData: React.FC<ICategoriesTotalsDataProps> = (
                 categoriesTransactionsTableDisplayData={
                   categoriesTransactionsTableDisplayData
                 }
-                categoriesGraphDisplayData={tempData}
+                categoriesGraphDisplayData={categoriesGraphDisplayData}
+                //categoriesGraphDisplayData={tempData}
               />
             </div>
           </>

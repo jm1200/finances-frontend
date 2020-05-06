@@ -1,31 +1,66 @@
 import { GetTransactionsByMonthQuery } from "../../../generated/graphql";
-import { ICategoriesGraphDisplayData } from "../../../types";
+import {
+  ICategoriesGraphDisplayData,
+  ICategoriesListDisplayData,
+} from "../../../types";
+import { parseDisplayData } from "./parseDisplayData";
+import { TransactionCategoryTable } from "../../categoriesComponents/TransactionCategoryTable";
 
+interface INormalisedData {
+  [key: string]: ICategoriesGraphDisplayData;
+}
 type Transactions = GetTransactionsByMonthQuery["getTransactionsByMonth"];
-
-//both  null - graph of all categories
-//categoryId - graph of all sub categories
-//subCategoryId - graph of individual sub categories
-
 export const parseGraphData = (
-  transactions: Transactions,
+  transactions: ICategoriesListDisplayData[],
+  allTransactions: Transactions,
   selectedCategoryId: string | null,
   selectedSubCategoryId: { categoryId: string; subCategoryId: string } | null
 ): ICategoriesGraphDisplayData[] => {
   let displayData: ICategoriesGraphDisplayData[] = [];
-  let filteredTransactions = transactions.filter(
-    (transaction) => transaction.category!.name !== "zzIgnore"
-  );
+  let includeIncome: boolean = false;
 
   if (!selectedCategoryId && !selectedSubCategoryId) {
-    //sum all categories
-    console.log("all categories");
+    transactions
+      .filter(
+        (transaction) =>
+          transaction.name !== "Income" &&
+          transaction.name !== "Rental Property"
+      )
+      .forEach((transaction) => {
+        displayData.push({
+          id: transaction.categoryId,
+          label: transaction.name,
+          value: Math.abs(transaction.categoryTotal),
+        });
+      });
+    console.log("PGD30", displayData);
+    return displayData;
   } else if (selectedCategoryId) {
     //sum all subCategories
-    console.log("all subCats");
+    transactions
+      .filter((category) => category.categoryId === selectedCategoryId)[0]
+      .subCategories.forEach((subCategory) => {
+        displayData.push({
+          id: subCategory.subCategoryId,
+          label: subCategory.name,
+          value: Math.abs(subCategory.subCategoryTotal),
+        });
+      });
+    console.log("PGD42", displayData);
+    return displayData;
   } else if (selectedSubCategoryId) {
-    //display subCategory
-    console.log("individual subcats");
+    displayData = allTransactions
+      .filter(
+        (transaction) =>
+          transaction.subCategory!.id === selectedSubCategoryId.subCategoryId
+      )
+      .map((transaction) => ({
+        id: transaction.id,
+        label: transaction.name,
+        value: Math.abs(transaction.amount),
+      }));
+    console.log("PGD54", displayData);
+    return displayData;
   } else {
     return displayData;
   }

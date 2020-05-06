@@ -88,6 +88,7 @@ export function CategoryTotalsTable(props: ICategoryTotalsTableProps) {
   const handleReset = () => {
     props.setSelectedCategory(null);
     props.setSelectedSubCategory(null);
+    setOpen(null);
   };
   return (
     <List
