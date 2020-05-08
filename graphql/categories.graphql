@@ -36,3 +36,48 @@ query GetUserCategories {
     }
   }
 }
+
+query GetUserSubCategories {
+  getUserSubCategories {
+    subCategoryName
+    categoryName
+    categoryId
+    subCategoryLength
+    Jan
+    Feb
+    Mar
+    Apr
+    May
+    Jun
+    Jul
+    Aug
+    Sep
+    Oct
+    Nov
+    Dec
+    low
+    high
+    avg
+    med
+    subCategories {
+      subCategoryId
+      subCategoryName
+      Jan
+      Feb
+      Mar
+      Apr
+      May
+      Jun
+      Jul
+      Aug
+      Sep
+      Oct
+      Nov
+      Dec
+      low
+      high
+      avg
+      med
+    }
+  }
+}

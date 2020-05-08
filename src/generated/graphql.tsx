@@ -24,6 +24,53 @@ export type CategoryEntity = {
   savedCategories: Array<SavedCategoriesEntity>;
 };
 
+export type IDisplayData = {
+   __typename?: 'IDisplayData';
+  categoryName: Scalars['String'];
+  subCategoryName: Scalars['String'];
+  categoryId: Scalars['String'];
+  subCategoryLength: Scalars['Float'];
+  Jan: Scalars['String'];
+  Feb: Scalars['String'];
+  Mar: Scalars['String'];
+  Apr: Scalars['String'];
+  May: Scalars['String'];
+  Jun: Scalars['String'];
+  Jul: Scalars['String'];
+  Aug: Scalars['String'];
+  Sep: Scalars['String'];
+  Oct: Scalars['String'];
+  Nov: Scalars['String'];
+  Dec: Scalars['String'];
+  low: Scalars['String'];
+  high: Scalars['String'];
+  avg: Scalars['String'];
+  med: Scalars['String'];
+  subCategories: Array<IDisplaySubCategoryRow>;
+};
+
+export type IDisplaySubCategoryRow = {
+   __typename?: 'IDisplaySubCategoryRow';
+  subCategoryName: Scalars['String'];
+  subCategoryId: Scalars['String'];
+  Jan: Scalars['String'];
+  Feb: Scalars['String'];
+  Mar: Scalars['String'];
+  Apr: Scalars['String'];
+  May: Scalars['String'];
+  Jun: Scalars['String'];
+  Jul: Scalars['String'];
+  Aug: Scalars['String'];
+  Sep: Scalars['String'];
+  Oct: Scalars['String'];
+  Nov: Scalars['String'];
+  Dec: Scalars['String'];
+  low: Scalars['String'];
+  high: Scalars['String'];
+  avg: Scalars['String'];
+  med: Scalars['String'];
+};
+
 export type LoginResponse = {
    __typename?: 'LoginResponse';
   accessToken: Scalars['String'];
@@ -139,6 +186,7 @@ export type Query = {
   getTransactionsById: TransactionEntity;
   getTransactionsByMonth: Array<TransactionEntity>;
   getUserCategories: Array<CategoryEntity>;
+  getUserSubCategories: Array<IDisplayData>;
   getCategorybyId: CategoryEntity;
   getUserSavedCategories: Array<SavedCategoriesEntity>;
 };
@@ -391,6 +439,21 @@ export type GetUserCategoriesQuery = (
       { __typename?: 'SubCategoryEntity' }
       & Pick<SubCategoryEntity, 'name' | 'id'>
     )>> }
+  )> }
+);
+
+export type GetUserSubCategoriesQueryVariables = {};
+
+
+export type GetUserSubCategoriesQuery = (
+  { __typename?: 'Query' }
+  & { getUserSubCategories: Array<(
+    { __typename?: 'IDisplayData' }
+    & Pick<IDisplayData, 'subCategoryName' | 'categoryName' | 'categoryId' | 'subCategoryLength' | 'Jan' | 'Feb' | 'Mar' | 'Apr' | 'May' | 'Jun' | 'Jul' | 'Aug' | 'Sep' | 'Oct' | 'Nov' | 'Dec' | 'low' | 'high' | 'avg' | 'med'>
+    & { subCategories: Array<(
+      { __typename?: 'IDisplaySubCategoryRow' }
+      & Pick<IDisplaySubCategoryRow, 'subCategoryId' | 'subCategoryName' | 'Jan' | 'Feb' | 'Mar' | 'Apr' | 'May' | 'Jun' | 'Jul' | 'Aug' | 'Sep' | 'Oct' | 'Nov' | 'Dec' | 'low' | 'high' | 'avg' | 'med'>
+    )> }
   )> }
 );
 
@@ -880,6 +943,77 @@ export function useGetUserCategoriesLazyQuery(baseOptions?: ApolloReactHooks.Laz
 export type GetUserCategoriesQueryHookResult = ReturnType<typeof useGetUserCategoriesQuery>;
 export type GetUserCategoriesLazyQueryHookResult = ReturnType<typeof useGetUserCategoriesLazyQuery>;
 export type GetUserCategoriesQueryResult = ApolloReactCommon.QueryResult<GetUserCategoriesQuery, GetUserCategoriesQueryVariables>;
+export const GetUserSubCategoriesDocument = gql`
+    query GetUserSubCategories {
+  getUserSubCategories {
+    subCategoryName
+    categoryName
+    categoryId
+    subCategoryLength
+    Jan
+    Feb
+    Mar
+    Apr
+    May
+    Jun
+    Jul
+    Aug
+    Sep
+    Oct
+    Nov
+    Dec
+    low
+    high
+    avg
+    med
+    subCategories {
+      subCategoryId
+      subCategoryName
+      Jan
+      Feb
+      Mar
+      Apr
+      May
+      Jun
+      Jul
+      Aug
+      Sep
+      Oct
+      Nov
+      Dec
+      low
+      high
+      avg
+      med
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUserSubCategoriesQuery__
+ *
+ * To run a query within a React component, call `useGetUserSubCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserSubCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserSubCategoriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetUserSubCategoriesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetUserSubCategoriesQuery, GetUserSubCategoriesQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetUserSubCategoriesQuery, GetUserSubCategoriesQueryVariables>(GetUserSubCategoriesDocument, baseOptions);
+      }
+export function useGetUserSubCategoriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetUserSubCategoriesQuery, GetUserSubCategoriesQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetUserSubCategoriesQuery, GetUserSubCategoriesQueryVariables>(GetUserSubCategoriesDocument, baseOptions);
+        }
+export type GetUserSubCategoriesQueryHookResult = ReturnType<typeof useGetUserSubCategoriesQuery>;
+export type GetUserSubCategoriesLazyQueryHookResult = ReturnType<typeof useGetUserSubCategoriesLazyQuery>;
+export type GetUserSubCategoriesQueryResult = ApolloReactCommon.QueryResult<GetUserSubCategoriesQuery, GetUserSubCategoriesQueryVariables>;
 export const HelloDocument = gql`
     query Hello {
   hello
