@@ -1,10 +1,20 @@
-import React, { useCallback, CSSProperties } from "react";
+import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import MaterialUITable from "../Components/MaterialUITable";
 import moment from "moment";
-import { Box, Button } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  makeStyles,
+  createStyles,
+  Theme,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@material-ui/core";
 import { TransactionEntity } from "../generated/graphql";
 import { Transaction } from "../types";
 import { useSnackbar } from "notistack";
@@ -43,18 +53,39 @@ const submitTransactionsMutation = gql`
   }
 `;
 
-const centralDivStyle: CSSProperties = {
-  minHeight: 100,
-  backgroundColor: "#fbff8a",
-  borderWidth: 2,
-  borderStyle: "solid",
-  borderColor: "#450d85",
-  textAlign: "center",
-  marginBottom: 20,
-};
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    options: {
+      display: "flex",
+      alignItems: "center",
+      height: 110,
+      marginBottom: 20,
+    },
+    bookSelect: {
+      display: "flex",
+      flexDirection: "column",
+    },
+    formControl: {
+      marginRight: 15,
+      minWidth: 250,
+    },
+    centralDivStyle: {
+      height: "100%",
+      backgroundColor: "#fbff8a",
+      borderWidth: 2,
+      borderStyle: "solid",
+      borderColor: "#450d85",
+      textAlign: "center",
+
+      width: "70%",
+    },
+  })
+);
 
 const ImportFile: React.FC = () => {
+  const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const [book, setBook] = React.useState("Home");
 
   const [uploadFile, { data, error, loading }] = useMutation(
     uploadFileMutation
@@ -62,8 +93,17 @@ const ImportFile: React.FC = () => {
 
   const [submitTransactions] = useMutation(submitTransactionsMutation);
 
+  const handleChange = (
+    event: React.ChangeEvent<{
+      name?: string | undefined;
+      value: unknown;
+    }>
+  ) => {
+    setBook(event.target.value as string);
+  };
+
   const onDrop = useCallback(
-    async ([file], userId) => {
+    async ([file]) => {
       try {
         await uploadFile({ variables: { file } });
       } catch (err) {
@@ -114,18 +154,35 @@ const ImportFile: React.FC = () => {
   };
   return (
     <div>
-      <div {...getRootProps()} style={centralDivStyle}>
-        <input {...getInputProps()} />
-        {isDragActive ? (
-          <p style={{ color: "black" }}>Drop the files here ...</p>
-        ) : (
-          <p style={{ color: "black" }}>
-            Drag 'n' drop some files here, or click to select files
-          </p>
-        )}
-      </div>
-      {loading && <div>Loading...</div>}
+      <div className={classes.options}>
+        <div className={classes.bookSelect}>
+          <p>Add Transactions to book:</p>
+          <FormControl variant="filled" className={classes.formControl}>
+            <InputLabel id="book">Select book:</InputLabel>
+            <Select
+              labelId="bookSelect"
+              id="bookSelectId"
+              value={book}
+              onChange={handleChange}
+            >
+              <MenuItem value="Home">Home</MenuItem>
+              <MenuItem value={"Book"}>Book</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
 
+        <div {...getRootProps()} className={classes.centralDivStyle}>
+          <input {...getInputProps()} />
+          {isDragActive ? (
+            <p style={{ color: "black" }}>Drop the files here ...</p>
+          ) : (
+            <p style={{ color: "black" }}>
+              Drag 'n' drop some files here, or click to select files
+            </p>
+          )}
+        </div>
+        {loading && <div>Loading...</div>}
+      </div>
       {data && data.uploadFile && (
         <div>
           <hr />

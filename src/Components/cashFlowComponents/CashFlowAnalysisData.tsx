@@ -14,22 +14,21 @@ export const CashFlowAnalysisData: React.FC<ICashFlowAnalysisDataProps> = (
   props
 ) => {
   const [selectedYear, setSelectedYear] = React.useState(2019);
-  const { data, loading, error } = useGetUserSubCategoriesQuery({
+  const {
+    data: homeData,
+    loading: homeLoading,
+    error: homeError,
+  } = useGetUserSubCategoriesQuery({
     variables: { selectedYear },
   });
-  console.log(data);
-  let homeData: dataType = [];
-  let rentalData: dataType = [];
-  if (data && data.getUserSubCategories) {
-    homeData = data.getUserSubCategories.filter(
-      (category) =>
-        category.categoryName !== "Rental Property" &&
-        category.categoryName !== "zzIgnore"
-    );
-    rentalData = data.getUserSubCategories.filter(
-      (category) => category.categoryName === "Rental Property"
-    );
-  }
+  const {
+    data: rentalData,
+    loading: rentalLoading,
+    error: rentalError,
+  } = useGetUserSubCategoriesQuery({
+    variables: { selectedYear, filteredCategory: "Rental Property" },
+  });
+  console.log("CFAD 23", homeData, rentalData);
 
   return (
     <div>
@@ -37,14 +36,25 @@ export const CashFlowAnalysisData: React.FC<ICashFlowAnalysisDataProps> = (
         selectedYear={selectedYear}
         setSelectedYear={setSelectedYear}
       />
-      {loading && <div>Loading...</div>}
-      {error && <div>error loading data</div>}
-      {!data || (!data.getUserSubCategories && <div>No data!</div>)}
-      {homeData.length > 0 && rentalData.length > 0 && (
+      {homeLoading && <div>Loading Home Data...</div>}
+      {homeError && <div>error loading Home data</div>}
+      {!homeData ||
+        (!homeData.getUserSubCategories && <div>No Home data!</div>)}
+      {homeData?.getUserSubCategories && (
         <div>
-          <CashFlowAnalysisTable displayData={homeData} />
+          <CashFlowAnalysisTable displayData={homeData.getUserSubCategories} />
+        </div>
+      )}
+      {rentalLoading && <div>Loading rental Data...</div>}
+      {rentalError && <div>error loading rental data</div>}
+      {!rentalData ||
+        (!rentalData.getUserSubCategories && <div>No rental data!</div>)}
+      {rentalData?.getUserSubCategories && (
+        <div>
           <br />
-          <CashFlowAnalysisTable displayData={rentalData} />
+          <CashFlowAnalysisTable
+            displayData={rentalData?.getUserSubCategories}
+          />
         </div>
       )}
     </div>

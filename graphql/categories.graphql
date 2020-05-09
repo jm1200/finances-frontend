@@ -37,8 +37,11 @@ query GetUserCategories {
   }
 }
 
-query GetUserSubCategories($selectedYear: Int!) {
-  getUserSubCategories(selectedYear: $selectedYear) {
+query GetUserSubCategories($selectedYear: Int!, $filteredCategory: String) {
+  getUserSubCategories(
+    selectedYear: $selectedYear
+    filteredCategory: $filteredCategory
+  ) {
     subCategoryName
     categoryName
     categoryId
