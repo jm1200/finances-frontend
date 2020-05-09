@@ -15,13 +15,13 @@ import {
   Select,
   MenuItem,
 } from "@material-ui/core";
-import { TransactionEntity } from "../generated/graphql";
-import { Transaction } from "../types";
+import { TransactionEntity, TransactionClass } from "../generated/graphql";
+//import { Transaction } from "../types";
 import { useSnackbar } from "notistack";
 
 const uploadFileMutation = gql`
-  mutation UploadFile($file: Upload!) {
-    uploadFile(file: $file) {
+  mutation UploadFile($file: Upload!, $book: String!) {
+    uploadFile(file: $file, book: $book) {
       uploaded
       name
       rangeStart
@@ -30,6 +30,7 @@ const uploadFileMutation = gql`
       transactions {
         id
         account
+        book
         type
         categoryId
         subCategoryId
@@ -105,7 +106,7 @@ const ImportFile: React.FC = () => {
   const onDrop = useCallback(
     async ([file]) => {
       try {
-        await uploadFile({ variables: { file } });
+        await uploadFile({ variables: { file, book } });
       } catch (err) {
         console.log(err);
       }
@@ -116,10 +117,12 @@ const ImportFile: React.FC = () => {
 
   const handleSubmitTransactions = () => {
     const trans: TransactionEntity[] = data.uploadFile.transactions;
-    let transNoTypename: Transaction[] = trans.map(
+    console.log("IF119: ", trans[0]);
+    let transNoTypename: TransactionClass[] = trans.map(
       (obj: TransactionEntity) => ({
         id: obj.id,
         userId: obj.userId,
+        book: obj.book,
         account: obj.account,
         type: obj.type,
         datePosted: obj.datePosted,

@@ -121,6 +121,7 @@ export type Mutation = {
 
 
 export type MutationUploadFileArgs = {
+  book: Scalars['String'];
   file: Scalars['Upload'];
 };
 
@@ -246,6 +247,7 @@ export type SavedCategoriesEntity = {
   id: Scalars['String'];
   name: Scalars['String'];
   memo?: Maybe<Scalars['String']>;
+  book: Scalars['String'];
   amounts: Array<Scalars['Float']>;
   keyName: Scalars['String'];
   userId: Scalars['String'];
@@ -288,6 +290,7 @@ export type TransactionClass = {
    __typename?: 'TransactionClass';
   id: Scalars['String'];
   userId: Scalars['String'];
+  book: Scalars['String'];
   account: Scalars['String'];
   type: Scalars['String'];
   datePosted: Scalars['String'];
@@ -304,6 +307,7 @@ export type TransactionEntity = {
   id: Scalars['String'];
   userId: Scalars['String'];
   user: UserEntity;
+  book: Scalars['String'];
   account: Scalars['String'];
   type: Scalars['String'];
   datePosted: Scalars['String'];
@@ -314,16 +318,17 @@ export type TransactionEntity = {
   savedCategory?: Maybe<SavedCategoriesEntity>;
   keyName: Scalars['String'];
   amount: Scalars['Float'];
-  subCategoryId?: Maybe<Scalars['String']>;
-  categoryId?: Maybe<Scalars['String']>;
-  category?: Maybe<CategoryEntity>;
-  subCategory?: Maybe<SubCategoryEntity>;
+  subCategoryId: Scalars['String'];
+  categoryId: Scalars['String'];
+  category: CategoryEntity;
+  subCategory: SubCategoryEntity;
 };
 
 export type TransactionInput = {
   id: Scalars['String'];
   userId: Scalars['String'];
   account: Scalars['String'];
+  book: Scalars['String'];
   type: Scalars['String'];
   datePosted: Scalars['String'];
   name: Scalars['String'];
@@ -648,13 +653,13 @@ export type GetTransactionsByMonthQuery = (
     & { savedCategory?: Maybe<(
       { __typename?: 'SavedCategoriesEntity' }
       & Pick<SavedCategoriesEntity, 'id' | 'name' | 'amounts'>
-    )>, category?: Maybe<(
+    )>, category: (
       { __typename?: 'CategoryEntity' }
       & Pick<CategoryEntity, 'id' | 'name'>
-    )>, subCategory?: Maybe<(
+    ), subCategory: (
       { __typename?: 'SubCategoryEntity' }
       & Pick<SubCategoryEntity, 'id' | 'name'>
-    )> }
+    ) }
   )> }
 );
 
