@@ -9,6 +9,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The javascript `Date` as integer. Type represents date and time as number of milliseconds from start of UNIX epoch. */
+  Timestamp: any;
   /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
@@ -22,6 +24,22 @@ export type CategoryEntity = {
   subCategories?: Maybe<Array<SubCategoryEntity>>;
   transactions: Array<TransactionEntity>;
   savedCategories: Array<SavedCategoriesEntity>;
+  categoryTotals: Array<CategoryTotalsEntity>;
+};
+
+export type CategoryTotalsEntity = {
+   __typename?: 'CategoryTotalsEntity';
+  id: Scalars['String'];
+  userId: Scalars['String'];
+  lastUpdate: Scalars['Timestamp'];
+  user: UserEntity;
+  month: Scalars['String'];
+  year: Scalars['String'];
+  total: Scalars['Float'];
+  subCategoryId?: Maybe<Scalars['String']>;
+  categoryId: Scalars['String'];
+  category: CategoryEntity;
+  subCategory?: Maybe<SubCategoryEntity>;
 };
 
 export type IDisplayData = {
@@ -208,6 +226,11 @@ export type QueryGetTransactionsByMonthArgs = {
 };
 
 
+export type QueryGetUserSubCategoriesArgs = {
+  selectedYear: Scalars['Int'];
+};
+
+
 export type QueryGetCategorybyIdArgs = {
   categoryId: Scalars['String'];
 };
@@ -250,6 +273,7 @@ export type SubCategoryEntity = {
   user: UserEntity;
   transactions: Array<TransactionEntity>;
   savedCategories: Array<SavedCategoriesEntity>;
+  categoryTotals: Array<CategoryTotalsEntity>;
 };
 
 export type SubmitTransactionsResponse = {
@@ -257,6 +281,7 @@ export type SubmitTransactionsResponse = {
   inserted: Scalars['Boolean'];
   message: Scalars['String'];
 };
+
 
 export type TransactionClass = {
    __typename?: 'TransactionClass';
@@ -442,7 +467,9 @@ export type GetUserCategoriesQuery = (
   )> }
 );
 
-export type GetUserSubCategoriesQueryVariables = {};
+export type GetUserSubCategoriesQueryVariables = {
+  selectedYear: Scalars['Int'];
+};
 
 
 export type GetUserSubCategoriesQuery = (
@@ -944,8 +971,8 @@ export type GetUserCategoriesQueryHookResult = ReturnType<typeof useGetUserCateg
 export type GetUserCategoriesLazyQueryHookResult = ReturnType<typeof useGetUserCategoriesLazyQuery>;
 export type GetUserCategoriesQueryResult = ApolloReactCommon.QueryResult<GetUserCategoriesQuery, GetUserCategoriesQueryVariables>;
 export const GetUserSubCategoriesDocument = gql`
-    query GetUserSubCategories {
-  getUserSubCategories {
+    query GetUserSubCategories($selectedYear: Int!) {
+  getUserSubCategories(selectedYear: $selectedYear) {
     subCategoryName
     categoryName
     categoryId
@@ -1002,6 +1029,7 @@ export const GetUserSubCategoriesDocument = gql`
  * @example
  * const { data, loading, error } = useGetUserSubCategoriesQuery({
  *   variables: {
+ *      selectedYear: // value for 'selectedYear'
  *   },
  * });
  */

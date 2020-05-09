@@ -14,7 +14,9 @@ export const CashFlowAnalysisData: React.FC<ICashFlowAnalysisDataProps> = (
   props
 ) => {
   const [selectedYear, setSelectedYear] = React.useState(2019);
-  const { data, loading, error } = useGetUserSubCategoriesQuery();
+  const { data, loading, error } = useGetUserSubCategoriesQuery({
+    variables: { selectedYear },
+  });
   console.log(data);
   let homeData: dataType = [];
   let rentalData: dataType = [];
