@@ -5,7 +5,6 @@ import Home from "../pages/Home";
 import ImportFile from "../pages/ImportFile";
 import Settings from "../pages/Settings";
 import Transactions from "../pages/Transactions";
-import Categories from "../pages/Categories";
 import { CategoriesTotals } from "../pages/CategoriesTotals";
 import { CashFlowAnalysis } from "../pages/CashFlowAnalysis";
 import { EditCategories } from "../pages/EditCategories";
@@ -58,12 +57,7 @@ export const routes: IRoutes = {
       component: Transactions,
       icon: InboxIcon,
     },
-    {
-      name: "Categories",
-      path: "/categories",
-      component: Categories,
-      icon: InboxIcon,
-    },
+
     {
       name: "EditCategories",
       path: "/edit-categories",
