@@ -2,7 +2,7 @@ import React from "react";
 import { EditCategoriesTable } from "./EditCategoriesTable";
 import { Theme, createStyles, makeStyles, Paper } from "@material-ui/core";
 import { MonthPicker } from "../shared/MonthPicker";
-import CategoryList from "../categoriesComponents/CategoryList";
+import CategoryList from "./CategoryList";
 import {
   useGetUserCategoriesQuery,
   useGetTransactionsByMonthQuery,

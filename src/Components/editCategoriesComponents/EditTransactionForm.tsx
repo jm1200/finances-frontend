@@ -91,7 +91,6 @@ export const EditTransactionForm: React.FC<IEditTransactionFormProps> = (
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("ETF39, submitted info");
     props.submit(props.row);
   };
 
