@@ -130,6 +130,7 @@ export function TransactionCategoryTable(
           id: row.id,
           name: row.name,
           memo: row.memo,
+          book: row.book,
           amount: row.amount,
           savedCategoryId,
           savedCategoryAmounts,

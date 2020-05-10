@@ -13,6 +13,7 @@ query GetTransactionsByMonth($month: String!, $year: Int!) {
     datePosted
     name
     memo
+    book
     note
     amount
     keyName
@@ -37,6 +38,7 @@ mutation UpdateCategoriesInTransactions(
   $note: String
   $name: String
   $memo: String
+  $book: String!
   $amount: Float!
   $selectedCategoryId: String!
   $selectedSubCategoryId: String!
@@ -51,6 +53,7 @@ mutation UpdateCategoriesInTransactions(
       name: $name
       memo: $memo
       note: $note
+      book: $book
       amount: $amount
       selectedCategoryId: $selectedCategoryId
       selectedSubCategoryId: $selectedSubCategoryId

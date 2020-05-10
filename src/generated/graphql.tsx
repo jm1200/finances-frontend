@@ -342,6 +342,7 @@ export type TransactionInput = {
 export type UpdateCategoriesInTransactionsInput = {
   id: Scalars['String'];
   name?: Maybe<Scalars['String']>;
+  book: Scalars['String'];
   memo?: Maybe<Scalars['String']>;
   note?: Maybe<Scalars['String']>;
   amount: Scalars['Float'];
@@ -649,7 +650,7 @@ export type GetTransactionsByMonthQuery = (
   { __typename?: 'Query' }
   & { getTransactionsByMonth: Array<(
     { __typename?: 'TransactionEntity' }
-    & Pick<TransactionEntity, 'id' | 'datePosted' | 'name' | 'memo' | 'note' | 'amount' | 'keyName'>
+    & Pick<TransactionEntity, 'id' | 'datePosted' | 'name' | 'memo' | 'book' | 'note' | 'amount' | 'keyName'>
     & { savedCategory?: Maybe<(
       { __typename?: 'SavedCategoriesEntity' }
       & Pick<SavedCategoriesEntity, 'id' | 'name' | 'amounts'>
@@ -668,6 +669,7 @@ export type UpdateCategoriesInTransactionsMutationVariables = {
   note?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   memo?: Maybe<Scalars['String']>;
+  book: Scalars['String'];
   amount: Scalars['Float'];
   selectedCategoryId: Scalars['String'];
   selectedSubCategoryId: Scalars['String'];
@@ -1415,6 +1417,7 @@ export const GetTransactionsByMonthDocument = gql`
     datePosted
     name
     memo
+    book
     note
     amount
     keyName
@@ -1462,8 +1465,8 @@ export type GetTransactionsByMonthQueryHookResult = ReturnType<typeof useGetTran
 export type GetTransactionsByMonthLazyQueryHookResult = ReturnType<typeof useGetTransactionsByMonthLazyQuery>;
 export type GetTransactionsByMonthQueryResult = ApolloReactCommon.QueryResult<GetTransactionsByMonthQuery, GetTransactionsByMonthQueryVariables>;
 export const UpdateCategoriesInTransactionsDocument = gql`
-    mutation UpdateCategoriesInTransactions($id: String!, $note: String, $name: String, $memo: String, $amount: Float!, $selectedCategoryId: String!, $selectedSubCategoryId: String!, $savedCategoryId: String, $savedCategoryAmounts: [Float!], $checkAmount: Boolean!, $applyToAll: Boolean!) {
-  updateCategoriesInTransactions(data: {id: $id, name: $name, memo: $memo, note: $note, amount: $amount, selectedCategoryId: $selectedCategoryId, selectedSubCategoryId: $selectedSubCategoryId, savedCategoryId: $savedCategoryId, savedCategoryAmounts: $savedCategoryAmounts, checkAmount: $checkAmount, applyToAll: $applyToAll})
+    mutation UpdateCategoriesInTransactions($id: String!, $note: String, $name: String, $memo: String, $book: String!, $amount: Float!, $selectedCategoryId: String!, $selectedSubCategoryId: String!, $savedCategoryId: String, $savedCategoryAmounts: [Float!], $checkAmount: Boolean!, $applyToAll: Boolean!) {
+  updateCategoriesInTransactions(data: {id: $id, name: $name, memo: $memo, note: $note, book: $book, amount: $amount, selectedCategoryId: $selectedCategoryId, selectedSubCategoryId: $selectedSubCategoryId, savedCategoryId: $savedCategoryId, savedCategoryAmounts: $savedCategoryAmounts, checkAmount: $checkAmount, applyToAll: $applyToAll})
 }
     `;
 export type UpdateCategoriesInTransactionsMutationFn = ApolloReactCommon.MutationFunction<UpdateCategoriesInTransactionsMutation, UpdateCategoriesInTransactionsMutationVariables>;
@@ -1485,6 +1488,7 @@ export type UpdateCategoriesInTransactionsMutationFn = ApolloReactCommon.Mutatio
  *      note: // value for 'note'
  *      name: // value for 'name'
  *      memo: // value for 'memo'
+ *      book: // value for 'book'
  *      amount: // value for 'amount'
  *      selectedCategoryId: // value for 'selectedCategoryId'
  *      selectedSubCategoryId: // value for 'selectedSubCategoryId'
