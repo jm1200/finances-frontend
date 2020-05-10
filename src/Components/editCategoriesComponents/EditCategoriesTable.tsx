@@ -14,7 +14,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import { Edit, Cancel } from "@material-ui/icons";
 import FirstPageIcon from "@material-ui/icons/FirstPage";
@@ -36,6 +35,8 @@ import {
   useUpdateCategoriesInTransactionsMutation,
 } from "../../generated/graphql";
 import { EditTransactionForm } from "./EditTransactionForm";
+import moment from "moment";
+import numeral from "numeral";
 
 const useRowStyles = makeStyles({
   root: {
@@ -63,7 +64,7 @@ function Row(props: IRowProps) {
   const [selectedCategoryId, setCategoryId] = React.useState("");
   const [selectedSubCategoryId, setSubCategoryId] = React.useState("");
   const [note, setNote] = React.useState<string | null | undefined>("");
-  const [book, setBook] = React.useState("");
+  const [book, setBook] = React.useState("Home");
   const [savedCategoryCheckBox, setSavedCategoryCheckBox] = React.useState(
     true
   );
@@ -140,10 +141,12 @@ function Row(props: IRowProps) {
   return (
     <React.Fragment>
       <TableRow className={classes.root}>
-        <TableCell>{row.datePosted}</TableCell>
+        <TableCell>
+          {moment(row.datePosted, "YYYYMMDD").format("MMM Do YYYY")}
+        </TableCell>
         <TableCell>{row.name}</TableCell>
         <TableCell>{row.memo}</TableCell>
-        <TableCell>{row.amount}</TableCell>
+        <TableCell>{numeral(row.amount).format("$0,0.00")}</TableCell>
         <TableCell>{row.category!.name}</TableCell>
         <TableCell>{row.subCategory!.name}</TableCell>
         <TableCell>{row.note}</TableCell>
@@ -170,7 +173,7 @@ function Row(props: IRowProps) {
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
+            <Box margin={3}>
               <EditTransactionForm
                 row={row}
                 categories={props.categories}
@@ -188,6 +191,7 @@ function Row(props: IRowProps) {
                 amountCheckBox={amountCheckBox}
                 setAmountCheckBox={setAmountCheckBox}
                 submit={handleUpdateTransactionCategory}
+                cancel={handleCancelTransactionMode}
               />
             </Box>
           </Collapse>
@@ -217,15 +221,13 @@ interface IEditCategoriesTableProps {
 
 export const EditCategoriesTable = (props: IEditCategoriesTableProps) => {
   const classes = useEditCategoryTableStyles();
-
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [uncategorizedCheckBox, setUncategorizedCheckBox] = React.useState(
     false
   );
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, props.data.length - page * rowsPerPage);
-  console.log("ECT 180", props.data);
+
+  //console.log("ECT 180", props.data);
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
@@ -242,12 +244,27 @@ export const EditCategoriesTable = (props: IEditCategoriesTableProps) => {
 
   let filteredData = props.data;
 
+  //filter uncategorized rows
   if (filteredData && uncategorizedCheckBox) {
     filteredData = filteredData.filter(
       (transaction) => transaction.category!.name === "uncategorized"
     );
   }
 
+  //paginate
+  let pageinatedData = filteredData.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
+  //add empty rows if table not full
+  const emptyRows =
+    rowsPerPage -
+    Math.min(rowsPerPage, filteredData.length - page * rowsPerPage);
+
+  // console.log(
+  //   `ECT 259: page: ${page}, RPP: ${rowsPerPage}, rows: ${pageinatedData} `
+  // );
   return (
     <Paper className={classes.table}>
       <EnhancedTableToolbar
@@ -269,15 +286,9 @@ export const EditCategoriesTable = (props: IEditCategoriesTableProps) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {(rowsPerPage > 0
-              ? filteredData.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
-              : filteredData
-            ).map((row) => (
+            {pageinatedData.map((row) => (
               <Row
-                key={row.name}
+                key={row.id}
                 row={row}
                 categories={props.categoriesData}
                 refetchTransactions={props.refetchTransactions}
@@ -285,7 +296,7 @@ export const EditCategoriesTable = (props: IEditCategoriesTableProps) => {
             ))}
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={7} />
+                <TableCell colSpan={8} />
               </TableRow>
             )}
           </TableBody>
@@ -293,8 +304,8 @@ export const EditCategoriesTable = (props: IEditCategoriesTableProps) => {
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
-                colSpan={6}
-                count={props.data.length}
+                colSpan={8}
+                count={filteredData.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{

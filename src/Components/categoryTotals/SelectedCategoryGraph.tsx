@@ -2,7 +2,6 @@ import React from "react";
 import { ResponsivePie } from "@nivo/pie";
 import { ICategoriesGraphDisplayData } from "../../types";
 import numeral from "numeral";
-import { colors } from "@material-ui/core";
 // make sure parent container have a defined height when using
 // responsive component, otherwise height will be 0 and
 // no chart will be rendered.

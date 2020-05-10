@@ -3,8 +3,6 @@ import {
   ICategoriesGraphDisplayData,
   ICategoriesListDisplayData,
 } from "../../../types";
-import { parseDisplayData } from "./parseDisplayData";
-import { TransactionCategoryTable } from "../../categoriesComponents/TransactionCategoryTable";
 
 interface INormalisedData {
   [key: string]: ICategoriesGraphDisplayData;
@@ -17,7 +15,6 @@ export const parseGraphData = (
   selectedSubCategoryId: { categoryId: string; subCategoryId: string } | null
 ): ICategoriesGraphDisplayData[] => {
   let displayData: ICategoriesGraphDisplayData[] = [];
-  let includeIncome: boolean = false;
 
   if (!selectedCategoryId && !selectedSubCategoryId) {
     transactions
@@ -64,8 +61,6 @@ export const parseGraphData = (
   } else {
     return displayData;
   }
-
-  return displayData;
 };
 
 // .forEach((transaction) => {

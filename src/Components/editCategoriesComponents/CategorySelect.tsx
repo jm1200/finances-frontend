@@ -9,7 +9,6 @@ import { UserQuery } from "../../generated/graphql";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
-      margin: theme.spacing(1),
       minWidth: 120,
     },
   })
@@ -30,11 +29,10 @@ export function CategorySelect(props: ICategorySelect) {
     props.setCategoryId(event.target.value);
     props.setSubCategoryId(props.subCategoriesMap[event.target.value][0].id);
   };
-
   return (
     <div>
       <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">Category</InputLabel>
+        <InputLabel id="demo-simple-select-label">Category:</InputLabel>
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"

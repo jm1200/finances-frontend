@@ -11,6 +11,7 @@ import {
   Checkbox,
   Tooltip,
   Button,
+  FormControlLabel,
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
@@ -18,10 +19,47 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: "flex",
+      alignItems: "center",
+      background: theme.palette.background.paper,
     },
     formControl: {
-      marginRight: 15,
-      minWidth: 250,
+      margin: 5,
+      width: 140,
+    },
+    buttons: {
+      marginLeft: 30,
+    },
+    submit: {
+      backgroundColor: theme.palette.primary.main,
+      marginBottom: 10,
+    },
+    cancel: {
+      backgroundColor: theme.palette.warning.light,
+    },
+    checkBoxes: {
+      display: "flex",
+      flexDirection: "column",
+      border: "1px solid lightgrey",
+      padding: 10,
+      borderRadius: 10,
+    },
+    selectFields: {
+      display: "flex",
+      justifyContent: "space-around",
+      alignItems: "center",
+      width: "50%",
+    },
+    columnOne: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "flex-start",
+      alignItems: "flex-start",
+    },
+    columnTwo: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "flex-start",
+      alignItems: "flex-start",
     },
   })
 );
@@ -43,6 +81,7 @@ interface IEditTransactionFormProps {
   amountCheckBox: boolean;
   setAmountCheckBox: React.Dispatch<React.SetStateAction<boolean>>;
   submit: (row: any) => Promise<void>;
+  cancel: () => void;
 }
 
 export const EditTransactionForm: React.FC<IEditTransactionFormProps> = (
@@ -63,7 +102,6 @@ export const EditTransactionForm: React.FC<IEditTransactionFormProps> = (
   const handleAmountCheckBox = () => {
     props.setAmountCheckBox(!props.amountCheckBox);
   };
-
   return (
     <div className={classes.root}>
       <form
@@ -72,61 +110,101 @@ export const EditTransactionForm: React.FC<IEditTransactionFormProps> = (
         noValidate
         autoComplete="off"
       >
-        <CategorySelect
-          categories={props.categories}
-          selectedCategoryId={props.selectedCategoryId}
-          setCategoryId={props.setCategoryId}
-          setSubCategoryId={props.setSubCategoryId}
-          subCategoriesMap={props.subCategoriesMap}
-        />
+        <div className={classes.selectFields}>
+          <div className={classes.columnOne}>
+            <div className={classes.formControl}>
+              <CategorySelect
+                categories={props.categories}
+                selectedCategoryId={props.selectedCategoryId}
+                setCategoryId={props.setCategoryId}
+                setSubCategoryId={props.setSubCategoryId}
+                subCategoriesMap={props.subCategoriesMap}
+              />
+            </div>
+            <div className={classes.formControl}>
+              <FormControl>
+                <InputLabel id="book">Select book:</InputLabel>
+                <Select
+                  labelId="bookSelect"
+                  id="bookSelectId"
+                  value={props.book}
+                  onChange={(event) =>
+                    props.setBook(event.target.value as string)
+                  }
+                >
+                  <MenuItem value="Home">Home</MenuItem>
+                  <MenuItem value="377 Hyde Park Rd.">
+                    377 Hyde Park Rd.
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+          </div>
+          <div className={classes.columnTwo}>
+            <div className={classes.formControl}>
+              <SubCategorySelect
+                categories={props.subCategoriesMap[props.selectedCategoryId]}
+                selectedSubCategoryId={props.selectedSubCategoryId}
+                setSubCategoryId={props.setSubCategoryId}
+              />
+            </div>
 
-        <SubCategorySelect
-          categories={props.subCategoriesMap[props.selectedCategoryId]}
-          selectedSubCategoryId={props.selectedSubCategoryId}
-          setSubCategoryId={props.setSubCategoryId}
-        />
-        <FormControl className={classes.formControl}>
-          <InputLabel id="book">Select book:</InputLabel>
-          <Select
-            labelId="bookSelect"
-            id="bookSelectId"
-            value={props.book}
-            onChange={(event) => props.setBook(event.target.value as string)}
-          >
-            <MenuItem value="Home">Home</MenuItem>
-            <MenuItem value="Book">Book</MenuItem>
-          </Select>
-        </FormControl>
+            <div className={classes.formControl}>
+              <TextField
+                label="Note:"
+                id="note"
+                defaultValue={props.note}
+                size="small"
+                onChange={(event) =>
+                  props.setNote(event.target.value as string)
+                }
+              />
+            </div>
+          </div>
+        </div>
 
-        <TextField
-          label="Note"
-          id="note"
-          defaultValue={props.note}
-          variant="filled"
-          size="small"
-          onChange={(event) => props.setNote(event.target.value as string)}
-        />
-        <Tooltip title="Apply to All">
-          <Checkbox
-            checked={props.savedCategoryCheckBox}
-            onClick={() => handleSavedCategoryCheckBox()}
-            color="primary"
-            inputProps={{
-              "aria-label": "secondary checkbox",
-            }}
-          />
-        </Tooltip>
-        <Tooltip title="Check Amount">
-          <Checkbox
-            checked={props.amountCheckBox}
-            onClick={() => handleAmountCheckBox()}
-            color="primary"
-            inputProps={{
-              "aria-label": "secondary checkbox",
-            }}
-          />
-        </Tooltip>
-        <Button type="submit">Submit</Button>
+        <div className={classes.checkBoxes}>
+          <Tooltip title="Apply to All">
+            <FormControlLabel
+              label="Apply to all categories with same name/memo"
+              labelPlacement="end"
+              control={
+                <Checkbox
+                  checked={props.savedCategoryCheckBox}
+                  onClick={() => handleSavedCategoryCheckBox()}
+                  color="primary"
+                  inputProps={{
+                    "aria-label": "secondary checkbox",
+                  }}
+                />
+              }
+            />
+          </Tooltip>
+          <Tooltip title="Save Amount">
+            <FormControlLabel
+              label="Save Amount to help auto-categorize transactions with the same name/memo"
+              labelPlacement="end"
+              control={
+                <Checkbox
+                  checked={props.amountCheckBox}
+                  onClick={() => handleAmountCheckBox()}
+                  color="primary"
+                  inputProps={{
+                    "aria-label": "secondary checkbox",
+                  }}
+                />
+              }
+            />
+          </Tooltip>
+        </div>
+        <div className={classes.buttons}>
+          <Button className={classes.submit} type="submit">
+            Update
+          </Button>
+          <Button className={classes.cancel} onClick={props.cancel}>
+            Cancel
+          </Button>
+        </div>
       </form>
     </div>
   );

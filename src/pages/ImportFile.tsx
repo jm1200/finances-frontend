@@ -111,7 +111,7 @@ const ImportFile: React.FC = () => {
         console.log(err);
       }
     },
-    [uploadFile]
+    [uploadFile, book]
   );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
@@ -169,7 +169,7 @@ const ImportFile: React.FC = () => {
               onChange={handleChange}
             >
               <MenuItem value="Home">Home</MenuItem>
-              <MenuItem value={"Book"}>Book</MenuItem>
+              <MenuItem value={"377 Hyde Park Rd."}>377 Hyde Park Rd.</MenuItem>
             </Select>
           </FormControl>
         </div>

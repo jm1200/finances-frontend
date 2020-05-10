@@ -71,10 +71,6 @@ export const CategoriesTotalsData: React.FC<ICategoriesTotalsDataProps> = (
   let categoriesTransactionsTableDisplayData: ICategoriesTransactionsTableDisplayData[] = [];
   let categoriesGraphDisplayData: ICategoriesGraphDisplayData[] = [];
   let grandTotal: number = 0;
-  const tempData: ICategoriesGraphDisplayData[] = [
-    { id: "css", label: "css", value: 40 },
-    { id: "javascript", label: "css", value: 60 },
-  ];
 
   if (!loading && data) {
     categoriesListDisplayData = parseDisplayData(data.getTransactionsByMonth);

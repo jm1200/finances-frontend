@@ -8,7 +8,6 @@ import Select from "@material-ui/core/Select";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
-      margin: theme.spacing(1),
       minWidth: 120,
     },
   })
@@ -26,26 +25,29 @@ export function SubCategorySelect(props: ISubCategorySelect) {
   const handleChange = (event: any) => {
     props.setSubCategoryId(event.target.value);
   };
-
   return (
     <div>
       <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">Sub-Category</InputLabel>
-        <Select
-          labelId="subCategory"
-          id="subCategoryId"
-          value={props.selectedSubCategoryId}
-          onChange={handleChange}
-        >
-          {props.categories &&
-            props.categories.map((category: any) => {
-              return (
-                <MenuItem key={category.id} value={category.id}>
-                  {category.name}
-                </MenuItem>
-              );
-            })}
-        </Select>
+        <InputLabel id="demo-simple-select-label">Sub-Category:</InputLabel>
+        {props.categories ? (
+          <Select
+            labelId="subCategory"
+            id="subCategoryId"
+            value={props.selectedSubCategoryId}
+            onChange={handleChange}
+          >
+            {props.categories &&
+              props.categories.map((category: any) => {
+                return (
+                  <MenuItem key={category.id} value={category.id}>
+                    {category.name}
+                  </MenuItem>
+                );
+              })}
+          </Select>
+        ) : (
+          "loading"
+        )}
       </FormControl>
     </div>
   );
