@@ -44,6 +44,10 @@ const useRowStyles = makeStyles({
       borderBottom: "unset",
     },
   },
+  form: {
+    display: "flex",
+    justifyContent: "flex-end",
+  },
 });
 
 interface IRowProps {
@@ -173,7 +177,7 @@ function Row(props: IRowProps) {
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={3}>
+            <Box className={classes.form}>
               <EditTransactionForm
                 row={row}
                 categories={props.categories}

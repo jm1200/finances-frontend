@@ -20,7 +20,9 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       display: "flex",
       alignItems: "center",
-      background: theme.palette.background.paper,
+      background: theme.palette.grey[900],
+      borderRadius: 7,
+      marginBottom: 10,
     },
     formControl: {
       margin: 5,
@@ -165,7 +167,7 @@ export const EditTransactionForm: React.FC<IEditTransactionFormProps> = (
         <div className={classes.checkBoxes}>
           <Tooltip title="Apply to All">
             <FormControlLabel
-              label="Apply to all categories with same name/memo"
+              label="Apply to all categories with same name, memo and book values"
               labelPlacement="end"
               control={
                 <Checkbox
@@ -179,7 +181,8 @@ export const EditTransactionForm: React.FC<IEditTransactionFormProps> = (
               }
             />
           </Tooltip>
-          <Tooltip title="Save Amount">
+          {/* //Leaving this here in case I need to check amounts in the future for some reason. */}
+          {/* <Tooltip title="Save Amount">
             <FormControlLabel
               label="Save Amount to help auto-categorize transactions with the same name/memo"
               labelPlacement="end"
@@ -194,7 +197,7 @@ export const EditTransactionForm: React.FC<IEditTransactionFormProps> = (
                 />
               }
             />
-          </Tooltip>
+          </Tooltip> */}
         </div>
         <div className={classes.buttons}>
           <Button className={classes.submit} type="submit">
