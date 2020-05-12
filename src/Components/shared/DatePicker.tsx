@@ -6,6 +6,7 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { MonthPicker } from "./MonthPicker";
+import { YearPicker } from "./YearPicker";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -46,7 +47,7 @@ interface IDatePickerProps {
   setSelectedYear: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export default function DatePicker(props: IDatePickerProps) {
+export const DatePicker = (props: IDatePickerProps) => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -67,11 +68,13 @@ export default function DatePicker(props: IDatePickerProps) {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
+        <YearPicker
+          selectedYear={props.selectedYear}
+          setSelectedYear={props.setSelectedYear}
+        />
         <MonthPicker
           selectedMonth={props.selectedMonth}
           setSelectedMonth={props.setSelectedMonth}
-          selectedYear={props.selectedYear}
-          setSelectedYear={props.setSelectedYear}
         />
       </TabPanel>
       <TabPanel value={value} index={1}>
@@ -79,4 +82,4 @@ export default function DatePicker(props: IDatePickerProps) {
       </TabPanel>
     </div>
   );
-}
+};

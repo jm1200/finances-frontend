@@ -7,6 +7,7 @@ import {
   useGetUserCategoriesQuery,
   useGetTransactionsByMonthQuery,
 } from "../../generated/graphql";
+import { YearPicker } from "../shared/YearPicker";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -64,11 +65,14 @@ export const EditCategoriesData: React.FC<IEditCategoriesDataProps> = (
     <div className={classes.root}>
       <div className={classes.sidebar}>
         <Paper component="div" className={classes.monthPicker}>
+          <YearPicker
+            selectedYear={selectedYear}
+            setSelectedYear={setSelectedYear}
+          />
+
           <MonthPicker
             selectedMonth={selectedMonth}
-            selectedYear={selectedYear}
             setSelectedMonth={setSelectedMonth}
-            setSelectedYear={setSelectedYear}
           />
         </Paper>
         <div>

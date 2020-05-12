@@ -1,5 +1,6 @@
 import React from "react";
 import { createStyles, makeStyles, Theme, Paper } from "@material-ui/core";
+import { YearPicker } from "../shared/YearPicker";
 import { MonthPicker } from "../shared/MonthPicker";
 import { useGetTransactionsByMonthQuery } from "../../generated/graphql";
 import { TotalsViewTab } from "./TotalsViewTab";
@@ -109,11 +110,13 @@ export const CategoriesTotalsData: React.FC<ICategoriesTotalsDataProps> = (
     <div className={classes.root}>
       <div className={classes.sidebar}>
         <Paper component="div" className={classes.monthPicker}>
+          <YearPicker
+            selectedYear={selectedYear}
+            setSelectedYear={setSelectedYear}
+          />
           <MonthPicker
             selectedMonth={selectedMonth}
-            selectedYear={selectedYear}
             setSelectedMonth={setSelectedMonth}
-            setSelectedYear={setSelectedYear}
           />
         </Paper>
         <Paper component="div" className={classes.bookSelect}>

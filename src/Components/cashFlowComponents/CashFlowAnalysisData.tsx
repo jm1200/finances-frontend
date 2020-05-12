@@ -1,10 +1,7 @@
 import React from "react";
 import { CashFlowAnalysisTable } from "./CashFlowAnalysisTable";
 import { CashFlowHeader } from "./CashFlowHeader";
-import {
-  useGetUserSubCategoriesQuery,
-  GetUserSubCategoriesQuery,
-} from "../../generated/graphql";
+import { useGetUserSubCategoriesQuery } from "../../generated/graphql";
 
 interface ICashFlowAnalysisDataProps {}
 

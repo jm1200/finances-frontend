@@ -100,9 +100,6 @@ export const EditTransactionForm: React.FC<IEditTransactionFormProps> = (
     props.setSavedCategoryCheckBox(!!!props.savedCategoryCheckBox);
   };
 
-  const handleAmountCheckBox = () => {
-    props.setAmountCheckBox(!props.amountCheckBox);
-  };
   return (
     <div className={classes.root}>
       <form

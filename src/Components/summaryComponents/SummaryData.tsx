@@ -1,9 +1,7 @@
 import React from "react";
 import { SummaryTable } from "./SummaryTable";
-import {
-  useGetUserSubCategoriesQuery,
-  GetUserSubCategoriesQuery,
-} from "../../generated/graphql";
+import { YearPicker } from "../shared/YearPicker";
+import { useGetUserSubCategoriesQuery } from "../../generated/graphql";
 
 interface ISummaryDataProps {}
 
@@ -27,7 +25,10 @@ export const SummaryData: React.FC<ISummaryDataProps> = (props) => {
 
   return (
     <div>
-      <div>year picker...</div>
+      <YearPicker
+        selectedYear={selectedYear}
+        setSelectedYear={setSelectedYear}
+      />
       {homeLoading && <div>Loading Home Data...</div>}
       {homeError && <div>error loading Home data</div>}
       {!homeData ||
