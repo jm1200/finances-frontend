@@ -1,16 +1,13 @@
 import React from "react";
-import { CashFlowAnalysisTable } from "./CashFlowAnalysisTable";
-import { CashFlowHeader } from "./CashFlowHeader";
+import { SummaryTable } from "./SummaryTable";
 import {
   useGetUserSubCategoriesQuery,
   GetUserSubCategoriesQuery,
 } from "../../generated/graphql";
 
-interface ICashFlowAnalysisDataProps {}
+interface ISummaryDataProps {}
 
-export const CashFlowAnalysisData: React.FC<ICashFlowAnalysisDataProps> = (
-  props
-) => {
+export const SummaryData: React.FC<ISummaryDataProps> = (props) => {
   const [selectedYear, setSelectedYear] = React.useState(2019);
   const {
     data: homeData,
@@ -30,17 +27,17 @@ export const CashFlowAnalysisData: React.FC<ICashFlowAnalysisDataProps> = (
 
   return (
     <div>
-      <CashFlowHeader
-        selectedYear={selectedYear}
-        setSelectedYear={setSelectedYear}
-      />
+      <div>year picker...</div>
       {homeLoading && <div>Loading Home Data...</div>}
       {homeError && <div>error loading Home data</div>}
       {!homeData ||
         (!homeData.getUserSubCategories && <div>No Home data!</div>)}
       {homeData?.getUserSubCategories && (
         <div>
-          <CashFlowAnalysisTable displayData={homeData.getUserSubCategories} />
+          <SummaryTable
+            name="Home"
+            displayData={homeData.getUserSubCategories[0]}
+          />
         </div>
       )}
 
@@ -51,11 +48,14 @@ export const CashFlowAnalysisData: React.FC<ICashFlowAnalysisDataProps> = (
       {rentalData?.getUserSubCategories && (
         <div>
           <br />
-          <CashFlowAnalysisTable
-            displayData={rentalData.getUserSubCategories}
+          <SummaryTable
+            name="377 Hyde Park Rd."
+            displayData={rentalData.getUserSubCategories[0]}
           />
         </div>
       )}
+      <div>Assets vs Liabilites</div>
+      <div>year over year for both IvE and AvL</div>
     </div>
   );
 };
