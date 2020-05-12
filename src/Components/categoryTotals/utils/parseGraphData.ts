@@ -30,7 +30,6 @@ export const parseGraphData = (
           value: Math.abs(transaction.categoryTotal),
         });
       });
-    console.log("PGD30", displayData);
     return displayData;
   } else if (selectedCategoryId) {
     //sum all subCategories

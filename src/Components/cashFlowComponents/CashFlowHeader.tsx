@@ -98,8 +98,8 @@ export const CashFlowHeader: React.FC<ICashFlowHeaderProps> = (props) => {
             DATE...
           </Typography>
         </div>
-        <IconButton aria-label="refresh">
-          <Refresh className={classes.refreshIcon} onClick={handleRefresh} />
+        <IconButton aria-label="refresh" onClick={handleRefresh}>
+          <Refresh className={classes.refreshIcon} />
         </IconButton>
       </div>
     </div>

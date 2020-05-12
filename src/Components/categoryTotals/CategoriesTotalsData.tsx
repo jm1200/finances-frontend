@@ -12,6 +12,7 @@ import { parseDisplayData } from "./utils/parseDisplayData";
 import { CategoryTotalsTable } from "./CategoryTotalsTable";
 import { parseSelectedCategoryData } from "./utils/parseSelectedCategoryData";
 import { parseGraphData } from "./utils/parseGraphData";
+import { BookPicker } from "../shared/BookPicker";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,6 +43,11 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: 20,
       maxHeight: 280,
     },
+    bookSelect: {
+      width: "100%",
+      marginTop: 20,
+      padding: 20,
+    },
   })
 );
 interface ICategoriesTotalsDataProps {}
@@ -59,6 +65,8 @@ export const CategoriesTotalsData: React.FC<ICategoriesTotalsDataProps> = (
     subCategoryId: string;
   } | null>(null);
 
+  const [selectedBook, setSelectedBook] = React.useState("Home");
+
   const { data, loading, error } = useGetTransactionsByMonthQuery({
     fetchPolicy: "no-cache",
     variables: {
@@ -73,7 +81,10 @@ export const CategoriesTotalsData: React.FC<ICategoriesTotalsDataProps> = (
   let grandTotal: number = 0;
 
   if (!loading && data) {
-    categoriesListDisplayData = parseDisplayData(data.getTransactionsByMonth);
+    const initialFilter = data.getTransactionsByMonth.filter(
+      (transaction) => transaction.book === selectedBook
+    );
+    categoriesListDisplayData = parseDisplayData(initialFilter);
 
     grandTotal = categoriesListDisplayData.reduce(
       (acc, cur) => (acc += cur.categoryTotal),
@@ -81,14 +92,14 @@ export const CategoriesTotalsData: React.FC<ICategoriesTotalsDataProps> = (
     );
 
     categoriesTransactionsTableDisplayData = parseSelectedCategoryData(
-      data.getTransactionsByMonth,
+      initialFilter,
       selectedCategory,
       selectedSubCategory
     );
 
     categoriesGraphDisplayData = parseGraphData(
       categoriesListDisplayData,
-      data.getTransactionsByMonth,
+      initialFilter,
       selectedCategory,
       selectedSubCategory
     );
@@ -103,6 +114,12 @@ export const CategoriesTotalsData: React.FC<ICategoriesTotalsDataProps> = (
             selectedYear={selectedYear}
             setSelectedMonth={setSelectedMonth}
             setSelectedYear={setSelectedYear}
+          />
+        </Paper>
+        <Paper component="div" className={classes.bookSelect}>
+          <BookPicker
+            selectedBook={selectedBook}
+            setSelectedBook={setSelectedBook}
           />
         </Paper>
       </div>

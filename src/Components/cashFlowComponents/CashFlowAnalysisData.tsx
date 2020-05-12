@@ -19,16 +19,16 @@ export const CashFlowAnalysisData: React.FC<ICashFlowAnalysisDataProps> = (
     loading: homeLoading,
     error: homeError,
   } = useGetUserSubCategoriesQuery({
-    variables: { selectedYear },
+    variables: { selectedYear, filteredCategory: "Home" },
   });
+
   const {
     data: rentalData,
     loading: rentalLoading,
     error: rentalError,
   } = useGetUserSubCategoriesQuery({
-    variables: { selectedYear, filteredCategory: "Rental Property" },
+    variables: { selectedYear, filteredCategory: "377 Hyde Park Rd." },
   });
-  console.log("CFAD 23", homeData, rentalData);
 
   return (
     <div>
@@ -45,6 +45,7 @@ export const CashFlowAnalysisData: React.FC<ICashFlowAnalysisDataProps> = (
           <CashFlowAnalysisTable displayData={homeData.getUserSubCategories} />
         </div>
       )}
+
       {rentalLoading && <div>Loading rental Data...</div>}
       {rentalError && <div>error loading rental data</div>}
       {!rentalData ||
@@ -53,7 +54,7 @@ export const CashFlowAnalysisData: React.FC<ICashFlowAnalysisDataProps> = (
         <div>
           <br />
           <CashFlowAnalysisTable
-            displayData={rentalData?.getUserSubCategories}
+            displayData={rentalData.getUserSubCategories}
           />
         </div>
       )}

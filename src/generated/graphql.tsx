@@ -205,6 +205,7 @@ export type Query = {
   getTransactionsById: TransactionEntity;
   getTransactionsByMonth: Array<TransactionEntity>;
   getUserCategories: Array<CategoryEntity>;
+  getOnlyUserSubCategories: Array<SubCategoryEntity>;
   getUserSubCategories: Array<IDisplayData>;
   getCategorybyId: CategoryEntity;
   getUserSavedCategories: Array<SavedCategoriesEntity>;
@@ -228,7 +229,7 @@ export type QueryGetTransactionsByMonthArgs = {
 
 
 export type QueryGetUserSubCategoriesArgs = {
-  filteredCategory?: Maybe<Scalars['String']>;
+  filteredCategory: Scalars['String'];
   selectedYear: Scalars['Int'];
 };
 
@@ -476,7 +477,7 @@ export type GetUserCategoriesQuery = (
 
 export type GetUserSubCategoriesQueryVariables = {
   selectedYear: Scalars['Int'];
-  filteredCategory?: Maybe<Scalars['String']>;
+  filteredCategory: Scalars['String'];
 };
 
 
@@ -980,7 +981,7 @@ export type GetUserCategoriesQueryHookResult = ReturnType<typeof useGetUserCateg
 export type GetUserCategoriesLazyQueryHookResult = ReturnType<typeof useGetUserCategoriesLazyQuery>;
 export type GetUserCategoriesQueryResult = ApolloReactCommon.QueryResult<GetUserCategoriesQuery, GetUserCategoriesQueryVariables>;
 export const GetUserSubCategoriesDocument = gql`
-    query GetUserSubCategories($selectedYear: Int!, $filteredCategory: String) {
+    query GetUserSubCategories($selectedYear: Int!, $filteredCategory: String!) {
   getUserSubCategories(selectedYear: $selectedYear, filteredCategory: $filteredCategory) {
     subCategoryName
     categoryName
