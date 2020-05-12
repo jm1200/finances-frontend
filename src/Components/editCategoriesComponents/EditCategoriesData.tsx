@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
     sidebar: {
       display: "flex",
       flexDirection: "column",
-      width: 300,
+      width: 400,
     },
   })
 );

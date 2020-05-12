@@ -2,11 +2,24 @@ import React from "react";
 import { SummaryTable } from "./SummaryTable";
 import { YearPicker } from "../shared/YearPicker";
 import { useGetUserSubCategoriesQuery } from "../../generated/graphql";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 interface ISummaryDataProps {}
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      display: "flex",
+    },
+    yearPicker: {
+      width: 200,
+    },
+  })
+);
+
 export const SummaryData: React.FC<ISummaryDataProps> = (props) => {
   const [selectedYear, setSelectedYear] = React.useState(2019);
+  const classes = useStyles();
   const {
     data: homeData,
     loading: homeLoading,
@@ -25,10 +38,14 @@ export const SummaryData: React.FC<ISummaryDataProps> = (props) => {
 
   return (
     <div>
-      <YearPicker
-        selectedYear={selectedYear}
-        setSelectedYear={setSelectedYear}
-      />
+      <div className={classes.yearPicker}>
+        {" "}
+        <YearPicker
+          selectedYear={selectedYear}
+          setSelectedYear={setSelectedYear}
+        />
+      </div>
+
       {homeLoading && <div>Loading Home Data...</div>}
       {homeError && <div>error loading Home data</div>}
       {!homeData ||

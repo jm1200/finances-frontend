@@ -117,7 +117,6 @@ const ImportFile: React.FC = () => {
 
   const handleSubmitTransactions = () => {
     const trans: TransactionEntity[] = data.uploadFile.transactions;
-    console.log("IF119: ", trans[0]);
     let transNoTypename: TransactionClass[] = trans.map(
       (obj: TransactionEntity) => ({
         id: obj.id,
@@ -134,8 +133,6 @@ const ImportFile: React.FC = () => {
         subCategoryId: obj.subCategoryId,
       })
     );
-
-    console.log("IF 94: ", transNoTypename[0]);
 
     submitTransactions({ variables: { transactions: transNoTypename } }).then(
       ({ data, errors }) => {
