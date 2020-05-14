@@ -14,6 +14,12 @@
 - must refresh to see new category but not subcat in selects
 
 
+-bug - click on update. find out why i can't update selected book to 377 hyde....
+-might be better to have transactions point at a savedCategoryId instead of separate categories and subCategories
+    on init, each transaction could point to the uncategorized savedCategoryId. might be some drawbacks.
+    each transactions that is categorized would also have a saved category. What about singleton transactions?
+
+
 - not enough room for notes in categories table
  - see only uncategorized.. maybe just table sort option?
  -
@@ -57,3 +63,51 @@ categories tests:
 13. check edits category name
 
 
+to update book or not update book
+single transaction: obviously need to be able to update the book. 
+
+should I update the saved category?
+apply to all true:
+    savedCategoryId true: does the alternative saved category already exist? 
+    if so, just change the savedCategoryId on the transaction, if not update the savedCategory
+    savedCategoryId false: make a new one with name, memo, book
+
+apply to all false:
+//don't want a saved category...
+    savedCategoryId true: bad. delete the saved category using the savedCategoryId
+    savedCategoryId false: good. don't make a new one
+
+
+saved category true: Problem: a savedCategory exists but I might be changing 
+                     the book value which might invalidate the savedCategory.
+                     if(savedCategory.book !== data.selectedBook){
+                         Need to swtich categories or create a newone.
+                         const existingCategory? SaveCategory.find(name, memo, book)
+                         if (exists){
+                             can the savedCategory already exist? 
+                             {enbridge, enbridge, 377 hyderpark rd} was created, {enbridge, enbridge, home} can both exist at the same time.
+                            switch categories
+                         } else {
+                             can the savedCategory not exist? yes
+                             create new one
+                         }
+                     }else{
+                         The book did not change, so we can use the savedCategoryId
+
+                         update the transaction first: book, note, categories...
+
+                         if the categories changed, then we want to update the savedCategory.
+                         update the saved category with new categories
+
+                         if the categories changed, then we want to update the transactions the savedCategory applies to.
+                         update all transactions with new categories
+
+
+                     }
+
+               false: easy. create a new saved category with name, memo, book
+
+
+transactionEntity         savedCategoryEntity
+
+book                      book

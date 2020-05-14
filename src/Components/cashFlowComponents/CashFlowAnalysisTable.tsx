@@ -27,6 +27,7 @@ const useStyles = makeStyles({
   },
   monthCell: {
     backgroundColor: "#DFA7A6",
+    color: "black",
   },
   monthCellTotal: {
     backgroundColor: "",

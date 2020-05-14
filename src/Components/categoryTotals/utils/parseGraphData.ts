@@ -33,15 +33,19 @@ export const parseGraphData = (
     return displayData;
   } else if (selectedCategoryId) {
     //sum all subCategories
-    transactions
-      .filter((category) => category.categoryId === selectedCategoryId)[0]
-      .subCategories.forEach((subCategory) => {
+    let filteredTransactions = transactions.filter(
+      (category) => category.categoryId === selectedCategoryId
+    )[0];
+    if (filteredTransactions && filteredTransactions.subCategories) {
+      filteredTransactions.subCategories.forEach((subCategory) => {
         displayData.push({
           id: subCategory.subCategoryId,
           label: subCategory.name,
           value: Math.abs(subCategory.subCategoryTotal),
         });
       });
+    }
+
     console.log("PGD42", displayData);
     return displayData;
   } else if (selectedSubCategoryId) {

@@ -39,12 +39,11 @@ mutation UpdateCategoriesInTransactions(
   $name: String
   $memo: String
   $book: String!
+  $selectedBook: String!
   $amount: Float!
   $selectedCategoryId: String!
   $selectedSubCategoryId: String!
   $savedCategoryId: String
-  $savedCategoryAmounts: [Float!]
-  $checkAmount: Boolean!
   $applyToAll: Boolean!
 ) {
   updateCategoriesInTransactions(
@@ -54,12 +53,11 @@ mutation UpdateCategoriesInTransactions(
       memo: $memo
       note: $note
       book: $book
+      selectedBook: $selectedBook
       amount: $amount
       selectedCategoryId: $selectedCategoryId
       selectedSubCategoryId: $selectedSubCategoryId
       savedCategoryId: $savedCategoryId
-      savedCategoryAmounts: $savedCategoryAmounts
-      checkAmount: $checkAmount
       applyToAll: $applyToAll
     }
   )

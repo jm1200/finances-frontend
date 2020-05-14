@@ -110,11 +110,11 @@ function Row(props: IRowProps) {
   };
 
   const handleUpdateTransactionCategory = async (row: any) => {
+    console.log("ECT113 running", row);
     let savedCategoryId,
       savedCategoryAmounts = null;
     if (row.savedCategory) {
       savedCategoryId = row.savedCategory.id;
-      savedCategoryAmounts = row.savedCategory.amounts;
     }
     try {
       await updateCategoriesInTransactions({
@@ -123,13 +123,12 @@ function Row(props: IRowProps) {
           name: row.name,
           memo: row.memo,
           amount: row.amount,
+          book: row.book,
           savedCategoryId,
-          savedCategoryAmounts,
           selectedCategoryId: selectedCategoryId,
           selectedSubCategoryId: selectedSubCategoryId,
           note,
-          book,
-          checkAmount: amountCheckBox,
+          selectedBook: book,
           applyToAll: savedCategoryCheckBox,
         },
       });
