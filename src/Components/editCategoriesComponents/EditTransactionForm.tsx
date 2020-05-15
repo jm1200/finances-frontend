@@ -84,6 +84,8 @@ interface IEditTransactionFormProps {
   setAmountCheckBox: React.Dispatch<React.SetStateAction<boolean>>;
   submit: (row: any) => Promise<void>;
   cancel: () => void;
+  noConflictCheckBox: boolean;
+  setNoConflictCheckBox: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const EditTransactionForm: React.FC<IEditTransactionFormProps> = (
@@ -98,6 +100,10 @@ export const EditTransactionForm: React.FC<IEditTransactionFormProps> = (
 
   const handleSavedCategoryCheckBox = () => {
     props.setSavedCategoryCheckBox(!!!props.savedCategoryCheckBox);
+  };
+
+  const handleNoConflictCheckBox = () => {
+    props.setNoConflictCheckBox(!props.noConflictCheckBox);
   };
 
   return (
@@ -170,6 +176,23 @@ export const EditTransactionForm: React.FC<IEditTransactionFormProps> = (
                 <Checkbox
                   checked={props.savedCategoryCheckBox}
                   onClick={() => handleSavedCategoryCheckBox()}
+                  color="primary"
+                  inputProps={{
+                    "aria-label": "secondary checkbox",
+                  }}
+                />
+              }
+            />
+          </Tooltip>
+          <Tooltip title="No Conflict">
+            <FormControlLabel
+              label="Click if you book is certain and transaction won't conflict with other transactions"
+              labelPlacement="end"
+              disabled={!!!props.savedCategoryCheckBox}
+              control={
+                <Checkbox
+                  checked={props.noConflictCheckBox}
+                  onClick={() => handleNoConflictCheckBox()}
                   color="primary"
                   inputProps={{
                     "aria-label": "secondary checkbox",

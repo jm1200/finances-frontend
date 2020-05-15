@@ -352,6 +352,7 @@ export type UpdateCategoriesInTransactionsInput = {
   book: Scalars['String'];
   selectedBook: Scalars['String'];
   applyToAll: Scalars['Boolean'];
+  noConflict: Scalars['Boolean'];
 };
 
 
@@ -676,6 +677,7 @@ export type UpdateCategoriesInTransactionsMutationVariables = {
   selectedSubCategoryId: Scalars['String'];
   savedCategoryId?: Maybe<Scalars['String']>;
   applyToAll: Scalars['Boolean'];
+  noConflict: Scalars['Boolean'];
 };
 
 
@@ -1464,8 +1466,8 @@ export type GetTransactionsByMonthQueryHookResult = ReturnType<typeof useGetTran
 export type GetTransactionsByMonthLazyQueryHookResult = ReturnType<typeof useGetTransactionsByMonthLazyQuery>;
 export type GetTransactionsByMonthQueryResult = ApolloReactCommon.QueryResult<GetTransactionsByMonthQuery, GetTransactionsByMonthQueryVariables>;
 export const UpdateCategoriesInTransactionsDocument = gql`
-    mutation UpdateCategoriesInTransactions($id: String!, $note: String, $name: String, $memo: String, $book: String!, $selectedBook: String!, $amount: Float!, $selectedCategoryId: String!, $selectedSubCategoryId: String!, $savedCategoryId: String, $applyToAll: Boolean!) {
-  updateCategoriesInTransactions(data: {id: $id, name: $name, memo: $memo, note: $note, book: $book, selectedBook: $selectedBook, amount: $amount, selectedCategoryId: $selectedCategoryId, selectedSubCategoryId: $selectedSubCategoryId, savedCategoryId: $savedCategoryId, applyToAll: $applyToAll})
+    mutation UpdateCategoriesInTransactions($id: String!, $note: String, $name: String, $memo: String, $book: String!, $selectedBook: String!, $amount: Float!, $selectedCategoryId: String!, $selectedSubCategoryId: String!, $savedCategoryId: String, $applyToAll: Boolean!, $noConflict: Boolean!) {
+  updateCategoriesInTransactions(data: {id: $id, name: $name, memo: $memo, note: $note, book: $book, selectedBook: $selectedBook, amount: $amount, selectedCategoryId: $selectedCategoryId, selectedSubCategoryId: $selectedSubCategoryId, savedCategoryId: $savedCategoryId, applyToAll: $applyToAll, noConflict: $noConflict})
 }
     `;
 export type UpdateCategoriesInTransactionsMutationFn = ApolloReactCommon.MutationFunction<UpdateCategoriesInTransactionsMutation, UpdateCategoriesInTransactionsMutationVariables>;
@@ -1494,6 +1496,7 @@ export type UpdateCategoriesInTransactionsMutationFn = ApolloReactCommon.Mutatio
  *      selectedSubCategoryId: // value for 'selectedSubCategoryId'
  *      savedCategoryId: // value for 'savedCategoryId'
  *      applyToAll: // value for 'applyToAll'
+ *      noConflict: // value for 'noConflict'
  *   },
  * });
  */

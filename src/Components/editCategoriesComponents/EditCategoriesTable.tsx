@@ -72,6 +72,7 @@ function Row(props: IRowProps) {
   const [savedCategoryCheckBox, setSavedCategoryCheckBox] = React.useState(
     true
   );
+  const [noConflict, setNoConflict] = React.useState(false);
   const [amountCheckBox, setAmountCheckBox] = React.useState(false);
   const [
     updateCategoriesInTransactions,
@@ -98,6 +99,7 @@ function Row(props: IRowProps) {
     setAmountCheckBox(
       !!row.savedCategory && row.savedCategory.amounts.length > 0
     );
+    setNoConflict(false);
   };
 
   const handleCancelTransactionMode = () => {
@@ -107,6 +109,7 @@ function Row(props: IRowProps) {
     setNote("");
     setSavedCategoryCheckBox(false);
     setAmountCheckBox(false);
+    setNoConflict(false);
   };
 
   const handleUpdateTransactionCategory = async (row: any) => {
@@ -130,6 +133,7 @@ function Row(props: IRowProps) {
           note,
           selectedBook: book,
           applyToAll: savedCategoryCheckBox,
+          noConflict,
         },
       });
     } catch (err) {
@@ -195,6 +199,8 @@ function Row(props: IRowProps) {
                 setAmountCheckBox={setAmountCheckBox}
                 submit={handleUpdateTransactionCategory}
                 cancel={handleCancelTransactionMode}
+                noConflictCheckBox={noConflict}
+                setNoConflictCheckBox={setNoConflict}
               />
             </Box>
           </Collapse>

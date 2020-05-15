@@ -45,6 +45,7 @@ mutation UpdateCategoriesInTransactions(
   $selectedSubCategoryId: String!
   $savedCategoryId: String
   $applyToAll: Boolean!
+  $noConflict: Boolean!
 ) {
   updateCategoriesInTransactions(
     data: {
@@ -59,6 +60,7 @@ mutation UpdateCategoriesInTransactions(
       selectedSubCategoryId: $selectedSubCategoryId
       savedCategoryId: $savedCategoryId
       applyToAll: $applyToAll
+      noConflict: $noConflict
     }
   )
 }
