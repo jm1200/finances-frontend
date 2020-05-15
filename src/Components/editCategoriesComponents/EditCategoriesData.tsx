@@ -8,6 +8,7 @@ import {
   useGetTransactionsByMonthQuery,
 } from "../../generated/graphql";
 import { YearPicker } from "../shared/YearPicker";
+import moment from "moment";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,8 +40,10 @@ export const EditCategoriesData: React.FC<IEditCategoriesDataProps> = (
   props
 ) => {
   const classes = useStyles();
-  const [selectedMonth, setSelectedMonth] = React.useState("Apr");
-  const [selectedYear, setSelectedYear] = React.useState(2019);
+  const currentMonth = moment(Date.now()).format("MMM");
+  const currentYear = moment(Date.now()).format("YYYY");
+  const [selectedMonth, setSelectedMonth] = React.useState(currentMonth);
+  const [selectedYear, setSelectedYear] = React.useState(parseInt(currentYear));
 
   const {
     data: categoryListData,

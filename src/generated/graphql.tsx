@@ -42,6 +42,12 @@ export type CategoryTotalsEntity = {
   subCategory?: Maybe<SubCategoryEntity>;
 };
 
+export type DisplayYear = {
+   __typename?: 'DisplayYear';
+  year: Scalars['String'];
+  amount: Scalars['Float'];
+};
+
 export type IDisplayData = {
    __typename?: 'IDisplayData';
   categoryName: Scalars['String'];
@@ -67,6 +73,16 @@ export type IDisplayData = {
   subCategories: Array<IDisplaySubCategoryRow>;
 };
 
+export type IDisplayDataSummary = {
+   __typename?: 'IDisplayDataSummary';
+  categoryName: Scalars['String'];
+  subCategoryName: Scalars['String'];
+  categoryId: Scalars['String'];
+  subCategoryLength: Scalars['Float'];
+  years: Array<DisplayYear>;
+  subCategories: Array<IDisplaySubCategoryRowSummary>;
+};
+
 export type IDisplaySubCategoryRow = {
    __typename?: 'IDisplaySubCategoryRow';
   subCategoryName: Scalars['String'];
@@ -87,6 +103,13 @@ export type IDisplaySubCategoryRow = {
   high: Scalars['String'];
   avg: Scalars['String'];
   med: Scalars['String'];
+};
+
+export type IDisplaySubCategoryRowSummary = {
+   __typename?: 'IDisplaySubCategoryRowSummary';
+  subCategoryName: Scalars['String'];
+  subCategoryId: Scalars['String'];
+  years: Array<DisplayYear>;
 };
 
 export type LoginResponse = {
@@ -204,6 +227,7 @@ export type Query = {
   getUserTransactions: Array<TransactionEntity>;
   getTransactionsById: TransactionEntity;
   getTransactionsByMonth: Array<TransactionEntity>;
+  getTotalsForSummary: Array<IDisplayDataSummary>;
   getUserCategories: Array<CategoryEntity>;
   getOnlyUserSubCategories: Array<SubCategoryEntity>;
   getUserSubCategoriesForCashFlow: Array<IDisplayData>;
@@ -684,6 +708,28 @@ export type UpdateCategoriesInTransactionsMutationVariables = {
 export type UpdateCategoriesInTransactionsMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'updateCategoriesInTransactions'>
+);
+
+export type GetTotalsForSummaryQueryVariables = {};
+
+
+export type GetTotalsForSummaryQuery = (
+  { __typename?: 'Query' }
+  & { getTotalsForSummary: Array<(
+    { __typename?: 'IDisplayDataSummary' }
+    & Pick<IDisplayDataSummary, 'categoryName' | 'subCategoryName' | 'subCategoryLength'>
+    & { years: Array<(
+      { __typename?: 'DisplayYear' }
+      & Pick<DisplayYear, 'year' | 'amount'>
+    )>, subCategories: Array<(
+      { __typename?: 'IDisplaySubCategoryRowSummary' }
+      & Pick<IDisplaySubCategoryRowSummary, 'subCategoryId' | 'subCategoryName'>
+      & { years: Array<(
+        { __typename?: 'DisplayYear' }
+        & Pick<DisplayYear, 'year' | 'amount'>
+      )> }
+    )> }
+  )> }
 );
 
 export type UsersQueryVariables = {};
@@ -1506,6 +1552,52 @@ export function useUpdateCategoriesInTransactionsMutation(baseOptions?: ApolloRe
 export type UpdateCategoriesInTransactionsMutationHookResult = ReturnType<typeof useUpdateCategoriesInTransactionsMutation>;
 export type UpdateCategoriesInTransactionsMutationResult = ApolloReactCommon.MutationResult<UpdateCategoriesInTransactionsMutation>;
 export type UpdateCategoriesInTransactionsMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateCategoriesInTransactionsMutation, UpdateCategoriesInTransactionsMutationVariables>;
+export const GetTotalsForSummaryDocument = gql`
+    query GetTotalsForSummary {
+  getTotalsForSummary {
+    categoryName
+    subCategoryName
+    subCategoryLength
+    years {
+      year
+      amount
+    }
+    subCategories {
+      subCategoryId
+      subCategoryName
+      years {
+        year
+        amount
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTotalsForSummaryQuery__
+ *
+ * To run a query within a React component, call `useGetTotalsForSummaryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTotalsForSummaryQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTotalsForSummaryQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetTotalsForSummaryQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetTotalsForSummaryQuery, GetTotalsForSummaryQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetTotalsForSummaryQuery, GetTotalsForSummaryQueryVariables>(GetTotalsForSummaryDocument, baseOptions);
+      }
+export function useGetTotalsForSummaryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetTotalsForSummaryQuery, GetTotalsForSummaryQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetTotalsForSummaryQuery, GetTotalsForSummaryQueryVariables>(GetTotalsForSummaryDocument, baseOptions);
+        }
+export type GetTotalsForSummaryQueryHookResult = ReturnType<typeof useGetTotalsForSummaryQuery>;
+export type GetTotalsForSummaryLazyQueryHookResult = ReturnType<typeof useGetTotalsForSummaryLazyQuery>;
+export type GetTotalsForSummaryQueryResult = ApolloReactCommon.QueryResult<GetTotalsForSummaryQuery, GetTotalsForSummaryQueryVariables>;
 export const UsersDocument = gql`
     query Users {
   users {

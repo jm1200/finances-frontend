@@ -2,13 +2,15 @@ import React from "react";
 import { CashFlowAnalysisTable } from "./CashFlowAnalysisTable";
 import { CashFlowHeader } from "./CashFlowHeader";
 import { useGetUserSubCategoriesForCashFlowQuery } from "../../generated/graphql";
+import moment from "moment";
 
 interface ICashFlowAnalysisDataProps {}
 
 export const CashFlowAnalysisData: React.FC<ICashFlowAnalysisDataProps> = (
   props
 ) => {
-  const [selectedYear, setSelectedYear] = React.useState(2019);
+  const currentYear = moment(Date.now()).format("YYYY");
+  const [selectedYear, setSelectedYear] = React.useState(parseInt(currentYear));
   const {
     data: homeData,
     loading: homeLoading,

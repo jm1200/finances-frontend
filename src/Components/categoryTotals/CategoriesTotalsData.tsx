@@ -14,6 +14,7 @@ import { CategoryTotalsTable } from "./CategoryTotalsTable";
 import { parseSelectedCategoryData } from "./utils/parseSelectedCategoryData";
 import { parseGraphData } from "./utils/parseGraphData";
 import { BookPicker } from "../shared/BookPicker";
+import moment from "moment";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -56,8 +57,11 @@ export const CategoriesTotalsData: React.FC<ICategoriesTotalsDataProps> = (
   props
 ) => {
   const classes = useStyles();
-  const [selectedMonth, setSelectedMonth] = React.useState("Jan");
-  const [selectedYear, setSelectedYear] = React.useState(2019);
+  const currentMonth = moment(Date.now()).format("MMM");
+  const currentYear = moment(Date.now()).format("YYYY");
+
+  const [selectedMonth, setSelectedMonth] = React.useState(currentMonth);
+  const [selectedYear, setSelectedYear] = React.useState(parseInt(currentYear));
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(
     null
   );

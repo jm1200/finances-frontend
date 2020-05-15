@@ -10,6 +10,9 @@ import Paper from "@material-ui/core/Paper";
 import numeral from "numeral";
 
 const useStyles = makeStyles({
+  paper: {
+    width: 600,
+  },
   table: {
     width: 600,
   },
@@ -42,7 +45,6 @@ const useStyles = makeStyles({
 
 interface IYearOverYearTableProps {
   displayData: any;
-  name: string;
 }
 
 const getTotal = (obj: any) => {
@@ -65,39 +67,9 @@ const getTotal = (obj: any) => {
 
 export const YearOverYearTable: React.FC<IYearOverYearTableProps> = (props) => {
   const classes = useStyles();
-  console.log("YOYT 68", props.displayData);
-  let displayData = {
-    "2019": numeral(getTotal(props.displayData[0])).format("$0,0.00"),
-    "2020": numeral(getTotal(props.displayData[1])).format("$0,0.00"),
-    categoryId: "cashFlow",
-    subCategoryName: "Cash Flow",
-    subCategoryLength: 2,
-    subCategories: [
-      {
-        "2019": numeral(getTotal(props.displayData[0].subCategories[0])).format(
-          "$0,0.00"
-        ),
-        "2020": numeral(getTotal(props.displayData[1].subCategories[0])).format(
-          "$0,0.00"
-        ),
-        subCategoryId: "Income",
-        subCategoryName: "Income",
-      },
-      {
-        "2019": numeral(getTotal(props.displayData[0].subCategories[1])).format(
-          "$0,0.00"
-        ),
-        "2020": numeral(getTotal(props.displayData[1].subCategories[1])).format(
-          "$0,0.00"
-        ),
-        subCategoryId: "Expenses",
-        subCategoryName: "Expenses",
-      },
-    ],
-  };
-  console.log("YOYT90", displayData);
+
   return (
-    <TableContainer className={classes.table} component={Paper}>
+    <TableContainer className={classes.paper} component={Paper}>
       <Table className={classes.table} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
@@ -112,41 +84,55 @@ export const YearOverYearTable: React.FC<IYearOverYearTableProps> = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          <React.Fragment key={displayData.categoryId}>
-            <TableRow>
-              <TableCell
-                className={classes.category}
-                rowSpan={displayData.subCategoryLength + 1}
-              >
-                {props.name}
-              </TableCell>
+          {props.displayData.map((categoryRow: any) => {
+            return (
+              <React.Fragment key={categoryRow.categoryName}>
+                <TableRow>
+                  <TableCell
+                    className={classes.category}
+                    rowSpan={categoryRow.subCategoryLength + 1}
+                  >
+                    {categoryRow.categoryName}
+                  </TableCell>
 
-              <TableCell className={classes.subCategoryTotal}>
-                {displayData.subCategoryName}
-              </TableCell>
-              <TableCell className={classes.monthCellTotal} align="center">
-                {displayData["2019"]}
-              </TableCell>
-              <TableCell className={classes.monthCellTotal} align="center">
-                {displayData["2020"]}
-              </TableCell>
-            </TableRow>
-            {displayData.subCategories.map((row: any) => {
-              return (
-                <TableRow key={row.subCategoryId}>
-                  <TableCell className={classes.subCategory}>
-                    {row.subCategoryName}
+                  <TableCell className={classes.subCategoryTotal}>
+                    {categoryRow.subCategoryName}
                   </TableCell>
-                  <TableCell className={classes.monthCell} align="center">
-                    {row["2019"]}
-                  </TableCell>
-                  <TableCell className={classes.monthCell} align="center">
-                    {row["2020"]}
-                  </TableCell>
+                  {categoryRow.years.map((year: any) => {
+                    return (
+                      <TableCell
+                        key={year.year}
+                        className={classes.monthCellTotal}
+                        align="center"
+                      >
+                        {numeral(year.amount).format("$0,0.00")}
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
-              );
-            })}
-          </React.Fragment>
+                {categoryRow.subCategories.map((row: any) => {
+                  return (
+                    <TableRow key={row.subCategoryId}>
+                      <TableCell className={classes.subCategory}>
+                        {row.subCategoryName}
+                      </TableCell>
+                      {row.years.map((year: any) => {
+                        return (
+                          <TableCell
+                            key={year.year}
+                            className={classes.monthCell}
+                            align="center"
+                          >
+                            {numeral(year.amount).format("$0,0.00")}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  );
+                })}
+              </React.Fragment>
+            );
+          })}
         </TableBody>
       </Table>
     </TableContainer>

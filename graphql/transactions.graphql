@@ -64,3 +64,23 @@ mutation UpdateCategoriesInTransactions(
     }
   )
 }
+
+query GetTotalsForSummary {
+  getTotalsForSummary {
+    categoryName
+    subCategoryName
+    subCategoryLength
+    years {
+      year
+      amount
+    }
+    subCategories {
+      subCategoryId
+      subCategoryName
+      years {
+        year
+        amount
+      }
+    }
+  }
+}

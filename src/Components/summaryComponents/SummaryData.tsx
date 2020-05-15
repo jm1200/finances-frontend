@@ -2,8 +2,12 @@ import React from "react";
 import { SummaryTable } from "./SummaryTable";
 import { YearOverYearTable } from "./YearOverYearTable";
 import { YearPicker } from "../shared/YearPicker";
-import { useGetUserSubCategoriesForCashFlowQuery } from "../../generated/graphql";
+import {
+  useGetUserSubCategoriesForCashFlowQuery,
+  useGetTotalsForSummaryQuery,
+} from "../../generated/graphql";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import moment from "moment";
 
 interface ISummaryDataProps {}
 
@@ -19,7 +23,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const SummaryData: React.FC<ISummaryDataProps> = (props) => {
-  const [selectedYear, setSelectedYear] = React.useState(2019);
+  const currentYear = moment(Date.now()).format("YYYY");
+  const [selectedYear, setSelectedYear] = React.useState(parseInt(currentYear));
   const classes = useStyles();
   const {
     data: homeData,
@@ -39,20 +44,10 @@ export const SummaryData: React.FC<ISummaryDataProps> = (props) => {
 
   //TODO separate query for these totals!
   const {
-    data: dataHome2019,
-    loading: loadingHome2019,
-    error: errorHome2019,
-  } = useGetUserSubCategoriesForCashFlowQuery({
-    variables: { selectedYear: 2019, filteredCategory: "Home" },
-  });
-
-  const {
-    data: dataHome2020,
-    loading: loadingHome2020,
-    error: errorHome2020,
-  } = useGetUserSubCategoriesForCashFlowQuery({
-    variables: { selectedYear: 2020, filteredCategory: "Home" },
-  });
+    data: YearOverYearData,
+    loading: YearOverYearLoading,
+    error: YearOverYearError,
+  } = useGetTotalsForSummaryQuery();
 
   return (
     <div>
@@ -93,27 +88,18 @@ export const SummaryData: React.FC<ISummaryDataProps> = (props) => {
         </div>
       )}
 
-      {loadingHome2019 && loadingHome2020 && <div>Loading rental Data...</div>}
-      {errorHome2019 && errorHome2020 && <div>error loading rental data</div>}
-      {!dataHome2019 ||
-        !dataHome2020 ||
-        (!dataHome2019.getUserSubCategoriesForCashFlow &&
-          !dataHome2020.getUserSubCategoriesForCashFlow && (
-            <div>No rental data!</div>
-          ))}
-      {dataHome2019?.getUserSubCategoriesForCashFlow &&
-        dataHome2020?.getUserSubCategoriesForCashFlow && (
-          <div>
-            <br />
-            <YearOverYearTable
-              name="Year over Year"
-              displayData={[
-                dataHome2019.getUserSubCategoriesForCashFlow[0],
-                dataHome2020.getUserSubCategoriesForCashFlow[0],
-              ]}
-            />
-          </div>
-        )}
+      {YearOverYearLoading && <div>Loading rental Data...</div>}
+      {YearOverYearError && <div>error loading rental data</div>}
+      {!YearOverYearData ||
+        (!YearOverYearData.getTotalsForSummary && <div>No rental data!</div>)}
+      {YearOverYearData?.getTotalsForSummary && (
+        <div>
+          <br />
+          <YearOverYearTable
+            displayData={YearOverYearData.getTotalsForSummary}
+          />
+        </div>
+      )}
 
       <div>Assets vs Liabilites</div>
     </div>
