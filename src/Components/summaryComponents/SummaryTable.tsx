@@ -46,7 +46,7 @@ interface ISummaryTableProps {
 
 export const SummaryTable: React.FC<ISummaryTableProps> = (props) => {
   const classes = useStyles();
-  console.log("CFAT 26", props.displayData);
+  console.log("Summary Table 49", props.displayData);
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} size="small" aria-label="a dense table">

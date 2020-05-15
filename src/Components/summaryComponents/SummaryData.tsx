@@ -1,5 +1,6 @@
 import React from "react";
 import { SummaryTable } from "./SummaryTable";
+import { YearOverYearTable } from "./YearOverYearTable";
 import { YearPicker } from "../shared/YearPicker";
 import { useGetUserSubCategoriesQuery } from "../../generated/graphql";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -34,6 +35,23 @@ export const SummaryData: React.FC<ISummaryDataProps> = (props) => {
     error: rentalError,
   } = useGetUserSubCategoriesQuery({
     variables: { selectedYear, filteredCategory: "377 Hyde Park Rd." },
+  });
+
+  //TODO separate query for these totals!
+  const {
+    data: dataHome2019,
+    loading: loadingHome2019,
+    error: errorHome2019,
+  } = useGetUserSubCategoriesQuery({
+    variables: { selectedYear: 2019, filteredCategory: "Home" },
+  });
+
+  const {
+    data: dataHome2020,
+    loading: loadingHome2020,
+    error: errorHome2020,
+  } = useGetUserSubCategoriesQuery({
+    variables: { selectedYear: 2020, filteredCategory: "Home" },
   });
 
   return (
@@ -72,8 +90,52 @@ export const SummaryData: React.FC<ISummaryDataProps> = (props) => {
           />
         </div>
       )}
+
+      {loadingHome2019 && loadingHome2020 && <div>Loading rental Data...</div>}
+      {errorHome2019 && errorHome2020 && <div>error loading rental data</div>}
+      {!dataHome2019 ||
+        !dataHome2020 ||
+        (!dataHome2019.getUserSubCategories &&
+          !dataHome2020.getUserSubCategories && <div>No rental data!</div>)}
+      {dataHome2019?.getUserSubCategories &&
+        dataHome2020?.getUserSubCategories && (
+          <div>
+            <br />
+            <YearOverYearTable
+              name="Year over Year"
+              displayData={[
+                dataHome2019.getUserSubCategories[0],
+                dataHome2020.getUserSubCategories[0],
+              ]}
+            />
+          </div>
+        )}
+
       <div>Assets vs Liabilites</div>
-      <div>year over year for both IvE and AvL</div>
     </div>
   );
 };
+// Display data shape for tables:
+// export class IDisplayData {
+//   categoryName: string;
+//   subCategoryName: string;
+//   categoryId: string;
+//   subCategoryLength: number;
+//   Jan: string;
+//   Feb: string;
+//   Mar: string;
+//   Apr: string;
+//   May: string;
+//   Jun: string;
+//   Jul: string;
+//   Aug: string;
+//   Sep: string;
+//   Oct: string;
+//   Nov: string;
+//   Dec: string;
+//   low?: string;
+//   high?: string;
+//   avg?: string;
+//   med?: string;
+//   subCategories: IDisplaySubCategoryRow[];
+// }
