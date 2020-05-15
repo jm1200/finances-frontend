@@ -37,8 +37,11 @@ query GetUserCategories {
   }
 }
 
-query GetUserSubCategories($selectedYear: Int!, $filteredCategory: String!) {
-  getUserSubCategories(
+query GetUserSubCategoriesForCashFlow(
+  $selectedYear: Int!
+  $filteredCategory: String!
+) {
+  getUserSubCategoriesForCashFlow(
     selectedYear: $selectedYear
     filteredCategory: $filteredCategory
   ) {

@@ -206,7 +206,7 @@ export type Query = {
   getTransactionsByMonth: Array<TransactionEntity>;
   getUserCategories: Array<CategoryEntity>;
   getOnlyUserSubCategories: Array<SubCategoryEntity>;
-  getUserSubCategories: Array<IDisplayData>;
+  getUserSubCategoriesForCashFlow: Array<IDisplayData>;
   getCategorybyId: CategoryEntity;
   getUserSavedCategories: Array<SavedCategoriesEntity>;
 };
@@ -228,7 +228,7 @@ export type QueryGetTransactionsByMonthArgs = {
 };
 
 
-export type QueryGetUserSubCategoriesArgs = {
+export type QueryGetUserSubCategoriesForCashFlowArgs = {
   filteredCategory: Scalars['String'];
   selectedYear: Scalars['Int'];
 };
@@ -475,15 +475,15 @@ export type GetUserCategoriesQuery = (
   )> }
 );
 
-export type GetUserSubCategoriesQueryVariables = {
+export type GetUserSubCategoriesForCashFlowQueryVariables = {
   selectedYear: Scalars['Int'];
   filteredCategory: Scalars['String'];
 };
 
 
-export type GetUserSubCategoriesQuery = (
+export type GetUserSubCategoriesForCashFlowQuery = (
   { __typename?: 'Query' }
-  & { getUserSubCategories: Array<(
+  & { getUserSubCategoriesForCashFlow: Array<(
     { __typename?: 'IDisplayData' }
     & Pick<IDisplayData, 'subCategoryName' | 'categoryName' | 'categoryId' | 'subCategoryLength' | 'Jan' | 'Feb' | 'Mar' | 'Apr' | 'May' | 'Jun' | 'Jul' | 'Aug' | 'Sep' | 'Oct' | 'Nov' | 'Dec' | 'low' | 'high' | 'avg' | 'med'>
     & { subCategories: Array<(
@@ -980,9 +980,9 @@ export function useGetUserCategoriesLazyQuery(baseOptions?: ApolloReactHooks.Laz
 export type GetUserCategoriesQueryHookResult = ReturnType<typeof useGetUserCategoriesQuery>;
 export type GetUserCategoriesLazyQueryHookResult = ReturnType<typeof useGetUserCategoriesLazyQuery>;
 export type GetUserCategoriesQueryResult = ApolloReactCommon.QueryResult<GetUserCategoriesQuery, GetUserCategoriesQueryVariables>;
-export const GetUserSubCategoriesDocument = gql`
-    query GetUserSubCategories($selectedYear: Int!, $filteredCategory: String!) {
-  getUserSubCategories(selectedYear: $selectedYear, filteredCategory: $filteredCategory) {
+export const GetUserSubCategoriesForCashFlowDocument = gql`
+    query GetUserSubCategoriesForCashFlow($selectedYear: Int!, $filteredCategory: String!) {
+  getUserSubCategoriesForCashFlow(selectedYear: $selectedYear, filteredCategory: $filteredCategory) {
     subCategoryName
     categoryName
     categoryId
@@ -1028,31 +1028,31 @@ export const GetUserSubCategoriesDocument = gql`
     `;
 
 /**
- * __useGetUserSubCategoriesQuery__
+ * __useGetUserSubCategoriesForCashFlowQuery__
  *
- * To run a query within a React component, call `useGetUserSubCategoriesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUserSubCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * To run a query within a React component, call `useGetUserSubCategoriesForCashFlowQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserSubCategoriesForCashFlowQuery` returns an object from Apollo Client that contains loading, error, and data properties 
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetUserSubCategoriesQuery({
+ * const { data, loading, error } = useGetUserSubCategoriesForCashFlowQuery({
  *   variables: {
  *      selectedYear: // value for 'selectedYear'
  *      filteredCategory: // value for 'filteredCategory'
  *   },
  * });
  */
-export function useGetUserSubCategoriesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetUserSubCategoriesQuery, GetUserSubCategoriesQueryVariables>) {
-        return ApolloReactHooks.useQuery<GetUserSubCategoriesQuery, GetUserSubCategoriesQueryVariables>(GetUserSubCategoriesDocument, baseOptions);
+export function useGetUserSubCategoriesForCashFlowQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetUserSubCategoriesForCashFlowQuery, GetUserSubCategoriesForCashFlowQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetUserSubCategoriesForCashFlowQuery, GetUserSubCategoriesForCashFlowQueryVariables>(GetUserSubCategoriesForCashFlowDocument, baseOptions);
       }
-export function useGetUserSubCategoriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetUserSubCategoriesQuery, GetUserSubCategoriesQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<GetUserSubCategoriesQuery, GetUserSubCategoriesQueryVariables>(GetUserSubCategoriesDocument, baseOptions);
+export function useGetUserSubCategoriesForCashFlowLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetUserSubCategoriesForCashFlowQuery, GetUserSubCategoriesForCashFlowQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetUserSubCategoriesForCashFlowQuery, GetUserSubCategoriesForCashFlowQueryVariables>(GetUserSubCategoriesForCashFlowDocument, baseOptions);
         }
-export type GetUserSubCategoriesQueryHookResult = ReturnType<typeof useGetUserSubCategoriesQuery>;
-export type GetUserSubCategoriesLazyQueryHookResult = ReturnType<typeof useGetUserSubCategoriesLazyQuery>;
-export type GetUserSubCategoriesQueryResult = ApolloReactCommon.QueryResult<GetUserSubCategoriesQuery, GetUserSubCategoriesQueryVariables>;
+export type GetUserSubCategoriesForCashFlowQueryHookResult = ReturnType<typeof useGetUserSubCategoriesForCashFlowQuery>;
+export type GetUserSubCategoriesForCashFlowLazyQueryHookResult = ReturnType<typeof useGetUserSubCategoriesForCashFlowLazyQuery>;
+export type GetUserSubCategoriesForCashFlowQueryResult = ApolloReactCommon.QueryResult<GetUserSubCategoriesForCashFlowQuery, GetUserSubCategoriesForCashFlowQueryVariables>;
 export const HelloDocument = gql`
     query Hello {
   hello

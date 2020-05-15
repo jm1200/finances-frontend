@@ -2,7 +2,7 @@ import React from "react";
 import { SummaryTable } from "./SummaryTable";
 import { YearOverYearTable } from "./YearOverYearTable";
 import { YearPicker } from "../shared/YearPicker";
-import { useGetUserSubCategoriesQuery } from "../../generated/graphql";
+import { useGetUserSubCategoriesForCashFlowQuery } from "../../generated/graphql";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 interface ISummaryDataProps {}
@@ -25,7 +25,7 @@ export const SummaryData: React.FC<ISummaryDataProps> = (props) => {
     data: homeData,
     loading: homeLoading,
     error: homeError,
-  } = useGetUserSubCategoriesQuery({
+  } = useGetUserSubCategoriesForCashFlowQuery({
     variables: { selectedYear, filteredCategory: "Home" },
   });
 
@@ -33,7 +33,7 @@ export const SummaryData: React.FC<ISummaryDataProps> = (props) => {
     data: rentalData,
     loading: rentalLoading,
     error: rentalError,
-  } = useGetUserSubCategoriesQuery({
+  } = useGetUserSubCategoriesForCashFlowQuery({
     variables: { selectedYear, filteredCategory: "377 Hyde Park Rd." },
   });
 
@@ -42,7 +42,7 @@ export const SummaryData: React.FC<ISummaryDataProps> = (props) => {
     data: dataHome2019,
     loading: loadingHome2019,
     error: errorHome2019,
-  } = useGetUserSubCategoriesQuery({
+  } = useGetUserSubCategoriesForCashFlowQuery({
     variables: { selectedYear: 2019, filteredCategory: "Home" },
   });
 
@@ -50,7 +50,7 @@ export const SummaryData: React.FC<ISummaryDataProps> = (props) => {
     data: dataHome2020,
     loading: loadingHome2020,
     error: errorHome2020,
-  } = useGetUserSubCategoriesQuery({
+  } = useGetUserSubCategoriesForCashFlowQuery({
     variables: { selectedYear: 2020, filteredCategory: "Home" },
   });
 
@@ -67,12 +67,12 @@ export const SummaryData: React.FC<ISummaryDataProps> = (props) => {
       {homeLoading && <div>Loading Home Data...</div>}
       {homeError && <div>error loading Home data</div>}
       {!homeData ||
-        (!homeData.getUserSubCategories && <div>No Home data!</div>)}
-      {homeData?.getUserSubCategories && (
+        (!homeData.getUserSubCategoriesForCashFlow && <div>No Home data!</div>)}
+      {homeData?.getUserSubCategoriesForCashFlow && (
         <div>
           <SummaryTable
             name="Home"
-            displayData={homeData.getUserSubCategories[0]}
+            displayData={homeData.getUserSubCategoriesForCashFlow[0]}
           />
         </div>
       )}
@@ -80,13 +80,15 @@ export const SummaryData: React.FC<ISummaryDataProps> = (props) => {
       {rentalLoading && <div>Loading rental Data...</div>}
       {rentalError && <div>error loading rental data</div>}
       {!rentalData ||
-        (!rentalData.getUserSubCategories && <div>No rental data!</div>)}
-      {rentalData?.getUserSubCategories && (
+        (!rentalData.getUserSubCategoriesForCashFlow && (
+          <div>No rental data!</div>
+        ))}
+      {rentalData?.getUserSubCategoriesForCashFlow && (
         <div>
           <br />
           <SummaryTable
             name="377 Hyde Park Rd."
-            displayData={rentalData.getUserSubCategories[0]}
+            displayData={rentalData.getUserSubCategoriesForCashFlow[0]}
           />
         </div>
       )}
@@ -95,17 +97,19 @@ export const SummaryData: React.FC<ISummaryDataProps> = (props) => {
       {errorHome2019 && errorHome2020 && <div>error loading rental data</div>}
       {!dataHome2019 ||
         !dataHome2020 ||
-        (!dataHome2019.getUserSubCategories &&
-          !dataHome2020.getUserSubCategories && <div>No rental data!</div>)}
-      {dataHome2019?.getUserSubCategories &&
-        dataHome2020?.getUserSubCategories && (
+        (!dataHome2019.getUserSubCategoriesForCashFlow &&
+          !dataHome2020.getUserSubCategoriesForCashFlow && (
+            <div>No rental data!</div>
+          ))}
+      {dataHome2019?.getUserSubCategoriesForCashFlow &&
+        dataHome2020?.getUserSubCategoriesForCashFlow && (
           <div>
             <br />
             <YearOverYearTable
               name="Year over Year"
               displayData={[
-                dataHome2019.getUserSubCategories[0],
-                dataHome2020.getUserSubCategories[0],
+                dataHome2019.getUserSubCategoriesForCashFlow[0],
+                dataHome2020.getUserSubCategoriesForCashFlow[0],
               ]}
             />
           </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { CashFlowAnalysisTable } from "./CashFlowAnalysisTable";
 import { CashFlowHeader } from "./CashFlowHeader";
-import { useGetUserSubCategoriesQuery } from "../../generated/graphql";
+import { useGetUserSubCategoriesForCashFlowQuery } from "../../generated/graphql";
 
 interface ICashFlowAnalysisDataProps {}
 
@@ -13,7 +13,7 @@ export const CashFlowAnalysisData: React.FC<ICashFlowAnalysisDataProps> = (
     data: homeData,
     loading: homeLoading,
     error: homeError,
-  } = useGetUserSubCategoriesQuery({
+  } = useGetUserSubCategoriesForCashFlowQuery({
     variables: { selectedYear, filteredCategory: "Home" },
   });
 
@@ -21,7 +21,7 @@ export const CashFlowAnalysisData: React.FC<ICashFlowAnalysisDataProps> = (
     data: rentalData,
     loading: rentalLoading,
     error: rentalError,
-  } = useGetUserSubCategoriesQuery({
+  } = useGetUserSubCategoriesForCashFlowQuery({
     variables: { selectedYear, filteredCategory: "377 Hyde Park Rd." },
   });
 
@@ -34,22 +34,26 @@ export const CashFlowAnalysisData: React.FC<ICashFlowAnalysisDataProps> = (
       {homeLoading && <div>Loading Home Data...</div>}
       {homeError && <div>error loading Home data</div>}
       {!homeData ||
-        (!homeData.getUserSubCategories && <div>No Home data!</div>)}
-      {homeData?.getUserSubCategories && (
+        (!homeData.getUserSubCategoriesForCashFlow && <div>No Home data!</div>)}
+      {homeData?.getUserSubCategoriesForCashFlow && (
         <div>
-          <CashFlowAnalysisTable displayData={homeData.getUserSubCategories} />
+          <CashFlowAnalysisTable
+            displayData={homeData.getUserSubCategoriesForCashFlow}
+          />
         </div>
       )}
 
       {rentalLoading && <div>Loading rental Data...</div>}
       {rentalError && <div>error loading rental data</div>}
       {!rentalData ||
-        (!rentalData.getUserSubCategories && <div>No rental data!</div>)}
-      {rentalData?.getUserSubCategories && (
+        (!rentalData.getUserSubCategoriesForCashFlow && (
+          <div>No rental data!</div>
+        ))}
+      {rentalData?.getUserSubCategoriesForCashFlow && (
         <div>
           <br />
           <CashFlowAnalysisTable
-            displayData={rentalData.getUserSubCategories}
+            displayData={rentalData.getUserSubCategoriesForCashFlow}
           />
         </div>
       )}

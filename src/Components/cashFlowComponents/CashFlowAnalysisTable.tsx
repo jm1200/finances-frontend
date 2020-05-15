@@ -7,7 +7,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import { GetUserSubCategoriesQuery } from "../../generated/graphql";
+import { GetUserSubCategoriesForCashFlowQuery } from "../../generated/graphql";
 
 const useStyles = makeStyles({
   table: {
@@ -42,7 +42,7 @@ const useStyles = makeStyles({
 });
 
 interface ICashFlowAnalysisTableProps {
-  displayData: GetUserSubCategoriesQuery["getUserSubCategories"];
+  displayData: GetUserSubCategoriesForCashFlowQuery["getUserSubCategoriesForCashFlow"];
 }
 
 export const CashFlowAnalysisTable: React.FC<ICashFlowAnalysisTableProps> = (
