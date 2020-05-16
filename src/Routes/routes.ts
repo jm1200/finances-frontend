@@ -7,6 +7,7 @@ import Settings from "../pages/Settings";
 import Transactions from "../pages/Transactions";
 import { CategoriesTotals } from "../pages/CategoriesTotals";
 import { CashFlowAnalysis } from "../pages/CashFlowAnalysis";
+import { Budget } from "../pages/Budget";
 import { Summary } from "../pages/Summary";
 import { EditCategories } from "../pages/EditCategories";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
@@ -81,6 +82,12 @@ export const routes: IRoutes = {
       name: "Summary",
       path: "/summary",
       component: Summary,
+      icon: InboxIcon,
+    },
+    {
+      name: "Budget",
+      path: "/budget",
+      component: Budget,
       icon: InboxIcon,
     },
     {

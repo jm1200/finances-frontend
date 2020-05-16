@@ -15,6 +15,14 @@ export type Scalars = {
   Upload: any;
 };
 
+export type ArrayedBudgetCategoryRow = {
+   __typename?: 'ArrayedBudgetCategoryRow';
+  categoryId: Scalars['String'];
+  categoryName: Scalars['String'];
+  subCategoryLength: Scalars['Float'];
+  subCategories: Array<DisplaySubCategoryRow>;
+};
+
 export type CategoryEntity = {
    __typename?: 'CategoryEntity';
   id: Scalars['String'];
@@ -40,6 +48,13 @@ export type CategoryTotalsEntity = {
   categoryId: Scalars['String'];
   category: CategoryEntity;
   subCategory?: Maybe<SubCategoryEntity>;
+};
+
+export type DisplaySubCategoryRow = {
+   __typename?: 'DisplaySubCategoryRow';
+  subCategoryId: Scalars['String'];
+  subCategoryName: Scalars['String'];
+  avg: Scalars['Float'];
 };
 
 export type DisplayYear = {
@@ -228,6 +243,7 @@ export type Query = {
   getTransactionsById: TransactionEntity;
   getTransactionsByMonth: Array<TransactionEntity>;
   getTotalsForSummary: Array<IDisplayDataSummary>;
+  getUserTransactionsForBudget: Array<ArrayedBudgetCategoryRow>;
   getUserCategories: Array<CategoryEntity>;
   getOnlyUserSubCategories: Array<SubCategoryEntity>;
   getUserSubCategoriesForCashFlow: Array<IDisplayData>;
@@ -249,6 +265,12 @@ export type QueryGetTransactionsByIdArgs = {
 export type QueryGetTransactionsByMonthArgs = {
   year: Scalars['Int'];
   month: Scalars['String'];
+};
+
+
+export type QueryGetUserTransactionsForBudgetArgs = {
+  selectedTimeFrame: Scalars['Float'];
+  book: Scalars['String'];
 };
 
 
@@ -728,6 +750,24 @@ export type GetTotalsForSummaryQuery = (
         { __typename?: 'DisplayYear' }
         & Pick<DisplayYear, 'year' | 'amount'>
       )> }
+    )> }
+  )> }
+);
+
+export type GetUserTransactionsForBudgetQueryVariables = {
+  book: Scalars['String'];
+  selectedTimeFrame: Scalars['Float'];
+};
+
+
+export type GetUserTransactionsForBudgetQuery = (
+  { __typename?: 'Query' }
+  & { getUserTransactionsForBudget: Array<(
+    { __typename?: 'ArrayedBudgetCategoryRow' }
+    & Pick<ArrayedBudgetCategoryRow, 'categoryId' | 'categoryName' | 'subCategoryLength'>
+    & { subCategories: Array<(
+      { __typename?: 'DisplaySubCategoryRow' }
+      & Pick<DisplaySubCategoryRow, 'subCategoryId' | 'subCategoryName' | 'avg'>
     )> }
   )> }
 );
@@ -1598,6 +1638,47 @@ export function useGetTotalsForSummaryLazyQuery(baseOptions?: ApolloReactHooks.L
 export type GetTotalsForSummaryQueryHookResult = ReturnType<typeof useGetTotalsForSummaryQuery>;
 export type GetTotalsForSummaryLazyQueryHookResult = ReturnType<typeof useGetTotalsForSummaryLazyQuery>;
 export type GetTotalsForSummaryQueryResult = ApolloReactCommon.QueryResult<GetTotalsForSummaryQuery, GetTotalsForSummaryQueryVariables>;
+export const GetUserTransactionsForBudgetDocument = gql`
+    query GetUserTransactionsForBudget($book: String!, $selectedTimeFrame: Float!) {
+  getUserTransactionsForBudget(book: $book, selectedTimeFrame: $selectedTimeFrame) {
+    categoryId
+    categoryName
+    subCategoryLength
+    subCategories {
+      subCategoryId
+      subCategoryName
+      avg
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUserTransactionsForBudgetQuery__
+ *
+ * To run a query within a React component, call `useGetUserTransactionsForBudgetQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserTransactionsForBudgetQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserTransactionsForBudgetQuery({
+ *   variables: {
+ *      book: // value for 'book'
+ *      selectedTimeFrame: // value for 'selectedTimeFrame'
+ *   },
+ * });
+ */
+export function useGetUserTransactionsForBudgetQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetUserTransactionsForBudgetQuery, GetUserTransactionsForBudgetQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetUserTransactionsForBudgetQuery, GetUserTransactionsForBudgetQueryVariables>(GetUserTransactionsForBudgetDocument, baseOptions);
+      }
+export function useGetUserTransactionsForBudgetLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetUserTransactionsForBudgetQuery, GetUserTransactionsForBudgetQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetUserTransactionsForBudgetQuery, GetUserTransactionsForBudgetQueryVariables>(GetUserTransactionsForBudgetDocument, baseOptions);
+        }
+export type GetUserTransactionsForBudgetQueryHookResult = ReturnType<typeof useGetUserTransactionsForBudgetQuery>;
+export type GetUserTransactionsForBudgetLazyQueryHookResult = ReturnType<typeof useGetUserTransactionsForBudgetLazyQuery>;
+export type GetUserTransactionsForBudgetQueryResult = ApolloReactCommon.QueryResult<GetUserTransactionsForBudgetQuery, GetUserTransactionsForBudgetQueryVariables>;
 export const UsersDocument = gql`
     query Users {
   users {
