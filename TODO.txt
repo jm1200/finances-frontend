@@ -13,6 +13,10 @@
 - maybe make save category true the default.
 - must refresh to see new category but not subcat in selects
 
+- budgets don't refetch when switched back and forth.
+- get budget names for select list
+- budget total does not calculate on load.
+
 
 -bug - click on update. find out why i can't update selected book to 377 hyde....
 -might be better to have transactions point at a savedCategoryId instead of separate categories and subCategories

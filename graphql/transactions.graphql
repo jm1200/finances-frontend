@@ -84,10 +84,15 @@ query GetTotalsForSummary {
     }
   }
 }
-query GetUserTransactionsForBudget($book: String!, $selectedTimeFrame: Float!) {
+query GetUserTransactionsForBudget(
+  $book: String!
+  $selectedTimeFrame: Float!
+  $selectedBudget: String!
+) {
   getUserTransactionsForBudget(
     book: $book
     selectedTimeFrame: $selectedTimeFrame
+    selectedBudget: $selectedBudget
   ) {
     categoryId
     categoryName

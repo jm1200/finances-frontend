@@ -23,6 +23,14 @@ export type ArrayedBudgetCategoryRow = {
   subCategories: Array<DisplaySubCategoryRow>;
 };
 
+export type BudgetsEntity = {
+   __typename?: 'BudgetsEntity';
+  id: Scalars['String'];
+  userId: Scalars['String'];
+  name: Scalars['String'];
+  values: Scalars['String'];
+};
+
 export type CategoryEntity = {
    __typename?: 'CategoryEntity';
   id: Scalars['String'];
@@ -156,6 +164,8 @@ export type Mutation = {
   deleteSubCategory: Scalars['Boolean'];
   createSavedCategory: SavedCategoriesEntity;
   deleteSavedCategory: Scalars['Boolean'];
+  createBudget: BudgetsEntity;
+  deleteBudget: Scalars['Boolean'];
 };
 
 
@@ -232,6 +242,17 @@ export type MutationDeleteSavedCategoryArgs = {
   savedCategoryId: Scalars['String'];
 };
 
+
+export type MutationCreateBudgetArgs = {
+  values: Scalars['String'];
+  name: Scalars['String'];
+};
+
+
+export type MutationDeleteBudgetArgs = {
+  budgetId: Scalars['String'];
+};
+
 export type Query = {
    __typename?: 'Query';
   getUserSettings: UserSettingsEntity;
@@ -250,6 +271,7 @@ export type Query = {
   getUserSubCategoriesForCashFlow: Array<IDisplayData>;
   getCategorybyId: CategoryEntity;
   getUserSavedCategories: Array<SavedCategoriesEntity>;
+  getUserBudgets: Array<BudgetsEntity>;
 };
 
 
@@ -270,6 +292,7 @@ export type QueryGetTransactionsByMonthArgs = {
 
 
 export type QueryGetUserTransactionsForBudgetArgs = {
+  selectedBudget: Scalars['String'];
   selectedTimeFrame: Scalars['Float'];
   book: Scalars['String'];
 };
@@ -429,6 +452,41 @@ export type UserSettingsEntity = {
   id: Scalars['String'];
   theme: Scalars['String'];
 };
+
+export type GetUserBudgetsQueryVariables = {};
+
+
+export type GetUserBudgetsQuery = (
+  { __typename?: 'Query' }
+  & { getUserBudgets: Array<(
+    { __typename?: 'BudgetsEntity' }
+    & Pick<BudgetsEntity, 'id' | 'name' | 'values'>
+  )> }
+);
+
+export type CreateBudgetMutationVariables = {
+  name: Scalars['String'];
+  values: Scalars['String'];
+};
+
+
+export type CreateBudgetMutation = (
+  { __typename?: 'Mutation' }
+  & { createBudget: (
+    { __typename?: 'BudgetsEntity' }
+    & Pick<BudgetsEntity, 'id' | 'name' | 'values'>
+  ) }
+);
+
+export type DeleteBudgetMutationVariables = {
+  budgetId: Scalars['String'];
+};
+
+
+export type DeleteBudgetMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteBudget'>
+);
 
 export type ByeQueryVariables = {};
 
@@ -758,6 +816,7 @@ export type GetTotalsForSummaryQuery = (
 export type GetUserTransactionsForBudgetQueryVariables = {
   book: Scalars['String'];
   selectedTimeFrame: Scalars['Float'];
+  selectedBudget: Scalars['String'];
 };
 
 
@@ -810,6 +869,105 @@ export type UserQuery = (
 );
 
 
+export const GetUserBudgetsDocument = gql`
+    query GetUserBudgets {
+  getUserBudgets {
+    id
+    name
+    values
+  }
+}
+    `;
+
+/**
+ * __useGetUserBudgetsQuery__
+ *
+ * To run a query within a React component, call `useGetUserBudgetsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserBudgetsQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserBudgetsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetUserBudgetsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetUserBudgetsQuery, GetUserBudgetsQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetUserBudgetsQuery, GetUserBudgetsQueryVariables>(GetUserBudgetsDocument, baseOptions);
+      }
+export function useGetUserBudgetsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetUserBudgetsQuery, GetUserBudgetsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetUserBudgetsQuery, GetUserBudgetsQueryVariables>(GetUserBudgetsDocument, baseOptions);
+        }
+export type GetUserBudgetsQueryHookResult = ReturnType<typeof useGetUserBudgetsQuery>;
+export type GetUserBudgetsLazyQueryHookResult = ReturnType<typeof useGetUserBudgetsLazyQuery>;
+export type GetUserBudgetsQueryResult = ApolloReactCommon.QueryResult<GetUserBudgetsQuery, GetUserBudgetsQueryVariables>;
+export const CreateBudgetDocument = gql`
+    mutation CreateBudget($name: String!, $values: String!) {
+  createBudget(name: $name, values: $values) {
+    id
+    name
+    values
+  }
+}
+    `;
+export type CreateBudgetMutationFn = ApolloReactCommon.MutationFunction<CreateBudgetMutation, CreateBudgetMutationVariables>;
+
+/**
+ * __useCreateBudgetMutation__
+ *
+ * To run a mutation, you first call `useCreateBudgetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBudgetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBudgetMutation, { data, loading, error }] = useCreateBudgetMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      values: // value for 'values'
+ *   },
+ * });
+ */
+export function useCreateBudgetMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateBudgetMutation, CreateBudgetMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateBudgetMutation, CreateBudgetMutationVariables>(CreateBudgetDocument, baseOptions);
+      }
+export type CreateBudgetMutationHookResult = ReturnType<typeof useCreateBudgetMutation>;
+export type CreateBudgetMutationResult = ApolloReactCommon.MutationResult<CreateBudgetMutation>;
+export type CreateBudgetMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateBudgetMutation, CreateBudgetMutationVariables>;
+export const DeleteBudgetDocument = gql`
+    mutation DeleteBudget($budgetId: String!) {
+  deleteBudget(budgetId: $budgetId)
+}
+    `;
+export type DeleteBudgetMutationFn = ApolloReactCommon.MutationFunction<DeleteBudgetMutation, DeleteBudgetMutationVariables>;
+
+/**
+ * __useDeleteBudgetMutation__
+ *
+ * To run a mutation, you first call `useDeleteBudgetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteBudgetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteBudgetMutation, { data, loading, error }] = useDeleteBudgetMutation({
+ *   variables: {
+ *      budgetId: // value for 'budgetId'
+ *   },
+ * });
+ */
+export function useDeleteBudgetMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteBudgetMutation, DeleteBudgetMutationVariables>) {
+        return ApolloReactHooks.useMutation<DeleteBudgetMutation, DeleteBudgetMutationVariables>(DeleteBudgetDocument, baseOptions);
+      }
+export type DeleteBudgetMutationHookResult = ReturnType<typeof useDeleteBudgetMutation>;
+export type DeleteBudgetMutationResult = ApolloReactCommon.MutationResult<DeleteBudgetMutation>;
+export type DeleteBudgetMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteBudgetMutation, DeleteBudgetMutationVariables>;
 export const ByeDocument = gql`
     query Bye {
   bye
@@ -1640,8 +1798,8 @@ export type GetTotalsForSummaryQueryHookResult = ReturnType<typeof useGetTotalsF
 export type GetTotalsForSummaryLazyQueryHookResult = ReturnType<typeof useGetTotalsForSummaryLazyQuery>;
 export type GetTotalsForSummaryQueryResult = ApolloReactCommon.QueryResult<GetTotalsForSummaryQuery, GetTotalsForSummaryQueryVariables>;
 export const GetUserTransactionsForBudgetDocument = gql`
-    query GetUserTransactionsForBudget($book: String!, $selectedTimeFrame: Float!) {
-  getUserTransactionsForBudget(book: $book, selectedTimeFrame: $selectedTimeFrame) {
+    query GetUserTransactionsForBudget($book: String!, $selectedTimeFrame: Float!, $selectedBudget: String!) {
+  getUserTransactionsForBudget(book: $book, selectedTimeFrame: $selectedTimeFrame, selectedBudget: $selectedBudget) {
     categoryId
     categoryName
     subCategoryLength
@@ -1669,6 +1827,7 @@ export const GetUserTransactionsForBudgetDocument = gql`
  *   variables: {
  *      book: // value for 'book'
  *      selectedTimeFrame: // value for 'selectedTimeFrame'
+ *      selectedBudget: // value for 'selectedBudget'
  *   },
  * });
  */

@@ -90,8 +90,9 @@ export const BudgetSidebar: React.FC<IBudgetSidebarProps> = (props) => {
               value={props.budget}
               onChange={(e) => props.setBudget(e.target.value as string)}
             >
-              <MenuItem value={"Test Budget 1"}>Test Budget 1</MenuItem>
-              <MenuItem value={"Test Budget 2"}>Test Budget 2</MenuItem>
+              <MenuItem value={"Default Budget"}>Default Budget</MenuItem>
+              <MenuItem value={"zero"}>zero</MenuItem>
+              <MenuItem value={"test budget"}>test budget</MenuItem>
             </Select>
           </FormControl>
 

@@ -1,0 +1,19 @@
+query GetUserBudgets {
+  getUserBudgets {
+    id
+    name
+    values
+  }
+}
+
+mutation CreateBudget($name: String!, $values: String!) {
+  createBudget(name: $name, values: $values) {
+    id
+    name
+    values
+  }
+}
+
+mutation DeleteBudget($budgetId: String!) {
+  deleteBudget(budgetId: $budgetId)
+}

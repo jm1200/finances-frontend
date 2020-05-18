@@ -6,6 +6,7 @@ import {
   useGetUserTransactionsForBudgetLazyQuery,
   ArrayedBudgetCategoryRow,
   DisplaySubCategoryRow,
+  useCreateBudgetMutation,
 } from "../../generated/graphql";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import numeral from "numeral";
@@ -50,12 +51,14 @@ export const BudgetData: React.FC<IBudgetDataProps> = (props) => {
   const [book, setBook] = React.useState("Home");
   const [timeFrame, setTimeFrame] = React.useState(2);
   const [budgetTotal, setBudgetTotal] = React.useState(0);
-  const [budget, setBudget] = React.useState("Test Budget 1");
+  const [budget, setBudget] = React.useState("Default Budget");
 
   const [
     getTransactionsForBudget,
     { data: averagesData, loading: averagesLoading, error: averagesError },
   ] = useGetUserTransactionsForBudgetLazyQuery();
+
+  const [createBudget] = useCreateBudgetMutation({});
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -63,6 +66,7 @@ export const BudgetData: React.FC<IBudgetDataProps> = (props) => {
       variables: {
         selectedTimeFrame: timeFrame,
         book,
+        selectedBudget: budget,
       },
     });
   };
@@ -72,6 +76,12 @@ export const BudgetData: React.FC<IBudgetDataProps> = (props) => {
     inputValues: InitialInputState
   ) => {
     console.log("bd61", values, inputValues);
+    createBudget({
+      variables: {
+        name: values.name,
+        values: JSON.stringify(inputValues),
+      },
+    });
   };
   let averagesTotal = 0;
   if (averagesData && averagesData.getUserTransactionsForBudget) {
