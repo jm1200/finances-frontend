@@ -96,6 +96,7 @@ query GetUserTransactionsForBudget($book: String!, $selectedTimeFrame: Float!) {
       subCategoryId
       subCategoryName
       avg
+      inputValue
     }
   }
 }

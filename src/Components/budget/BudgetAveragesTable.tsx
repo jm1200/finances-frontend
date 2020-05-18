@@ -12,10 +12,10 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
-      width: 600,
+      width: "100%",
     },
     table: {
-      width: 600,
+      width: "100%",
     },
     th: {
       backgroundColor: "#9A403E",

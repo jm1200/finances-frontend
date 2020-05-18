@@ -9,6 +9,9 @@ import {
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import numeral from "numeral";
+import * as yup from "yup";
+import { Formik, Form } from "formik";
+import { MyTextField } from "../MyTextField";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: theme.spacing(1),
       minWidth: 120,
     },
-    form: {
+    optionsForm: {
       margin: 2,
     },
     totals: {
@@ -29,8 +32,15 @@ const useStyles = makeStyles((theme: Theme) =>
     total: {
       fontSize: "1.5em",
     },
+    saveBudgetForm: {
+      margin: 2,
+    },
   })
 );
+
+const validationSchema = yup.object({
+  name: yup.string().required(),
+});
 interface IBudgetSidebarProps {
   book: string;
   setBook: React.Dispatch<React.SetStateAction<string>>;
@@ -39,13 +49,25 @@ interface IBudgetSidebarProps {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   averagesTotal: number;
   budgetTotal: number;
+  budget: string;
+  setBudget: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const BudgetSidebar: React.FC<IBudgetSidebarProps> = (props) => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <div className={classes.form}>
+      <div className={classes.totals}>
+        <p className={classes.total}>
+          Averages total cash flow:{" "}
+          {numeral(props.averagesTotal).format("$0,0.00")}
+        </p>
+        <p className={classes.total}>
+          Budgeted total cash flow:
+          {numeral(props.budgetTotal).format("$0,0.00")}
+        </p>
+      </div>
+      <div className={classes.optionsForm}>
         <form onSubmit={props.handleSubmit}>
           <FormControl className={classes.formControl}>
             <InputLabel id="book">Book</InputLabel>
@@ -57,6 +79,19 @@ export const BudgetSidebar: React.FC<IBudgetSidebarProps> = (props) => {
             >
               <MenuItem value={"Home"}>Home</MenuItem>
               <MenuItem value={"377 Hyde Park Rd."}>377 Hyde Park Rd.</MenuItem>
+            </Select>
+          </FormControl>
+
+          <FormControl>
+            <InputLabel id="loadBudgetId">Load Budget</InputLabel>
+            <Select
+              labelId="loadBudgetLabelId"
+              id="loadBudgetSelectId"
+              value={props.budget}
+              onChange={(e) => props.setBudget(e.target.value as string)}
+            >
+              <MenuItem value={"Test Budget 1"}>Test Budget 1</MenuItem>
+              <MenuItem value={"Test Budget 2"}>Test Budget 2</MenuItem>
             </Select>
           </FormControl>
 
@@ -82,16 +117,6 @@ export const BudgetSidebar: React.FC<IBudgetSidebarProps> = (props) => {
             Get Averages
           </Button>
         </form>
-      </div>
-      <div className={classes.totals}>
-        <p className={classes.total}>
-          Averages total cash flow:{" "}
-          {numeral(props.averagesTotal).format("$0,0.00")}
-        </p>
-        <p className={classes.total}>
-          Budgeted total cash flow:
-          {numeral(props.budgetTotal).format("$0,0.00")}
-        </p>
       </div>
     </div>
   );

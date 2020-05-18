@@ -9,13 +9,19 @@ import Paper from "@material-ui/core/Paper";
 import numeral from "numeral";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { GetUserTransactionsForBudgetQuery } from "../../generated/graphql";
+import { InitialInputState } from "./BudgetData";
+import * as yup from "yup";
+import { Formik, Form } from "formik";
+import { MyTextField } from "../MyTextField";
+import { Button } from "@material-ui/core";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
-      width: 600,
+      width: "100%",
     },
     table: {
-      width: 600,
+      width: "100%",
     },
     th: {
       backgroundColor: "#9A403E",
@@ -51,20 +57,24 @@ const useStyles = makeStyles((theme: Theme) =>
       borderTopStyle: "solid",
       borderColor: theme.palette.grey[800],
     },
+    saveBudgetForm: {
+      margin: 2,
+    },
   })
 );
+
+const validationSchema = yup.object({
+  name: yup.string().required(),
+});
 
 interface IBudgetTableProps {
   displayData: GetUserTransactionsForBudgetQuery["getUserTransactionsForBudget"];
   setBudgetTotal: any;
-}
-
-interface InitialInputState {
-  [key: string]: {
-    id: string;
-    name: string;
-    value: string;
-  };
+  //initialInputValues: InitialInputState;
+  saveBudget: (
+    values: { name: string },
+    inputValues: InitialInputState
+  ) => void;
 }
 
 export const BudgetTable: React.FC<IBudgetTableProps> = (props) => {
@@ -76,7 +86,7 @@ export const BudgetTable: React.FC<IBudgetTableProps> = (props) => {
       inputInitialState[subCategory.subCategoryId] = {
         id: subCategory.subCategoryId,
         name: subCategory.subCategoryName,
-        value: numeral(subCategory.avg).format("$0,0.00"),
+        value: numeral(subCategory.inputValue).format("$0,0.00"),
       };
     });
   });
@@ -105,84 +115,115 @@ export const BudgetTable: React.FC<IBudgetTableProps> = (props) => {
       );
       return newState;
     });
-
-    // let budgetTotal = Object.keys(input).reduce((acc, cur) => {
-    //   return (acc += numeral(input[cur].value).value());
-    // }, 0);
-
-    // props.setBudgetTotal(budgetTotal);
-    // setTimeout(() => {
-    //   let budgetTotal = Object.keys(input).reduce((acc, cur) => {
-    //     return (acc += numeral(input[cur].value).value());
-    //   }, 0);
-    //   props.setBudgetTotal(budgetTotal);
-    // }, 500);
   };
 
   const handleOnBlur = () => {
     setTimeout(() => {
-      let budgetTotal = Object.keys(input).reduce((acc, cur) => {
-        return (acc += numeral(input[cur].value).value());
+      let budgetTotal = Object.keys(input!).reduce((acc, cur) => {
+        return (acc += numeral(input![cur].value).value());
       }, 0);
       props.setBudgetTotal(budgetTotal);
     }, 500);
   };
 
   return (
-    <TableContainer className={classes.paper} component={Paper}>
-      <Table className={classes.table} size="small" aria-label="a dense table">
-        <TableHead>
-          <TableRow>
-            <TableCell className={classes.th}>Category</TableCell>
-            <TableCell className={classes.th}>Sub-Category</TableCell>
-            <TableCell className={classes.th} align="center">
-              Target Amount
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {props.displayData.map((categoryRow: any) => {
+    <>
+      <div className={classes.saveBudgetForm}>
+        <p>Save Budget your budget</p>
+        <Formik
+          initialValues={{ name: "" }}
+          validationSchema={validationSchema}
+          onSubmit={(values, { setSubmitting }) => {
+            setSubmitting(true);
+
+            props.saveBudget(values, input!);
+            setSubmitting(false);
+          }}
+        >
+          {({ isSubmitting }) => {
             return (
-              <React.Fragment key={categoryRow.categoryName}>
-                <TableRow>
-                  <TableCell
-                    className={classes.category}
-                    rowSpan={categoryRow.subCategoryLength + 1}
-                  >
-                    {categoryRow.categoryName}
-                  </TableCell>
-                </TableRow>
-                {categoryRow.subCategories.map((row: any, index: number) => {
-                  return (
-                    <TableRow
-                      key={row.subCategoryId}
-                      className={index === 0 ? classes.borderTop : ""}
-                    >
-                      <TableCell className={classes.subCategory}>
-                        {row.subCategoryName}
-                      </TableCell>
-                      <TableCell className={classes.monthCell}>
-                        <input
-                          id={row.subCategoryId}
-                          onChange={(e) =>
-                            handleChange(
-                              e,
-                              row.subCategoryId,
-                              row.subCategoryName
-                            )
-                          }
-                          onBlur={handleOnBlur}
-                          value={input[row.subCategoryId].value}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </React.Fragment>
+              <Form>
+                <div>
+                  <MyTextField placeholder="Budget Title:" name="name" />
+                </div>
+                <Button
+                  color="primary"
+                  disabled={isSubmitting}
+                  variant="contained"
+                  type="submit"
+                >
+                  Submit
+                </Button>
+              </Form>
             );
-          })}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          }}
+        </Formik>
+      </div>
+      <TableContainer className={classes.paper} component={Paper}>
+        <Table
+          className={classes.table}
+          size="small"
+          aria-label="a dense table"
+        >
+          <TableHead>
+            <TableRow>
+              <TableCell className={classes.th}>Category</TableCell>
+              <TableCell className={classes.th}>Sub-Category</TableCell>
+              <TableCell className={classes.th} align="center">
+                Target Amount
+              </TableCell>
+              <TableCell className={classes.th} align="center">
+                Rolling Average
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {props.displayData.map((categoryRow: any) => {
+              return (
+                <React.Fragment key={categoryRow.categoryName}>
+                  <TableRow>
+                    <TableCell
+                      className={classes.category}
+                      rowSpan={categoryRow.subCategoryLength + 1}
+                    >
+                      {categoryRow.categoryName}
+                    </TableCell>
+                  </TableRow>
+                  {categoryRow.subCategories.map((row: any, index: number) => {
+                    return (
+                      <TableRow
+                        key={row.subCategoryId}
+                        className={index === 0 ? classes.borderTop : ""}
+                      >
+                        <TableCell className={classes.subCategory}>
+                          {row.subCategoryName}
+                        </TableCell>
+                        <TableCell className={classes.monthCell}>
+                          <input
+                            id={row.subCategoryId}
+                            onChange={(e) =>
+                              handleChange(
+                                e,
+                                row.subCategoryId,
+                                row.subCategoryName
+                              )
+                            }
+                            onBlur={handleOnBlur}
+                            value={input![row.subCategoryId].value}
+                          />
+                        </TableCell>
+                        <TableCell className={classes.monthCell}>
+                          {numeral(Math.abs(row.avg)).format("$0,0.00")}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </React.Fragment>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 };

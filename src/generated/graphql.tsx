@@ -54,6 +54,7 @@ export type DisplaySubCategoryRow = {
    __typename?: 'DisplaySubCategoryRow';
   subCategoryId: Scalars['String'];
   subCategoryName: Scalars['String'];
+  inputValue: Scalars['Float'];
   avg: Scalars['Float'];
 };
 
@@ -767,7 +768,7 @@ export type GetUserTransactionsForBudgetQuery = (
     & Pick<ArrayedBudgetCategoryRow, 'categoryId' | 'categoryName' | 'subCategoryLength'>
     & { subCategories: Array<(
       { __typename?: 'DisplaySubCategoryRow' }
-      & Pick<DisplaySubCategoryRow, 'subCategoryId' | 'subCategoryName' | 'avg'>
+      & Pick<DisplaySubCategoryRow, 'subCategoryId' | 'subCategoryName' | 'avg' | 'inputValue'>
     )> }
   )> }
 );
@@ -1648,6 +1649,7 @@ export const GetUserTransactionsForBudgetDocument = gql`
       subCategoryId
       subCategoryName
       avg
+      inputValue
     }
   }
 }
