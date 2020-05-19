@@ -4,7 +4,7 @@ import Register from "../pages/Register";
 import Home from "../pages/Home";
 import ImportFile from "../pages/ImportFile";
 import Settings from "../pages/Settings";
-import Transactions from "../pages/Transactions";
+import { Transactions } from "../pages/Transactions";
 import { CategoriesTotals } from "../pages/CategoriesTotals";
 import { CashFlowAnalysis } from "../pages/CashFlowAnalysis";
 import { Budget } from "../pages/Budget";

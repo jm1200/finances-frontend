@@ -105,3 +105,45 @@ query GetUserTransactionsForBudget(
     }
   }
 }
+
+query GetUserTransactionsForTransactionsPage(
+  $skip: Int!
+  $take: Int!
+  $filter: String!
+  $order: String!
+  $month: String
+  $year: Int
+) {
+  getUserTransactionsForTransactionsPage(
+    skip: $skip
+    take: $take
+    filter: $filter
+    order: $order
+    month: $month
+    year: $year
+  ) {
+    length
+    transactions {
+      id
+      datePosted
+      name
+      memo
+      book
+      amount
+      note
+      category {
+        id
+        name
+      }
+      subCategory {
+        id
+        name
+      }
+      savedCategory {
+        id
+        name
+        amounts
+      }
+    }
+  }
+}

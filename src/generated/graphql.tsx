@@ -266,6 +266,7 @@ export type Query = {
   getTransactionsByMonth: Array<TransactionEntity>;
   getTotalsForSummary: Array<IDisplayDataSummary>;
   getUserTransactionsForBudget: Array<ArrayedBudgetCategoryRow>;
+  getUserTransactionsForTransactionsPage: TransPageReturn;
   getUserCategories: Array<CategoryEntity>;
   getOnlyUserSubCategories: Array<SubCategoryEntity>;
   getUserSubCategoriesForCashFlow: Array<IDisplayData>;
@@ -295,6 +296,16 @@ export type QueryGetUserTransactionsForBudgetArgs = {
   selectedBudget: Scalars['String'];
   selectedTimeFrame: Scalars['Float'];
   book: Scalars['String'];
+};
+
+
+export type QueryGetUserTransactionsForTransactionsPageArgs = {
+  year?: Maybe<Scalars['Int']>;
+  month?: Maybe<Scalars['String']>;
+  order: Scalars['String'];
+  filter: Scalars['String'];
+  take: Scalars['Int'];
+  skip: Scalars['Int'];
 };
 
 
@@ -408,6 +419,12 @@ export type TransactionInput = {
   savedCategoryId?: Maybe<Scalars['String']>;
   memo: Scalars['String'];
   amount: Scalars['Float'];
+};
+
+export type TransPageReturn = {
+   __typename?: 'TransPageReturn';
+  length: Scalars['Int'];
+  transactions: Array<TransactionEntity>;
 };
 
 export type UpdateCategoriesInTransactionsInput = {
@@ -830,6 +847,38 @@ export type GetUserTransactionsForBudgetQuery = (
       & Pick<DisplaySubCategoryRow, 'subCategoryId' | 'subCategoryName' | 'avg' | 'inputValue'>
     )> }
   )> }
+);
+
+export type GetUserTransactionsForTransactionsPageQueryVariables = {
+  skip: Scalars['Int'];
+  take: Scalars['Int'];
+  filter: Scalars['String'];
+  order: Scalars['String'];
+  month?: Maybe<Scalars['String']>;
+  year?: Maybe<Scalars['Int']>;
+};
+
+
+export type GetUserTransactionsForTransactionsPageQuery = (
+  { __typename?: 'Query' }
+  & { getUserTransactionsForTransactionsPage: (
+    { __typename?: 'TransPageReturn' }
+    & Pick<TransPageReturn, 'length'>
+    & { transactions: Array<(
+      { __typename?: 'TransactionEntity' }
+      & Pick<TransactionEntity, 'id' | 'datePosted' | 'name' | 'memo' | 'book' | 'amount' | 'note'>
+      & { category: (
+        { __typename?: 'CategoryEntity' }
+        & Pick<CategoryEntity, 'id' | 'name'>
+      ), subCategory: (
+        { __typename?: 'SubCategoryEntity' }
+        & Pick<SubCategoryEntity, 'id' | 'name'>
+      ), savedCategory?: Maybe<(
+        { __typename?: 'SavedCategoriesEntity' }
+        & Pick<SavedCategoriesEntity, 'id' | 'name' | 'amounts'>
+      )> }
+    )> }
+  ) }
 );
 
 export type UsersQueryVariables = {};
@@ -1840,6 +1889,66 @@ export function useGetUserTransactionsForBudgetLazyQuery(baseOptions?: ApolloRea
 export type GetUserTransactionsForBudgetQueryHookResult = ReturnType<typeof useGetUserTransactionsForBudgetQuery>;
 export type GetUserTransactionsForBudgetLazyQueryHookResult = ReturnType<typeof useGetUserTransactionsForBudgetLazyQuery>;
 export type GetUserTransactionsForBudgetQueryResult = ApolloReactCommon.QueryResult<GetUserTransactionsForBudgetQuery, GetUserTransactionsForBudgetQueryVariables>;
+export const GetUserTransactionsForTransactionsPageDocument = gql`
+    query GetUserTransactionsForTransactionsPage($skip: Int!, $take: Int!, $filter: String!, $order: String!, $month: String, $year: Int) {
+  getUserTransactionsForTransactionsPage(skip: $skip, take: $take, filter: $filter, order: $order, month: $month, year: $year) {
+    length
+    transactions {
+      id
+      datePosted
+      name
+      memo
+      book
+      amount
+      note
+      category {
+        id
+        name
+      }
+      subCategory {
+        id
+        name
+      }
+      savedCategory {
+        id
+        name
+        amounts
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUserTransactionsForTransactionsPageQuery__
+ *
+ * To run a query within a React component, call `useGetUserTransactionsForTransactionsPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserTransactionsForTransactionsPageQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserTransactionsForTransactionsPageQuery({
+ *   variables: {
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *      filter: // value for 'filter'
+ *      order: // value for 'order'
+ *      month: // value for 'month'
+ *      year: // value for 'year'
+ *   },
+ * });
+ */
+export function useGetUserTransactionsForTransactionsPageQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetUserTransactionsForTransactionsPageQuery, GetUserTransactionsForTransactionsPageQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetUserTransactionsForTransactionsPageQuery, GetUserTransactionsForTransactionsPageQueryVariables>(GetUserTransactionsForTransactionsPageDocument, baseOptions);
+      }
+export function useGetUserTransactionsForTransactionsPageLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetUserTransactionsForTransactionsPageQuery, GetUserTransactionsForTransactionsPageQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetUserTransactionsForTransactionsPageQuery, GetUserTransactionsForTransactionsPageQueryVariables>(GetUserTransactionsForTransactionsPageDocument, baseOptions);
+        }
+export type GetUserTransactionsForTransactionsPageQueryHookResult = ReturnType<typeof useGetUserTransactionsForTransactionsPageQuery>;
+export type GetUserTransactionsForTransactionsPageLazyQueryHookResult = ReturnType<typeof useGetUserTransactionsForTransactionsPageLazyQuery>;
+export type GetUserTransactionsForTransactionsPageQueryResult = ApolloReactCommon.QueryResult<GetUserTransactionsForTransactionsPageQuery, GetUserTransactionsForTransactionsPageQueryVariables>;
 export const UsersDocument = gql`
     query Users {
   users {
