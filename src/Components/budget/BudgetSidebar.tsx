@@ -2,16 +2,12 @@ import React from "react";
 import {
   FormControl,
   MenuItem,
-  FormControlLabel,
   InputLabel,
   Select,
   Button,
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import numeral from "numeral";
-import * as yup from "yup";
-import { Formik, Form } from "formik";
-import { MyTextField } from "../MyTextField";
 import { GetUserBudgetsQuery } from "../../generated/graphql";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -19,36 +15,45 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       display: "flex",
       flexDirection: "column",
-    },
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
+      width: 1000,
+      border: "1px solid lightGrey",
+      borderRadius: 5,
+      padding: 15,
+      backgroundColor: theme.palette.background.paper,
     },
     optionsForm: {
-      margin: 2,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      width: 950,
+    },
+    form: {
+      width: "100%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    formControl: {
+      minWidth: 200,
     },
     totals: {
-      marginTop: 15,
+      marginBottom: 5,
     },
     total: {
-      fontSize: "1.5em",
-    },
-    saveBudgetForm: {
-      margin: 2,
+      fontSize: "2em",
     },
   })
 );
 
-const validationSchema = yup.object({
-  name: yup.string().required(),
-});
+// const validationSchema = yup.object({
+//   name: yup.string().required(),
+// });
 interface IBudgetSidebarProps {
   book: string;
   setBook: React.Dispatch<React.SetStateAction<string>>;
   timeFrame: number;
   setTimeFrame: React.Dispatch<React.SetStateAction<number>>;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  averagesTotal: number;
   budgetTotal: number;
   budget: string;
   setBudget: React.Dispatch<React.SetStateAction<string>>;
@@ -63,16 +68,19 @@ export const BudgetSidebar: React.FC<IBudgetSidebarProps> = (props) => {
     <div className={classes.root}>
       <div className={classes.totals}>
         <p className={classes.total}>
-          Averages total cash flow:{" "}
-          {numeral(props.averagesTotal).format("$0,0.00")}
-        </p>
-        <p className={classes.total}>
-          Budgeted total cash flow:
-          {numeral(props.budgetTotal).format("$0,0.00")}
+          Cash Flow:
+          <span
+            style={{
+              marginLeft: 10,
+              color: props.budgetTotal > 0 ? "green" : "red",
+            }}
+          >
+            {numeral(props.budgetTotal).format("$0,0.00")}
+          </span>
         </p>
       </div>
       <div className={classes.optionsForm}>
-        <form onSubmit={props.handleSubmit}>
+        <form className={classes.form} onSubmit={props.handleSubmit}>
           <FormControl className={classes.formControl}>
             <InputLabel id="book">Book</InputLabel>
             <Select
@@ -86,7 +94,7 @@ export const BudgetSidebar: React.FC<IBudgetSidebarProps> = (props) => {
             </Select>
           </FormControl>
 
-          <FormControl>
+          <FormControl className={classes.formControl}>
             <InputLabel id="loadBudgetId">Load Budget</InputLabel>
             <Select
               labelId="loadBudgetLabelId"

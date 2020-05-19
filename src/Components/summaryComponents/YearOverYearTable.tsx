@@ -47,24 +47,6 @@ interface IYearOverYearTableProps {
   displayData: any;
 }
 
-const getTotal = (obj: any) => {
-  let arr = [
-    obj.Jan,
-    obj.Feb,
-    obj.Mar,
-    obj.Apr,
-    obj.May,
-    obj.Jun,
-    obj.Jul,
-    obj.Aug,
-    obj.Sep,
-    obj.Oct,
-    obj.Nov,
-    obj.Dec,
-  ];
-  return arr.map((x) => numeral(x).value()).reduce((a, b) => a + b, 0);
-};
-
 export const YearOverYearTable: React.FC<IYearOverYearTableProps> = (props) => {
   const classes = useStyles();
 

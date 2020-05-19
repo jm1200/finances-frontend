@@ -1,5 +1,4 @@
 import React from "react";
-import { BudgetAveragesTable } from "./BudgetAveragesTable";
 import { BudgetTable } from "./BudgetTable";
 import { BudgetSidebar } from "./BudgetSidebar";
 import {
@@ -7,28 +6,27 @@ import {
   ArrayedBudgetCategoryRow,
   useGetUserBudgetsQuery,
   useCreateBudgetMutation,
-  useDeleteBudgetMutation,
 } from "../../generated/graphql";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import numeral from "numeral";
 
 //TODO make one table with targets, month compare and all rolling averages
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: "flex",
+      flexDirection: "column",
+      width: "100%",
     },
     sidebar: {
-      width: 250,
+      width: "100%",
     },
     main: {
       display: "flex",
+      marginTop: 20,
     },
-    averages: {
-      marginLeft: 15,
-    },
+
     budget: {
-      marginLeft: 15,
+      marginLeft: 1,
     },
   })
 );
@@ -50,7 +48,7 @@ interface IBudgetDataProps {}
 export const BudgetData: React.FC<IBudgetDataProps> = (props) => {
   const classes = useStyles();
   const [book, setBook] = React.useState("Home");
-  const [timeFrame, setTimeFrame] = React.useState(2);
+  const [timeFrame, setTimeFrame] = React.useState(12);
   const [budgetTotal, setBudgetTotal] = React.useState(0);
   const [budget, setBudget] = React.useState("Default Budget");
 
@@ -96,17 +94,17 @@ export const BudgetData: React.FC<IBudgetDataProps> = (props) => {
     await budgetRefetch();
   };
 
-  let averagesTotal = 0;
-  if (averagesData && averagesData.getUserTransactionsForBudget) {
-    console.log("BD71", averagesData.getUserTransactionsForBudget);
+  // let averagesTotal = 0;
+  // if (averagesData && averagesData.getUserTransactionsForBudget) {
+  //   console.log("BD71", averagesData.getUserTransactionsForBudget);
 
-    //Get average total for sidebar
-    averagesData.getUserTransactionsForBudget.forEach((category) => {
-      category.subCategories.forEach((subCategory) => {
-        averagesTotal += subCategory.avg;
-      });
-    });
-  }
+  //   //Get average total for sidebar
+  //   averagesData.getUserTransactionsForBudget.forEach((category) => {
+  //     category.subCategories.forEach((subCategory) => {
+  //       averagesTotal += subCategory.avg;
+  //     });
+  //   });
+  // }
   return (
     <div className={classes.root}>
       <div className={classes.sidebar}>
@@ -122,7 +120,6 @@ export const BudgetData: React.FC<IBudgetDataProps> = (props) => {
             setBook={setBook}
             setTimeFrame={setTimeFrame}
             handleSubmit={handleSubmit}
-            averagesTotal={averagesTotal}
             budgetTotal={budgetTotal}
             budget={budget}
             setBudget={setBudget}
@@ -130,7 +127,7 @@ export const BudgetData: React.FC<IBudgetDataProps> = (props) => {
           />
         )}
       </div>
-      <div>
+      <div className={classes.main}>
         {averagesLoading && <div>Loading rental Data...</div>}
         {averagesError && <div>error loading rental data</div>}
         {!averagesData ||

@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: "flex",
+      backgroundColor: theme.palette.background.paper,
+      padding: 15,
+      borderRadius: 5,
     },
 
     table: {
@@ -72,21 +75,30 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
+      width: 300,
     },
     saveBudgetForm: {
       display: "flex",
       flexDirection: "column",
+      width: "100%",
+      border: "1px solid lightGrey",
+      borderRadius: 5,
+      padding: 15,
     },
     deleteBudgetForm: {
       display: "flex",
       flexDirection: "column",
       marginTop: 30,
+      width: "100%",
+      border: "1px solid lightGrey",
+      borderRadius: 5,
+      padding: 15,
     },
     form: {
-      width: 200,
+      width: "100%",
     },
     formLabel: {
-      width: 200,
+      width: "100%",
     },
     formButton: { marginTop: 10 },
   })
@@ -111,7 +123,7 @@ interface IBudgetTableProps {
 export const BudgetTable: React.FC<IBudgetTableProps> = (props) => {
   const classes = useStyles();
   const [budget, setBudget] = React.useState("");
-  const [deleteBudget, {}] = useDeleteBudgetMutation();
+  const [deleteBudget] = useDeleteBudgetMutation();
   const handleDeleteBudget = async () => {
     await deleteBudget({ variables: { budgetId: budget } });
     await props.refetchBudget();
@@ -154,21 +166,21 @@ export const BudgetTable: React.FC<IBudgetTableProps> = (props) => {
     });
   };
 
-  const handleOnBlur = () => {
-    setTimeout(() => {
-      let budgetTotal = Object.keys(input!).reduce((acc, cur) => {
-        return (acc += numeral(input![cur].value).value());
-      }, 0);
-      props.setBudgetTotal(budgetTotal);
-    }, 500);
-  };
+  // const handleOnBlur = () => {
+  // setTimeout(() => {
+  //   let budgetTotal = Object.keys(input!).reduce((acc, cur) => {
+  //     return (acc += numeral(input![cur].value).value());
+  //   }, 0);
+  //   props.setBudgetTotal(budgetTotal);
+  // }, 500);
+  // };
 
   React.useEffect(() => {
     let budgetTotal = Object.keys(input!).reduce((acc, cur) => {
       return (acc += numeral(input![cur].value).value());
     }, 0);
     props.setBudgetTotal(budgetTotal);
-  }, []);
+  }, [props, input]);
 
   return (
     <div className={classes.root}>
@@ -200,7 +212,7 @@ export const BudgetTable: React.FC<IBudgetTableProps> = (props) => {
                     type="submit"
                     size="small"
                   >
-                    Submit
+                    Save Budget
                   </Button>
                 </div>
               </Form>
@@ -287,7 +299,7 @@ export const BudgetTable: React.FC<IBudgetTableProps> = (props) => {
                                 row.subCategoryName
                               )
                             }
-                            onBlur={handleOnBlur}
+                            // onBlur={handleOnBlur}
                             value={input![row.subCategoryId].value}
                           />
                         </TableCell>

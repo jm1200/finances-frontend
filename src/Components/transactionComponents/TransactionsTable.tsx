@@ -20,13 +20,7 @@ import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
-import {
-  TablePagination,
-  TableFooter,
-  Toolbar,
-  FormControlLabel,
-  Checkbox,
-} from "@material-ui/core";
+import { TablePagination, TableFooter } from "@material-ui/core";
 import {
   GetUserTransactionsForTransactionsPageQuery,
   GetUserCategoriesQuery,
@@ -109,8 +103,7 @@ function Row(props: IRowProps) {
 
   const handleUpdateTransactionCategory = async (row: any) => {
     console.log("ECT113 running", row);
-    let savedCategoryId,
-      savedCategoryAmounts = null;
+    let savedCategoryId = null;
     if (row.savedCategory) {
       savedCategoryId = row.savedCategory.id;
     }
@@ -269,18 +262,7 @@ export const TransactionsTable = (props: ITransactionsTableProps) => {
       /> */}
       <TableContainer component={Paper}>
         <Table size="small" aria-label="collapsible table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Memo</TableCell>
-              <TableCell>Amount</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Sub Category</TableCell>
-              <TableCell>Note</TableCell>
-              <TableCell>Edit</TableCell>
-            </TableRow>
-          </TableHead>
+          <EnhancedTableHead order={props.order} setOrder={props.setOrder} />
           <TableBody>
             {props.displayData.map((row) => (
               <Row
@@ -417,37 +399,62 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
   );
 }
 
-const useToolbarStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: "flex",
-      justifyContent: "flex-end",
-    },
-  })
-);
+// const useToolbarStyles = makeStyles((theme: Theme) =>
+//   createStyles({
+//     root: {
+//       display: "flex",
+//       justifyContent: "flex-end",
+//     },
+//   })
+// );
 
-interface IEnhancedToolBarProps {
-  uncategorizedCheckBox: boolean;
-  setUncategorizedCheckBox: Dispatch<SetStateAction<boolean>>;
+// interface IEnhancedToolBarProps {
+//   uncategorizedCheckBox: boolean;
+//   setUncategorizedCheckBox: Dispatch<SetStateAction<boolean>>;
+// }
+
+// function EnhancedTableToolbar(props: IEnhancedToolBarProps) {
+//   const classes = useToolbarStyles();
+
+//   const handleUncategorizedCheckBox = () => {
+//     props.setUncategorizedCheckBox(!props.uncategorizedCheckBox);
+//   };
+
+//   return (
+//     <Toolbar className={classes.root}>
+//       <FormControlLabel
+//         value={props.uncategorizedCheckBox}
+//         control={
+//           <Checkbox color="primary" onChange={handleUncategorizedCheckBox} />
+//         }
+//         label="Uncategorized only: "
+//         labelPlacement="start"
+//       />
+//     </Toolbar>
+//   );
+// }
+//type Order = "asc" | "desc";
+interface IEnhancedTableHeadProps {
+  // onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Data) => void;
+  // order: Order;
+  // orderBy: string;
+  order: string;
+  setOrder: React.Dispatch<React.SetStateAction<string>>;
 }
 
-function EnhancedTableToolbar(props: IEnhancedToolBarProps) {
-  const classes = useToolbarStyles();
-
-  const handleUncategorizedCheckBox = () => {
-    props.setUncategorizedCheckBox(!props.uncategorizedCheckBox);
-  };
-
+function EnhancedTableHead(props: IEnhancedTableHeadProps) {
   return (
-    <Toolbar className={classes.root}>
-      <FormControlLabel
-        value={props.uncategorizedCheckBox}
-        control={
-          <Checkbox color="primary" onChange={handleUncategorizedCheckBox} />
-        }
-        label="Uncategorized only: "
-        labelPlacement="start"
-      />
-    </Toolbar>
+    <TableHead>
+      <TableRow>
+        <TableCell>Date</TableCell>
+        <TableCell>Name</TableCell>
+        <TableCell>Memo</TableCell>
+        <TableCell>Amount</TableCell>
+        <TableCell>Category</TableCell>
+        <TableCell>Sub Category</TableCell>
+        <TableCell>Note</TableCell>
+        <TableCell>Edit</TableCell>
+      </TableRow>
+    </TableHead>
   );
 }

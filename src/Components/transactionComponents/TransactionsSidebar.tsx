@@ -1,12 +1,7 @@
 import React from "react";
 import { DatePicker } from "../shared/DatePicker";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import {
-  TextField,
-  Toolbar,
-  FormControlLabel,
-  Checkbox,
-} from "@material-ui/core";
+import { TextField, FormControlLabel, Checkbox } from "@material-ui/core";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
