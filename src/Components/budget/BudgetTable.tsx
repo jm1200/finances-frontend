@@ -27,11 +27,12 @@ import {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    paper: {
-      width: "100%",
+    root: {
+      display: "flex",
     },
+
     table: {
-      width: "100%",
+      marginLeft: 20,
     },
     th: {
       backgroundColor: "#9A403E",
@@ -70,15 +71,24 @@ const useStyles = makeStyles((theme: Theme) =>
     budgetOptions: {
       display: "flex",
       flexDirection: "column",
-      justifyContent: "space-around",
       alignItems: "center",
     },
     saveBudgetForm: {
       display: "flex",
+      flexDirection: "column",
     },
     deleteBudgetForm: {
       display: "flex",
+      flexDirection: "column",
+      marginTop: 30,
     },
+    form: {
+      width: 200,
+    },
+    formLabel: {
+      width: 200,
+    },
+    formButton: { marginTop: 10 },
   })
 );
 
@@ -161,26 +171,28 @@ export const BudgetTable: React.FC<IBudgetTableProps> = (props) => {
   }, []);
 
   return (
-    <>
+    <div className={classes.root}>
       <div className={classes.budgetOptions}>
-        <div className={classes.saveBudgetForm}>
-          <p>Save Budget your budget</p>
-          <Formik
-            initialValues={{ name: "" }}
-            validationSchema={validationSchema}
-            onSubmit={(values, { setSubmitting }) => {
-              setSubmitting(true);
+        <Formik
+          initialValues={{ name: "" }}
+          validationSchema={validationSchema}
+          onSubmit={(values, { setSubmitting }) => {
+            setSubmitting(true);
 
-              props.saveBudget(values, input!);
-              setSubmitting(false);
-            }}
-          >
-            {({ isSubmitting }) => {
-              return (
-                <Form>
-                  <div>
-                    <MyTextField placeholder="Budget Title:" name="name" />
-                  </div>
+            props.saveBudget(values, input!);
+            setSubmitting(false);
+          }}
+        >
+          {({ isSubmitting }) => {
+            return (
+              <Form className={classes.saveBudgetForm}>
+                <div className={classes.formLabel}>
+                  <p>Save your budget</p>
+                </div>
+                <div className={classes.form}>
+                  <MyTextField placeholder="Budget Title:" name="name" />
+                </div>
+                <div className={classes.formButton}>
                   <Button
                     color="primary"
                     disabled={isSubmitting}
@@ -190,17 +202,18 @@ export const BudgetTable: React.FC<IBudgetTableProps> = (props) => {
                   >
                     Submit
                   </Button>
-                </Form>
-              );
-            }}
-          </Formik>
-        </div>
+                </div>
+              </Form>
+            );
+          }}
+        </Formik>
+
         <div className={classes.deleteBudgetForm}>
-          <div>
+          <div className={classes.formLabel}>
             <p>Delete an old budget</p>
           </div>
-          <div>
-            <FormControl>
+          <div className={classes.form}>
+            <FormControl className={classes.form}>
               <InputLabel id="deleteBudgetId">Delete Budget</InputLabel>
               <Select
                 labelId="deleteBudgetLabelId"
@@ -216,7 +229,7 @@ export const BudgetTable: React.FC<IBudgetTableProps> = (props) => {
               </Select>
             </FormControl>
           </div>
-          <div>
+          <div className={classes.formButton}>
             <Button
               color="primary"
               size="small"
@@ -229,12 +242,8 @@ export const BudgetTable: React.FC<IBudgetTableProps> = (props) => {
         </div>
       </div>
 
-      <TableContainer className={classes.paper} component={Paper}>
-        <Table
-          className={classes.table}
-          size="small"
-          aria-label="a dense table"
-        >
+      <TableContainer className={classes.table} component={Paper}>
+        <Table size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
               <TableCell className={classes.th}>Category</TableCell>
@@ -294,6 +303,6 @@ export const BudgetTable: React.FC<IBudgetTableProps> = (props) => {
           </TableBody>
         </Table>
       </TableContainer>
-    </>
+    </div>
   );
 };
