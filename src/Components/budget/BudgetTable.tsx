@@ -8,12 +8,22 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import numeral from "numeral";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { GetUserTransactionsForBudgetQuery } from "../../generated/graphql";
+import {
+  GetUserTransactionsForBudgetQuery,
+  useDeleteBudgetMutation,
+  GetUserBudgetsQuery,
+} from "../../generated/graphql";
 import { InitialInputState } from "./BudgetData";
 import * as yup from "yup";
 import { Formik, Form } from "formik";
 import { MyTextField } from "../MyTextField";
-import { Button } from "@material-ui/core";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,8 +67,17 @@ const useStyles = makeStyles((theme: Theme) =>
       borderTopStyle: "solid",
       borderColor: theme.palette.grey[800],
     },
+    budgetOptions: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-around",
+      alignItems: "center",
+    },
     saveBudgetForm: {
-      margin: 2,
+      display: "flex",
+    },
+    deleteBudgetForm: {
+      display: "flex",
     },
   })
 );
@@ -75,10 +94,18 @@ interface IBudgetTableProps {
     values: { name: string },
     inputValues: InitialInputState
   ) => void;
+  availableBudgets: GetUserBudgetsQuery["getUserBudgets"];
+  refetchBudget: any;
 }
 
 export const BudgetTable: React.FC<IBudgetTableProps> = (props) => {
   const classes = useStyles();
+  const [budget, setBudget] = React.useState("");
+  const [deleteBudget, {}] = useDeleteBudgetMutation();
+  const handleDeleteBudget = async () => {
+    await deleteBudget({ variables: { budgetId: budget } });
+    await props.refetchBudget();
+  };
 
   const inputInitialState: InitialInputState = {};
   props.displayData.forEach((category) => {
@@ -126,39 +153,82 @@ export const BudgetTable: React.FC<IBudgetTableProps> = (props) => {
     }, 500);
   };
 
+  React.useEffect(() => {
+    let budgetTotal = Object.keys(input!).reduce((acc, cur) => {
+      return (acc += numeral(input![cur].value).value());
+    }, 0);
+    props.setBudgetTotal(budgetTotal);
+  }, []);
+
   return (
     <>
-      <div className={classes.saveBudgetForm}>
-        <p>Save Budget your budget</p>
-        <Formik
-          initialValues={{ name: "" }}
-          validationSchema={validationSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            setSubmitting(true);
+      <div className={classes.budgetOptions}>
+        <div className={classes.saveBudgetForm}>
+          <p>Save Budget your budget</p>
+          <Formik
+            initialValues={{ name: "" }}
+            validationSchema={validationSchema}
+            onSubmit={(values, { setSubmitting }) => {
+              setSubmitting(true);
 
-            props.saveBudget(values, input!);
-            setSubmitting(false);
-          }}
-        >
-          {({ isSubmitting }) => {
-            return (
-              <Form>
-                <div>
-                  <MyTextField placeholder="Budget Title:" name="name" />
-                </div>
-                <Button
-                  color="primary"
-                  disabled={isSubmitting}
-                  variant="contained"
-                  type="submit"
-                >
-                  Submit
-                </Button>
-              </Form>
-            );
-          }}
-        </Formik>
+              props.saveBudget(values, input!);
+              setSubmitting(false);
+            }}
+          >
+            {({ isSubmitting }) => {
+              return (
+                <Form>
+                  <div>
+                    <MyTextField placeholder="Budget Title:" name="name" />
+                  </div>
+                  <Button
+                    color="primary"
+                    disabled={isSubmitting}
+                    variant="contained"
+                    type="submit"
+                    size="small"
+                  >
+                    Submit
+                  </Button>
+                </Form>
+              );
+            }}
+          </Formik>
+        </div>
+        <div className={classes.deleteBudgetForm}>
+          <div>
+            <p>Delete an old budget</p>
+          </div>
+          <div>
+            <FormControl>
+              <InputLabel id="deleteBudgetId">Delete Budget</InputLabel>
+              <Select
+                labelId="deleteBudgetLabelId"
+                id="deleteBudgetSelectId"
+                value={budget}
+                onChange={(e) => setBudget(e.target.value as string)}
+              >
+                {props.availableBudgets.map((budget) => (
+                  <MenuItem key={budget.id} value={budget.id}>
+                    {budget.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+          <div>
+            <Button
+              color="primary"
+              size="small"
+              variant="contained"
+              onClick={handleDeleteBudget}
+            >
+              Delete Budget
+            </Button>
+          </div>
+        </div>
       </div>
+
       <TableContainer className={classes.paper} component={Paper}>
         <Table
           className={classes.table}

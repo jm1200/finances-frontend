@@ -16,6 +16,7 @@
 - budgets don't refetch when switched back and forth.
 - get budget names for select list
 - budget total does not calculate on load.
+- empty budget fields return error -> cannot return null for non nullable field. need to make empty string or "$0.00"
 
 
 -bug - click on update. find out why i can't update selected book to 377 hyde....

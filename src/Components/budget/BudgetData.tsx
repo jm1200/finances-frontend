@@ -5,8 +5,9 @@ import { BudgetSidebar } from "./BudgetSidebar";
 import {
   useGetUserTransactionsForBudgetLazyQuery,
   ArrayedBudgetCategoryRow,
-  DisplaySubCategoryRow,
+  useGetUserBudgetsQuery,
   useCreateBudgetMutation,
+  useDeleteBudgetMutation,
 } from "../../generated/graphql";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import numeral from "numeral";
@@ -56,9 +57,16 @@ export const BudgetData: React.FC<IBudgetDataProps> = (props) => {
   const [
     getTransactionsForBudget,
     { data: averagesData, loading: averagesLoading, error: averagesError },
-  ] = useGetUserTransactionsForBudgetLazyQuery();
+  ] = useGetUserTransactionsForBudgetLazyQuery({ fetchPolicy: "network-only" });
 
-  const [createBudget] = useCreateBudgetMutation({});
+  const {
+    data: budgetData,
+    loading: budgetLoading,
+    error: budgetError,
+    refetch: budgetRefetch,
+  } = useGetUserBudgetsQuery();
+
+  const [createBudget] = useCreateBudgetMutation();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -71,18 +79,23 @@ export const BudgetData: React.FC<IBudgetDataProps> = (props) => {
     });
   };
 
-  const handleSaveBudget = (
+  const handleSaveBudget = async (
     values: { name: string },
     inputValues: InitialInputState
   ) => {
     console.log("bd61", values, inputValues);
-    createBudget({
+    Object.keys(inputValues).forEach((key) => {
+      if (!inputValues[key].value) inputValues[key].value = "0";
+    });
+    await createBudget({
       variables: {
         name: values.name,
         values: JSON.stringify(inputValues),
       },
     });
+    await budgetRefetch();
   };
+
   let averagesTotal = 0;
   if (averagesData && averagesData.getUserTransactionsForBudget) {
     console.log("BD71", averagesData.getUserTransactionsForBudget);
@@ -97,17 +110,25 @@ export const BudgetData: React.FC<IBudgetDataProps> = (props) => {
   return (
     <div className={classes.root}>
       <div className={classes.sidebar}>
-        <BudgetSidebar
-          book={book}
-          timeFrame={timeFrame}
-          setBook={setBook}
-          setTimeFrame={setTimeFrame}
-          handleSubmit={handleSubmit}
-          averagesTotal={averagesTotal}
-          budgetTotal={budgetTotal}
-          budget={budget}
-          setBudget={setBudget}
-        />
+        {budgetLoading && <div>Loading rental Data...</div>}
+        {budgetError && <div>error loading rental data</div>}
+        {!budgetData ||
+          (!budgetData.getUserBudgets && <div>No rental data!</div>)}
+
+        {budgetData && budgetData.getUserBudgets && (
+          <BudgetSidebar
+            book={book}
+            timeFrame={timeFrame}
+            setBook={setBook}
+            setTimeFrame={setTimeFrame}
+            handleSubmit={handleSubmit}
+            averagesTotal={averagesTotal}
+            budgetTotal={budgetTotal}
+            budget={budget}
+            setBudget={setBudget}
+            availableBudgets={budgetData.getUserBudgets}
+          />
+        )}
       </div>
       <div>
         {averagesLoading && <div>Loading rental Data...</div>}
@@ -117,17 +138,20 @@ export const BudgetData: React.FC<IBudgetDataProps> = (props) => {
             <div>No rental data!</div>
           ))}
 
-        {averagesData?.getUserTransactionsForBudget && (
-          <div className={classes.main}>
-            <div className={classes.budget}>
-              <BudgetTable
-                displayData={averagesData.getUserTransactionsForBudget}
-                setBudgetTotal={setBudgetTotal}
-                saveBudget={handleSaveBudget}
-              />
+        {averagesData?.getUserTransactionsForBudget &&
+          budgetData?.getUserBudgets && (
+            <div className={classes.main}>
+              <div className={classes.budget}>
+                <BudgetTable
+                  displayData={averagesData.getUserTransactionsForBudget}
+                  setBudgetTotal={setBudgetTotal}
+                  saveBudget={handleSaveBudget}
+                  availableBudgets={budgetData.getUserBudgets}
+                  refetchBudget={budgetRefetch}
+                />
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </div>
     </div>
   );

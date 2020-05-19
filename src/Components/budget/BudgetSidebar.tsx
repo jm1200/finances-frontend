@@ -12,6 +12,7 @@ import numeral from "numeral";
 import * as yup from "yup";
 import { Formik, Form } from "formik";
 import { MyTextField } from "../MyTextField";
+import { GetUserBudgetsQuery } from "../../generated/graphql";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,10 +52,13 @@ interface IBudgetSidebarProps {
   budgetTotal: number;
   budget: string;
   setBudget: React.Dispatch<React.SetStateAction<string>>;
+  availableBudgets: GetUserBudgetsQuery["getUserBudgets"];
 }
 
 export const BudgetSidebar: React.FC<IBudgetSidebarProps> = (props) => {
   const classes = useStyles();
+
+  console.log("BS61", props.availableBudgets);
   return (
     <div className={classes.root}>
       <div className={classes.totals}>
@@ -91,8 +95,11 @@ export const BudgetSidebar: React.FC<IBudgetSidebarProps> = (props) => {
               onChange={(e) => props.setBudget(e.target.value as string)}
             >
               <MenuItem value={"Default Budget"}>Default Budget</MenuItem>
-              <MenuItem value={"zero"}>zero</MenuItem>
-              <MenuItem value={"test budget"}>test budget</MenuItem>
+              {props.availableBudgets.map((budget) => (
+                <MenuItem key={budget.id} value={budget.id}>
+                  {budget.name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
 
