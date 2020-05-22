@@ -11,3 +11,7 @@
 Budget Component
 - budget colors don't change on input value change
 
+Transactions Component
+-clean up options sidebar
+- add "all" option to dates section. Make cleaner date picker. no hidden menu.
+- add filter by book option

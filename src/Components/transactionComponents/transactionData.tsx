@@ -30,7 +30,8 @@ export const TransactionData: React.FC<ITransactionDataProps> = (props) => {
   const [page, setPage] = React.useState(0);
   const [take, setTake] = React.useState(10);
   const [filter, setFilter] = React.useState("");
-  const [order, setOrder] = React.useState("datePosted");
+  const [orderBy, setOrderBy] = React.useState("datePosted");
+  const [order, setOrder] = React.useState(false);
   const [filterByDate, setFilterByDate] = React.useState(false);
   const [selectedMonth, setSelectedMonth] = React.useState(
     moment().format("MMM")
@@ -42,6 +43,7 @@ export const TransactionData: React.FC<ITransactionDataProps> = (props) => {
     skip: page,
     take,
     filter,
+    orderBy,
     order,
   };
   if (filterByDate) {
@@ -104,6 +106,8 @@ export const TransactionData: React.FC<ITransactionDataProps> = (props) => {
               <TransactionsTable
                 page={page}
                 setPage={setPage}
+                orderBy={orderBy}
+                setOrderBy={setOrderBy}
                 order={order}
                 setOrder={setOrder}
                 take={take}

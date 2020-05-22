@@ -20,7 +20,13 @@ import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
-import { TablePagination, TableFooter } from "@material-ui/core";
+import ArrowDownward from "@material-ui/icons/ArrowDownward";
+import ArrowUpward from "@material-ui/icons/ArrowUpward";
+import {
+  TablePagination,
+  TableFooter,
+  TableSortLabel,
+} from "@material-ui/core";
 import {
   GetUserTransactionsForTransactionsPageQuery,
   GetUserCategoriesQuery,
@@ -201,7 +207,7 @@ function Row(props: IRowProps) {
 const useEditCategoryTableStyles = makeStyles((theme: Theme) =>
   createStyles({
     table: {
-      width: "100%",
+      minWidth: "100%",
     },
     footer: {
       display: "flex",
@@ -217,8 +223,10 @@ interface ITransactionsTableProps {
   setPage: React.Dispatch<React.SetStateAction<number>>;
   take: number;
   setTake: React.Dispatch<React.SetStateAction<number>>;
-  order: string;
-  setOrder: React.Dispatch<React.SetStateAction<string>>;
+  orderBy: string;
+  setOrderBy: React.Dispatch<React.SetStateAction<string>>;
+  order: boolean;
+  setOrder: React.Dispatch<React.SetStateAction<boolean>>;
   categoriesData: GetUserCategoriesQuery["getUserCategories"];
   refetchTransactions: any;
 }
@@ -262,7 +270,12 @@ export const TransactionsTable = (props: ITransactionsTableProps) => {
       /> */}
       <TableContainer component={Paper}>
         <Table size="small" aria-label="collapsible table">
-          <EnhancedTableHead order={props.order} setOrder={props.setOrder} />
+          <EnhancedTableHead
+            orderBy={props.orderBy}
+            setOrderBy={props.setOrderBy}
+            order={props.order}
+            setOrder={props.setOrder}
+          />
           <TableBody>
             {props.displayData.map((row) => (
               <Row
@@ -433,25 +446,44 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
 //     </Toolbar>
 //   );
 // }
-//type Order = "asc" | "desc";
 interface IEnhancedTableHeadProps {
-  // onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Data) => void;
-  // order: Order;
-  // orderBy: string;
-  order: string;
-  setOrder: React.Dispatch<React.SetStateAction<string>>;
+  order: boolean;
+  setOrder: React.Dispatch<React.SetStateAction<boolean>>;
+  orderBy: string;
+  setOrderBy: React.Dispatch<React.SetStateAction<string>>;
 }
 
 function EnhancedTableHead(props: IEnhancedTableHeadProps) {
+  const handleClick = (
+    // e: React.MouseEvent<HTMLTableHeaderCellElement, MouseEvent>,
+    column: string
+  ) => {
+    console.log("TT450", column, props.order, props.orderBy);
+    props.setOrder(!props.order);
+    props.setOrderBy(column);
+  };
+  const tableHeads = [
+    { name: "Date", id: "datePosted" },
+    { name: "Name", id: "name" },
+    { name: "Memo", id: "memo" },
+    { name: "Amount", id: "amount" },
+    { name: "Category", id: "category" },
+    { name: "Sub-Category", id: "subCategory" },
+  ];
   return (
     <TableHead>
       <TableRow>
-        <TableCell>Date</TableCell>
-        <TableCell>Name</TableCell>
-        <TableCell>Memo</TableCell>
-        <TableCell>Amount</TableCell>
-        <TableCell>Category</TableCell>
-        <TableCell>Sub Category</TableCell>
+        {tableHeads.map((head) => (
+          <TableCell key={head.id}>
+            <TableSortLabel
+              active={props.orderBy === head.id}
+              direction={props.order ? "asc" : "desc"}
+              onClick={() => handleClick(head.id)}
+            >
+              {head.name}
+            </TableSortLabel>
+          </TableCell>
+        ))}
         <TableCell>Note</TableCell>
         <TableCell>Edit</TableCell>
       </TableRow>

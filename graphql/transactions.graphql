@@ -114,7 +114,8 @@ query GetUserTransactionsForTransactionsPage(
   $skip: Int!
   $take: Int!
   $filter: String!
-  $order: String!
+  $orderBy: String!
+  $order: Boolean!
   $month: String
   $year: Int
 ) {
@@ -122,6 +123,7 @@ query GetUserTransactionsForTransactionsPage(
     skip: $skip
     take: $take
     filter: $filter
+    orderBy: $orderBy
     order: $order
     month: $month
     year: $year

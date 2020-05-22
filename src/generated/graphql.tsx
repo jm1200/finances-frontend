@@ -306,7 +306,8 @@ export type QueryGetUserTransactionsForBudgetArgs = {
 export type QueryGetUserTransactionsForTransactionsPageArgs = {
   year?: Maybe<Scalars['Int']>;
   month?: Maybe<Scalars['String']>;
-  order: Scalars['String'];
+  orderBy: Scalars['String'];
+  order: Scalars['Boolean'];
   filter: Scalars['String'];
   take: Scalars['Int'];
   skip: Scalars['Int'];
@@ -857,7 +858,8 @@ export type GetUserTransactionsForTransactionsPageQueryVariables = {
   skip: Scalars['Int'];
   take: Scalars['Int'];
   filter: Scalars['String'];
-  order: Scalars['String'];
+  orderBy: Scalars['String'];
+  order: Scalars['Boolean'];
   month?: Maybe<Scalars['String']>;
   year?: Maybe<Scalars['Int']>;
 };
@@ -1898,8 +1900,8 @@ export type GetUserTransactionsForBudgetQueryHookResult = ReturnType<typeof useG
 export type GetUserTransactionsForBudgetLazyQueryHookResult = ReturnType<typeof useGetUserTransactionsForBudgetLazyQuery>;
 export type GetUserTransactionsForBudgetQueryResult = ApolloReactCommon.QueryResult<GetUserTransactionsForBudgetQuery, GetUserTransactionsForBudgetQueryVariables>;
 export const GetUserTransactionsForTransactionsPageDocument = gql`
-    query GetUserTransactionsForTransactionsPage($skip: Int!, $take: Int!, $filter: String!, $order: String!, $month: String, $year: Int) {
-  getUserTransactionsForTransactionsPage(skip: $skip, take: $take, filter: $filter, order: $order, month: $month, year: $year) {
+    query GetUserTransactionsForTransactionsPage($skip: Int!, $take: Int!, $filter: String!, $orderBy: String!, $order: Boolean!, $month: String, $year: Int) {
+  getUserTransactionsForTransactionsPage(skip: $skip, take: $take, filter: $filter, orderBy: $orderBy, order: $order, month: $month, year: $year) {
     length
     transactions {
       id
@@ -1942,6 +1944,7 @@ export const GetUserTransactionsForTransactionsPageDocument = gql`
  *      skip: // value for 'skip'
  *      take: // value for 'take'
  *      filter: // value for 'filter'
+ *      orderBy: // value for 'orderBy'
  *      order: // value for 'order'
  *      month: // value for 'month'
  *      year: // value for 'year'
