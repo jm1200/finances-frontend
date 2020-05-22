@@ -7,7 +7,12 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import numeral from "numeral";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import {
+  createStyles,
+  makeStyles,
+  Theme,
+  useTheme,
+} from "@material-ui/core/styles";
 import {
   GetUserTransactionsForBudgetQuery,
   useDeleteBudgetMutation,
@@ -24,6 +29,7 @@ import {
   Select,
   MenuItem,
 } from "@material-ui/core";
+import moment from "moment";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -123,6 +129,11 @@ interface IBudgetTableProps {
 export const BudgetTable: React.FC<IBudgetTableProps> = (props) => {
   const classes = useStyles();
   const [budget, setBudget] = React.useState("");
+  const lastYear = moment().subtract(1, "year").format("YYYY");
+  const lastMonth = moment().subtract(1, "month").format("MMM");
+  const thisMonth = moment().format("MMM");
+  const thisYear = moment().format("YYYY");
+  //console.log("BT127", props.displayData);
   const [deleteBudget] = useDeleteBudgetMutation();
   const handleDeleteBudget = async () => {
     await deleteBudget({ variables: { budgetId: budget } });
@@ -266,6 +277,18 @@ export const BudgetTable: React.FC<IBudgetTableProps> = (props) => {
               <TableCell className={classes.th} align="center">
                 Rolling Average
               </TableCell>
+              <TableCell className={classes.th} align="center">
+                {thisMonth} - {thisYear}
+              </TableCell>
+              <TableCell className={classes.th} align="center">
+                {thisMonth} - {lastYear}
+              </TableCell>
+              <TableCell className={classes.th} align="center">
+                {lastMonth} - {thisYear}
+              </TableCell>
+              <TableCell className={classes.th} align="center">
+                {lastMonth} - {lastYear}
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -303,8 +326,44 @@ export const BudgetTable: React.FC<IBudgetTableProps> = (props) => {
                             value={input![row.subCategoryId].value}
                           />
                         </TableCell>
-                        <TableCell className={classes.monthCell}>
-                          {numeral(Math.abs(row.avg)).format("$0,0.00")}
+                        <TableCell
+                          className={classes.monthCell}
+                          style={{ color: row.avg.color }}
+                        >
+                          {numeral(Math.abs(row.avg.value)).format("$0,0.00")}
+                        </TableCell>
+
+                        <TableCell
+                          className={classes.monthCell}
+                          style={{ color: row.currentMonth.color }}
+                        >
+                          {numeral(Math.abs(row.currentMonth.value)).format(
+                            "$0,0.00"
+                          )}
+                        </TableCell>
+                        <TableCell
+                          className={classes.monthCell}
+                          style={{ color: row.lastYearCurrentMonth.color }}
+                        >
+                          {numeral(
+                            Math.abs(row.lastYearCurrentMonth.value)
+                          ).format("$0,0.00")}
+                        </TableCell>
+                        <TableCell
+                          className={classes.monthCell}
+                          style={{ color: row.lastMonth.color }}
+                        >
+                          {numeral(Math.abs(row.lastMonth.value)).format(
+                            "$0,0.00"
+                          )}
+                        </TableCell>
+                        <TableCell
+                          className={classes.monthCell}
+                          style={{ color: row.lastYearLastMonth.color }}
+                        >
+                          {numeral(
+                            Math.abs(row.lastYearLastMonth.value)
+                          ).format("$0,0.00")}
                         </TableCell>
                       </TableRow>
                     );

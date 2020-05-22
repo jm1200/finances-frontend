@@ -98,6 +98,10 @@ query GetUserTransactionsForBudget(
     categoryName
     subCategoryLength
     subCategories {
+      currentMonth
+      lastMonth
+      lastYearCurrentMonth
+      lastYearLastMonth
       subCategoryId
       subCategoryName
       avg

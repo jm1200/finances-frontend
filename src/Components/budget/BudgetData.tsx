@@ -54,7 +54,11 @@ export const BudgetData: React.FC<IBudgetDataProps> = (props) => {
 
   const [
     getTransactionsForBudget,
-    { data: averagesData, loading: averagesLoading, error: averagesError },
+    {
+      data: transactionsData,
+      loading: transactionsLoading,
+      error: transactionsError,
+    },
   ] = useGetUserTransactionsForBudgetLazyQuery({ fetchPolicy: "network-only" });
 
   const {
@@ -76,6 +80,50 @@ export const BudgetData: React.FC<IBudgetDataProps> = (props) => {
       },
     });
   };
+
+  let displayData: any = [];
+  if (transactionsData && transactionsData.getUserTransactionsForBudget) {
+    transactionsData.getUserTransactionsForBudget.forEach((category) => {
+      let cat: any = Object.assign({}, { ...category }, { subCategories: [] });
+      category.subCategories.forEach((subCategory) => {
+        let {
+          inputValue,
+          avg,
+          currentMonth,
+          lastMonth,
+          lastYearCurrentMonth,
+          lastYearLastMonth,
+        } = subCategory;
+
+        let newSubCat = Object.assign(
+          {},
+          { ...subCategory },
+          {
+            avg: { value: avg, color: avg < inputValue ? "red" : "green" },
+            currentMonth: {
+              value: currentMonth,
+              color: currentMonth < inputValue ? "red" : "green",
+            },
+            lastMonth: {
+              value: lastMonth,
+              color: lastMonth < inputValue ? "red" : "green",
+            },
+            lastYearCurrentMonth: {
+              value: lastYearCurrentMonth,
+              color: lastYearCurrentMonth < inputValue ? "red" : "green",
+            },
+            lastYearLastMonth: {
+              value: lastYearLastMonth,
+              color: lastYearLastMonth < inputValue ? "red" : "green",
+            },
+          }
+        );
+        cat.subCategories.push(newSubCat);
+      });
+
+      displayData.push(cat);
+    });
+  }
 
   const handleSaveBudget = async (
     values: { name: string },
@@ -128,27 +176,26 @@ export const BudgetData: React.FC<IBudgetDataProps> = (props) => {
         )}
       </div>
       <div className={classes.main}>
-        {averagesLoading && <div>Loading rental Data...</div>}
-        {averagesError && <div>error loading rental data</div>}
-        {!averagesData ||
-          (!averagesData.getUserTransactionsForBudget && (
+        {transactionsLoading && <div>Loading rental Data...</div>}
+        {transactionsError && <div>error loading rental data</div>}
+        {!transactionsData ||
+          (!transactionsData.getUserTransactionsForBudget && (
             <div>No rental data!</div>
           ))}
 
-        {averagesData?.getUserTransactionsForBudget &&
-          budgetData?.getUserBudgets && (
-            <div className={classes.main}>
-              <div className={classes.budget}>
-                <BudgetTable
-                  displayData={averagesData.getUserTransactionsForBudget}
-                  setBudgetTotal={setBudgetTotal}
-                  saveBudget={handleSaveBudget}
-                  availableBudgets={budgetData.getUserBudgets}
-                  refetchBudget={budgetRefetch}
-                />
-              </div>
+        {budgetData?.getUserBudgets && displayData.length > 0 && (
+          <div className={classes.main}>
+            <div className={classes.budget}>
+              <BudgetTable
+                displayData={displayData}
+                setBudgetTotal={setBudgetTotal}
+                saveBudget={handleSaveBudget}
+                availableBudgets={budgetData.getUserBudgets}
+                refetchBudget={budgetRefetch}
+              />
             </div>
-          )}
+          </div>
+        )}
       </div>
     </div>
   );

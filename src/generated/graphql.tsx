@@ -64,6 +64,10 @@ export type DisplaySubCategoryRow = {
   subCategoryName: Scalars['String'];
   inputValue: Scalars['Float'];
   avg: Scalars['Float'];
+  currentMonth: Scalars['Float'];
+  lastMonth: Scalars['Float'];
+  lastYearCurrentMonth: Scalars['Float'];
+  lastYearLastMonth: Scalars['Float'];
 };
 
 export type DisplayYear = {
@@ -844,7 +848,7 @@ export type GetUserTransactionsForBudgetQuery = (
     & Pick<ArrayedBudgetCategoryRow, 'categoryId' | 'categoryName' | 'subCategoryLength'>
     & { subCategories: Array<(
       { __typename?: 'DisplaySubCategoryRow' }
-      & Pick<DisplaySubCategoryRow, 'subCategoryId' | 'subCategoryName' | 'avg' | 'inputValue'>
+      & Pick<DisplaySubCategoryRow, 'currentMonth' | 'lastMonth' | 'lastYearCurrentMonth' | 'lastYearLastMonth' | 'subCategoryId' | 'subCategoryName' | 'avg' | 'inputValue'>
     )> }
   )> }
 );
@@ -1853,6 +1857,10 @@ export const GetUserTransactionsForBudgetDocument = gql`
     categoryName
     subCategoryLength
     subCategories {
+      currentMonth
+      lastMonth
+      lastYearCurrentMonth
+      lastYearLastMonth
       subCategoryId
       subCategoryName
       avg

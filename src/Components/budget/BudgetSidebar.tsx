@@ -63,7 +63,6 @@ interface IBudgetSidebarProps {
 export const BudgetSidebar: React.FC<IBudgetSidebarProps> = (props) => {
   const classes = useStyles();
 
-  console.log("BS61", props.availableBudgets);
   return (
     <div className={classes.root}>
       <div className={classes.totals}>
