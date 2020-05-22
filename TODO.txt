@@ -15,3 +15,6 @@ Transactions Component
 -clean up options sidebar
 - add "all" option to dates section. Make cleaner date picker. no hidden menu.
 - add filter by book option
+
+ImportTransactions Page
+- make one to manually import transactions
